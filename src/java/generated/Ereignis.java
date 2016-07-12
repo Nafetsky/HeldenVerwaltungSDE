@@ -2,7 +2,7 @@
 // Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.8-b130911.1802 generiert 
 // Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2016.07.12 um 02:15:21 PM CEST 
+// Generiert: 2016.07.12 um 09:01:02 PM CEST 
 //
 
 
@@ -37,6 +37,9 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *         &lt;element name="Nachteil" type="{http://www.example.org/Charakter/}Nachteil" maxOccurs="unbounded" minOccurs="0"/>
  *         &lt;element name="Fertigkeitsänderung" type="{http://www.example.org/Charakter/}Fertigkeitsmodifikation" maxOccurs="unbounded" minOccurs="0"/>
  *         &lt;element name="Kampftechnikänderung" type="{http://www.example.org/Charakter/}Fertigkeitsmodifikation" maxOccurs="unbounded" minOccurs="0"/>
+ *         &lt;element name="LePGekauft" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
+ *         &lt;element name="AsPGekauft" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
+ *         &lt;element name="KaPGekauft" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -55,7 +58,10 @@ import javax.xml.datatype.XMLGregorianCalendar;
     "vorteil",
     "nachteil",
     "fertigkeits\u00e4nderung",
-    "kampftechnik\u00e4nderung"
+    "kampftechnik\u00e4nderung",
+    "lePGekauft",
+    "asPGekauft",
+    "kaPGekauft"
 })
 public class Ereignis {
 
@@ -77,6 +83,12 @@ public class Ereignis {
     protected List<Fertigkeitsmodifikation> fertigkeitsänderung;
     @XmlElement(name = "Kampftechnik\u00e4nderung")
     protected List<Fertigkeitsmodifikation> kampftechnikänderung;
+    @XmlElement(name = "LePGekauft")
+    protected Integer lePGekauft;
+    @XmlElement(name = "AsPGekauft")
+    protected Integer asPGekauft;
+    @XmlElement(name = "KaPGekauft")
+    protected Integer kaPGekauft;
 
     /**
      * Ruft den Wert der datum-Eigenschaft ab.
@@ -317,6 +329,78 @@ public class Ereignis {
             kampftechnikänderung = new ArrayList<Fertigkeitsmodifikation>();
         }
         return this.kampftechnikänderung;
+    }
+
+    /**
+     * Ruft den Wert der lePGekauft-Eigenschaft ab.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Integer }
+     *     
+     */
+    public Integer getLePGekauft() {
+        return lePGekauft;
+    }
+
+    /**
+     * Legt den Wert der lePGekauft-Eigenschaft fest.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Integer }
+     *     
+     */
+    public void setLePGekauft(Integer value) {
+        this.lePGekauft = value;
+    }
+
+    /**
+     * Ruft den Wert der asPGekauft-Eigenschaft ab.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Integer }
+     *     
+     */
+    public Integer getAsPGekauft() {
+        return asPGekauft;
+    }
+
+    /**
+     * Legt den Wert der asPGekauft-Eigenschaft fest.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Integer }
+     *     
+     */
+    public void setAsPGekauft(Integer value) {
+        this.asPGekauft = value;
+    }
+
+    /**
+     * Ruft den Wert der kaPGekauft-Eigenschaft ab.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Integer }
+     *     
+     */
+    public Integer getKaPGekauft() {
+        return kaPGekauft;
+    }
+
+    /**
+     * Legt den Wert der kaPGekauft-Eigenschaft fest.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Integer }
+     *     
+     */
+    public void setKaPGekauft(Integer value) {
+        this.kaPGekauft = value;
     }
 
 }

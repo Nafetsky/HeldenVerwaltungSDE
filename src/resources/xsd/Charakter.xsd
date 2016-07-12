@@ -10,18 +10,27 @@
 			<element name="Geschlecht" type="tns:Geschlecht" />
 			<element name="Spezies" type="tns:Spezies" />
 			<element name="Kultur" type="string" />
-			<element name="Eigenschaftswerte" type="tns:Eigenschaftswerte" />
+			<element name="Eigenschaftswerte"
+				type="tns:Eigenschaftswerte" />
 
 			<element name="Vorteile" type="tns:Vorteile"></element>
 			<element name="Nachteile" type="tns:Nachteile"></element>
 			<element name="AP" type="int" />
+			<element name="LeP" type="int" maxOccurs="1"
+				minOccurs="0">
+			</element>
+			<element name="AsP" type="int" maxOccurs="1"
+				minOccurs="0">
+			</element>
+			<element name="KaP" type="int" maxOccurs="1" minOccurs="0"></element>
 			<element name="Talente" type="tns:Talente"></element>
 			<element name="Zauber" type="tns:Zauber"></element>
 			<element name="Rituale" type="tns:Rituale"></element>
 			<element name="Liturgien" type="tns:Liturgien"></element>
 			<element name="Zeremonien" type="tns:Zeremonien"></element>
 			<element name="Kampftechniken" type="tns:Kampftechniken"></element>
-			<element name="Sonderfertigkeiten" type="tns:Sonderfertigkeiten" />
+			<element name="Sonderfertigkeiten"
+				type="tns:Sonderfertigkeiten" />
 			<element name="Steigerungshistorie" type="tns:Historie" />
 		</sequence>
 	</complexType>
@@ -254,17 +263,23 @@
 			<element name="Datum" type="date" />
 			<element name="Grund" type="string" />
 			<element name="AP" type="int" maxOccurs="1" minOccurs="0" />
-			<element name="neueAP" type="int" maxOccurs="1" minOccurs="0" />
-			<element name="Sonderfertigkeitshinzugewinn" maxOccurs="unbounded"
-				type="tns:Sonderfertigkeit" minOccurs="0" />
-			<element name="Vorteil" maxOccurs="unbounded" type="tns:Vorteil"
+			<element name="neueAP" type="int" maxOccurs="1"
 				minOccurs="0" />
-			<element name="Nachteil" maxOccurs="unbounded" type="tns:Nachteil"
-				minOccurs="0" />
+			<element name="Sonderfertigkeitshinzugewinn"
+				maxOccurs="unbounded" type="tns:Sonderfertigkeit" minOccurs="0" />
+			<element name="Vorteil" maxOccurs="unbounded"
+				type="tns:Vorteil" minOccurs="0" />
+			<element name="Nachteil" maxOccurs="unbounded"
+				type="tns:Nachteil" minOccurs="0" />
 			<element name="Fertigkeitsänderung" maxOccurs="unbounded"
 				type="tns:Fertigkeitsmodifikation" minOccurs="0" />
 			<element name="Kampftechnikänderung" maxOccurs="unbounded"
 				type="tns:Fertigkeitsmodifikation" minOccurs="0" />
+			<element name="LePGekauft" type="int" maxOccurs="1"
+				minOccurs="0">
+			</element>
+			<element name="AsPGekauft" type="int" maxOccurs="1" minOccurs="0"></element>
+			<element name="KaPGekauft" type="int" maxOccurs="1" minOccurs="0"></element>
 		</sequence>
 	</complexType>
 

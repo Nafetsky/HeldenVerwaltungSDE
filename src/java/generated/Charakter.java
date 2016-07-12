@@ -2,7 +2,7 @@
 // Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.8-b130911.1802 generiert 
 // Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2016.07.12 um 02:15:21 PM CEST 
+// Generiert: 2016.07.12 um 09:01:02 PM CEST 
 //
 
 
@@ -33,6 +33,9 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="Vorteile" type="{http://www.example.org/Charakter/}Vorteile"/>
  *         &lt;element name="Nachteile" type="{http://www.example.org/Charakter/}Nachteile"/>
  *         &lt;element name="AP" type="{http://www.w3.org/2001/XMLSchema}int"/>
+ *         &lt;element name="LeP" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
+ *         &lt;element name="AsP" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
+ *         &lt;element name="KaP" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
  *         &lt;element name="Talente" type="{http://www.example.org/Charakter/}Talente"/>
  *         &lt;element name="Zauber" type="{http://www.example.org/Charakter/}Zauber"/>
  *         &lt;element name="Rituale" type="{http://www.example.org/Charakter/}Rituale"/>
@@ -59,6 +62,9 @@ import javax.xml.bind.annotation.XmlType;
     "vorteile",
     "nachteile",
     "ap",
+    "leP",
+    "asP",
+    "kaP",
     "talente",
     "zauber",
     "rituale",
@@ -87,6 +93,12 @@ public class Charakter {
     protected Nachteile nachteile;
     @XmlElement(name = "AP")
     protected int ap;
+    @XmlElement(name = "LeP")
+    protected Integer leP;
+    @XmlElement(name = "AsP")
+    protected Integer asP;
+    @XmlElement(name = "KaP")
+    protected Integer kaP;
     @XmlElement(name = "Talente", required = true)
     protected Talente talente;
     @XmlElement(name = "Zauber", required = true)
@@ -286,6 +298,78 @@ public class Charakter {
      */
     public void setAP(int value) {
         this.ap = value;
+    }
+
+    /**
+     * Ruft den Wert der leP-Eigenschaft ab.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Integer }
+     *     
+     */
+    public Integer getLeP() {
+        return leP;
+    }
+
+    /**
+     * Legt den Wert der leP-Eigenschaft fest.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Integer }
+     *     
+     */
+    public void setLeP(Integer value) {
+        this.leP = value;
+    }
+
+    /**
+     * Ruft den Wert der asP-Eigenschaft ab.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Integer }
+     *     
+     */
+    public Integer getAsP() {
+        return asP;
+    }
+
+    /**
+     * Legt den Wert der asP-Eigenschaft fest.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Integer }
+     *     
+     */
+    public void setAsP(Integer value) {
+        this.asP = value;
+    }
+
+    /**
+     * Ruft den Wert der kaP-Eigenschaft ab.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Integer }
+     *     
+     */
+    public Integer getKaP() {
+        return kaP;
+    }
+
+    /**
+     * Legt den Wert der kaP-Eigenschaft fest.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Integer }
+     *     
+     */
+    public void setKaP(Integer value) {
+        this.kaP = value;
     }
 
     /**
