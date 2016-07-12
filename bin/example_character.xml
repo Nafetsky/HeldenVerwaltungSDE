@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Charakter>
+  <Name>str1234</Name>
+  <Geschlecht>männlich</Geschlecht>
+  <Spezies>str1234</Spezies>
+  <Kultur>str1234</Kultur>
+  <Eigenschaftswerte>
+    <Mut Attributswert="123" Kürzel="MU" />
+    <Klugheit Attributswert="123" Kürzel="MU" />
+    <Intuition Attributswert="123" Kürzel="MU" />
+    <Charisma Attributswert="123" Kürzel="MU" />
+    <Fingerfertigkeit Attributswert="123" Kürzel="MU" />
+    <Gewandheit Attributswert="123" Kürzel="MU" />
+    <Konstitution Attributswert="123" Kürzel="MU" />
+    <Körperkraft Attributswert="123" Kürzel="MU" />
+  </Eigenschaftswerte>
+  <Vorteile>
+    <Vorteil>
+      <Name>str1234</Name>
+      <Kosten>123</Kosten>
+    </Vorteil>
+  </Vorteile>
+  <Nachteile>
+    <Nachteil>
+      <Name>str1234</Name>
+      <Kosten>123</Kosten>
+    </Nachteil>
+  </Nachteile>
+  <Talente>
+    <Talent>
+      <Name>str1234</Name>
+      <Attribut1>MU</Attribut1>
+      <Attribut2>MU</Attribut2>
+      <Attribut3>MU</Attribut3>
+      <Fertigkeitswert>123</Fertigkeitswert>
+      <Steigerungskosten>A</Steigerungskosten>
+      <Kategorie>profan</Kategorie>
+    </Talent>
+  </Talente>
+  <Zauber>
+    <Zauber>
+      <Name>str1234</Name>
+      <Attribut1>MU</Attribut1>
+      <Attribut2>MU</Attribut2>
+      <Attribut3>MU</Attribut3>
+      <Fertigkeitswert>123</Fertigkeitswert>
+      <Steigerungskosten>A</Steigerungskosten>
+      <Kategorie>profan</Kategorie>
+    </Zauber>
+  </Zauber>
+  <Rituale>
+    <Ritual>
+      <Name>str1234</Name>
+      <Attribut1>MU</Attribut1>
+      <Attribut2>MU</Attribut2>
+      <Attribut3>MU</Attribut3>
+      <Fertigkeitswert>123</Fertigkeitswert>
+      <Steigerungskosten>A</Steigerungskosten>
+      <Kategorie>profan</Kategorie>
+    </Ritual>
+  </Rituale>
+  <Liturgien>
+    <Liturgie>
+      <Name>str1234</Name>
+      <Attribut1>MU</Attribut1>
+      <Attribut2>MU</Attribut2>
+      <Attribut3>MU</Attribut3>
+      <Fertigkeitswert>123</Fertigkeitswert>
+      <Steigerungskosten>A</Steigerungskosten>
+      <Kategorie>profan</Kategorie>
+    </Liturgie>
+  </Liturgien>
+  <Zeremonien>
+    <Zeremonie>
+      <Name>str1234</Name>
+      <Attribut1>MU</Attribut1>
+      <Attribut2>MU</Attribut2>
+      <Attribut3>MU</Attribut3>
+      <Fertigkeitswert>123</Fertigkeitswert>
+      <Steigerungskosten>A</Steigerungskosten>
+      <Kategorie>profan</Kategorie>
+    </Zeremonie>
+  </Zeremonien>
+  <Kampftechniken>
+    <Zeremonie>
+      <Name>str1234</Name>
+      <Attribut1>MU</Attribut1>
+      <Attribut2>MU</Attribut2>
+      <Attribut3>MU</Attribut3>
+      <Fertigkeitswert>123</Fertigkeitswert>
+      <Steigerungskosten>A</Steigerungskosten>
+      <Kategorie>profan</Kategorie>
+    </Zeremonie>
+  </Kampftechniken>
+</Charakter>

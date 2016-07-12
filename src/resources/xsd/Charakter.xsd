@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.example.org/Charakter/"
+	targetNamespace="http://www.example.org/Charakter/">
+
+	<element name="Charakter" type="tns:Charakter" />
+
+	<complexType name="Charakter">
+		<sequence>
+			<element name="Name" type="string" />
+			<element name="Geschlecht" type="tns:Geschlecht" />
+			<element name="Spezies" type="tns:Spezies" />
+			<element name="Kultur" type="string" />
+			<element name="Eigenschaftswerte" type="tns:Eigenschaftswerte" />
+
+			<element name="Vorteile" type="tns:Vorteile"></element>
+			<element name="Nachteile" type="tns:Nachteile"></element>
+			<element name="AP" type="int" />
+			<element name="Talente" type="tns:Talente"></element>
+			<element name="Zauber" type="tns:Zauber"></element>
+			<element name="Rituale" type="tns:Rituale"></element>
+			<element name="Liturgien" type="tns:Liturgien"></element>
+			<element name="Zeremonien" type="tns:Zeremonien"></element>
+			<element name="Kampftechniken" type="tns:Kampftechniken"></element>
+			<element name="Sonderfertigkeiten" type="tns:Sonderfertigkeiten" />
+			<element name="Steigerungshistorie" type="tns:Historie" />
+		</sequence>
+	</complexType>
+
+
+	<simpleType name="Geschlecht">
+		<restriction base="string">
+			<enumeration value="männlich"></enumeration>
+			<enumeration value="weiblich"></enumeration>
+		</restriction>
+	</simpleType>
+	<simpleType name="Kultur">
+		<restriction base="string"></restriction>
+	</simpleType>
+	<simpleType name="Abenteuerpunkte">
+		<restriction base="int"></restriction>
+	</simpleType>
+	<complexType name="Eigenschaftswerte">
+		<sequence>
+			<element name="Mut" type="tns:Attribut" />
+			<element name="Klugheit" type="tns:Attribut" />
+			<element name="Intuition" type="tns:Attribut" />
+			<element name="Charisma" type="tns:Attribut" />
+			<element name="Fingerfertigkeit" type="tns:Attribut" />
+			<element name="Gewandheit" type="tns:Attribut" />
+			<element name="Konstitution" type="tns:Attribut" />
+			<element name="Körperkraft" type="tns:Attribut" />
+		</sequence>
+	</complexType>
+
+	<complexType name="Attribut">
+		<attribute name="Attributswert" type="int"></attribute>
+		<attribute name="Kürzel" type="tns:Attributskürzel"></attribute>
+	</complexType>
+	<simpleType name="Attributskürzel">
+		<restriction base="string">
+			<enumeration value="MU"></enumeration>
+			<enumeration value="KL"></enumeration>
+			<enumeration value="IN"></enumeration>
+			<enumeration value="CH"></enumeration>
+			<enumeration value="FF"></enumeration>
+			<enumeration value="GE"></enumeration>
+			<enumeration value="KO"></enumeration>
+			<enumeration value="KK"></enumeration>
+		</restriction>
+	</simpleType>
+
+	<complexType name="Vorteile">
+		<sequence>
+			<element name="Vorteil" type="tns:Vorteil" maxOccurs="unbounded"
+				minOccurs="0" />
+		</sequence>
+	</complexType>
+	<complexType name="Vorteil">
+		<sequence>
+			<element name="Name" type="string" />
+			<element name="Kosten" type="int"></element>
+		</sequence>
+	</complexType>
+
+	<complexType name="Nachteile">
+		<sequence>
+			<element name="Nachteil" type="tns:Nachteil" maxOccurs="unbounded"
+				minOccurs="0" />
+		</sequence>
+	</complexType>
+
+	<complexType name="Nachteil">
+		<sequence>
+			<element name="Name" type="string" />
+			<element name="Kosten" type="int"></element>
+		</sequence>
+	</complexType>
+
+	<complexType name="Talente">
+		<sequence>
+			<element name="Talent" type="tns:Basistalent" maxOccurs="unbounded"
+				minOccurs="0" />
+		</sequence>
+	</complexType>
+	<complexType name="Zauber">
+		<sequence>
+			<element name="Zauber" type="tns:Fertigkeit" maxOccurs="unbounded"
+				minOccurs="0" />
+		</sequence>
+	</complexType>
+	<complexType name="Rituale">
+		<sequence>
+			<element name="Ritual" type="tns:Fertigkeit" maxOccurs="unbounded"
+				minOccurs="0" />
+		</sequence>
+	</complexType>
+	<complexType name="Liturgien">
+		<sequence>
+			<element name="Liturgie" type="tns:Fertigkeit" maxOccurs="unbounded"
+				minOccurs="0" />
+		</sequence>
+	</complexType>
+	<complexType name="Zeremonien">
+		<sequence>
+			<element name="Zeremonie" type="tns:Fertigkeit" maxOccurs="unbounded"
+				minOccurs="0" />
+		</sequence>
+	</complexType>
+	<complexType name="Kampftechniken">
+		<sequence>
+			<element name="Kampftechnik" type="tns:Kampftechnik"
+				maxOccurs="unbounded" minOccurs="0" />
+		</sequence>
+	</complexType>
+
+	<complexType name="Sonderfertigkeiten">
+		<sequence>
+			<element name="Sonderfertigkeit" type="tns:Sonderfertigkeit"
+				minOccurs="0" maxOccurs="unbounded" />
+			<element name="Talentspezialisierung" type="tns:Talentspezialisierung"
+				minOccurs="0" maxOccurs="unbounded" />
+		</sequence>
+	</complexType>
+
+	<complexType name="Basistalent">
+		<sequence>
+			<element name="Name" type="string"/>
+			<element name="Fertigkeitswert" type ="int"/>
+			<element name="Merkmal" type="tns:MerkmalProfan" />
+		</sequence>
+	</complexType>
+	<complexType name="Fertigkeit">
+		<sequence>
+			<element name="Name" type="string" />
+			<element name="Attribut1" type="tns:Attributskürzel" />
+			<element name="Attribut2" type="tns:Attributskürzel" />
+			<element name="Attribut3" type="tns:Attributskürzel" />			<element name="Fertigkeitswert" type="int" />
+			<element name="Steigerungskosten" type="tns:Steigerungskategorie" />
+			<element name="Kategorie" type="tns:Fertigkeitskategorie" />
+			<element name="Merkmal" type="tns:Merkmal" maxOccurs="unbounded" />
+		</sequence>
+	</complexType>
+
+	<simpleType name="Fertigkeitskategorie">
+		<restriction base="string">
+			<enumeration value="Profan" />
+			<enumeration value="Zauber" />
+			<enumeration value="Ritual" />
+			<enumeration value="Liturgie" />
+			<enumeration value="Zeremonie" />
+		</restriction>
+	</simpleType>
+
+	<simpleType name="Merkmal">
+		<restriction base="string" />
+	</simpleType>
+
+	<simpleType name="MerkmalProfan">
+		<restriction base="tns:Merkmal">
+			<enumeration value="Körper" />
+			<enumeration value="Gesellschaft" />
+			<enumeration value="Gesellschaft" />
+			<enumeration value="Natur" />
+			<enumeration value="Wissen" />
+			<enumeration value="Handwerk" />
+		</restriction>
+	</simpleType>
+
+	<simpleType name="MerkmalMagie">
+		<restriction base="tns:Merkmal">
+			<enumeration value="Antimagie" />
+			<enumeration value="Dämonisch" />
+			<enumeration value="Einfluss" />
+			<enumeration value="Elementar" />
+			<enumeration value="Heilung" />
+			<enumeration value="Hellsicht" />
+			<enumeration value="Illusion" />
+			<enumeration value="Sphären" />
+			<enumeration value="Objekt" />
+			<enumeration value="Telekinese" />
+			<enumeration value="Verwandlung" />
+		</restriction>
+	</simpleType>
+
+	<simpleType name="MerkmalKarmal">
+		<restriction base="tns:Merkmal">
+			<!-- <enumeration value="Allgemein" /> <enumeration value="Traum" /> <enumeration 
+				value="Ordnung" /> <enumeration value="Tod" /> <enumeration value="Schatten" 
+				/> <enumeration value="" /> -->
+		</restriction>
+	</simpleType>
+	<simpleType name="Steigerungskategorie">
+		<restriction base="string">
+			<enumeration value="A"></enumeration>
+			<enumeration value="B"></enumeration>
+			<enumeration value="C"></enumeration>
+			<enumeration value="D"></enumeration>
+		</restriction>
+	</simpleType>
+
+	<complexType name="Sonderfertigkeit">
+		<sequence>
+			<element name="Name" type="string" />
+			<element name="Kosten" type="int" maxOccurs="1" minOccurs="0"/>
+			<element name="Kategorie" type="tns:Merkmal" minOccurs="0" />
+		</sequence>
+	</complexType>
+
+	<complexType name="Talentspezialisierung">
+		<sequence>
+			<element name="Name" type="string" />
+			<element name="Fertigkeit" type="string" />
+		</sequence>
+	</complexType>
+
+	<complexType name="Kampftechnik">
+		<sequence>
+			<element name="Name" type="string" />
+			<element name="Kampftechnikwert" type="int" />
+			<element name="Leiteigenschaft" type="tns:Attributskürzel" />
+			<element name="Steigerungskosten" type="tns:Steigerungskategorie" />
+			<element name="Basistechnik" type="boolean" minOccurs="0"/>
+		</sequence>
+	</complexType>
+
+	<complexType name="Historie">
+		<sequence>
+			<element name="Ereignis" type="tns:Ereignis" minOccurs="0"
+				maxOccurs="unbounded" />
+		</sequence>
+	</complexType>
+	<complexType name="Ereignis">
+		<sequence>
+			<element name="Datum" type="date" />
+			<element name="Grund" type="string" />
+			<element name="AP" type="int" maxOccurs="1" minOccurs="0" />
+			<element name="neueAP" type="int" maxOccurs="1" minOccurs="0" />
+			<element name="Sonderfertigkeitshinzugewinn" maxOccurs="unbounded"
+				type="tns:Sonderfertigkeit" minOccurs="0" />
+			<element name="Vorteil" maxOccurs="unbounded" type="tns:Vorteil"
+				minOccurs="0" />
+			<element name="Nachteil" maxOccurs="unbounded" type="tns:Nachteil"
+				minOccurs="0" />
+			<element name="Fertigkeitsänderung" maxOccurs="unbounded"
+				type="tns:Fertigkeitsmodifikation" minOccurs="0" />
+			<element name="Kampftechnikänderung" maxOccurs="unbounded"
+				type="tns:Fertigkeitsmodifikation" minOccurs="0" />
+		</sequence>
+	</complexType>
+
+	<complexType name="Fertigkeitsmodifikation">
+		<sequence>
+			<element name="Name" type="string" />
+			<element name="Änderung" type="int" />
+			<element name="neuerWert" type="int" />
+			<element name="NeueFertigkeit" type="tns:Fertigkeit" minOccurs="0" />
+		</sequence>
+	</complexType>
+
+	<!--
+	<complexType name="Kampftechniksmodifikation">
+		<sequence>
+			<element name="Name" type="string" />
+			<element name="Änderung" type="int" />
+		</sequence>
+	</complexType>
+	-->
+
+    <complexType name="Spezies">
+    	<sequence>
+    		<element name="Name" type="string"/>
+    		<element name="BasisLeben" type="int"/>
+    		<element name="BasisSeelenkraft" type="int"/>
+    		<element name="BasisZähigkeit" type="int"/>
+    		<element name="BasisGeschwindigkeit" type="int"/>
+    		<element name="Kosten" type="int"/>
+    	</sequence>
+    </complexType>
+</schema>

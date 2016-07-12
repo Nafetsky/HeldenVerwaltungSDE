@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.example.org/held/" targetNamespace="http://www.example.org/held/">
+
+    <xs:complexType name="Attribut">
+    	<simpleContent>
+    		<extension base="int">
+    			<attribute name="kuerzel">
+    				<simpleType>
+    					<restriction base="string">
+    						<length value="2"></length>
+    						<enumeration value="MU"></enumeration>
+    						<enumeration value="KL"></enumeration>
+    						<enumeration value="IN"></enumeration>
+    						<enumeration value="CH"></enumeration>
+    						<enumeration value="FF"></enumeration>
+    						<enumeration value="GE"></enumeration>
+    						<enumeration value="KO"></enumeration>
+    						<enumeration value="KK"></enumeration>
+    					</restriction>
+    				</simpleType>
+    			</attribute>
+    			
+    		</extension>
+    	</simpleContent>
+    </xs:complexType>
+
+    <complexType name="Fertigkeit">
+    	<simpleContent>
+    		<extension base="int">
+    			<attribute name="BasisFertigkeit" type="boolean"></attribute>
+    			<attribute name="NewAttribute" type="string"></attribute>
+    		</extension>
+    	</simpleContent>
+    	<attribute name="Attribut1" type="string" />
+    	<attribute name="Attribut2" type="string" />
+    	<attribute name="Attribut3" type="string" />
+    	<attribute name="Steigerungskategorie"
+    		type="tns:Steigerungskategorie">
+    	</attribute>
+    </complexType>
+    
+    <complexType name="Sonderfertigkeit">
+    	<simpleContent>
+    		<extension base="string">
+    			<attribute name="Kosten" type="int"></attribute>
+    		</extension>
+    	</simpleContent>
+    </complexType>
+
+    <complexType name="Fertigkeitsspezialisierung">
+    	<simpleContent>
+    		<extension base="tns:Sonderfertigkeit">
+    			<attribute name="Fertigkeit" type="string"></attribute>
+    		</extension>
+    	</simpleContent>
+    </complexType>
+
+
+
+    <complexType name="Kampftechnik">
+    	<simpleContent>
+    		<extension base="int">
+    			<attribute name="Steigerungskategorie" type="tns:Steigerungskategorie"></attribute>
+    			<attribute name="NewAttribute" type="string"></attribute>
+    		</extension>
+    	</simpleContent>
+    </complexType>
+    
+    <simpleType name="Steigerungskategorie">
+    	<restriction base="string">
+    		<length value="1"></length>
+    		<enumeration value="A"></enumeration>
+    		<enumeration value="B"></enumeration>
+    		<enumeration value="C"></enumeration>
+    		<enumeration value="D"></enumeration>
+    		<enumeration value="E"></enumeration>
+    	</restriction>
+    </simpleType>
+
+
+    <complexType name="VorNachteil">
+    	<sequence>
+    		<element name="Name" type="string"></element>
+    		<element name="Kosten" type="int"></element>
+    	</sequence>
+    </complexType>
+
+    <complexType name="Vorteil">
+    	<complexContent>
+    		<extension base="tns:VorNachteil"></extension>
+    	</complexContent>
+    </complexType>
+
+    <complexType name="Nachteil">
+    	<complexContent>
+    		<extension base="tns:VorNachteil"></extension>
+    	</complexContent>
+    </complexType>
+
+    <group name="Attribute">
+    	<sequence>
+    		<element name="Mut" type="tns:Attribut" maxOccurs="1" minOccurs="1"></element>
+    		<element name="Klugheit" type="tns:Attribut" maxOccurs="1" minOccurs="1"></element>
+    		<element name="Intuition" type="tns:Attribut" maxOccurs="1" minOccurs="1"></element>
+    		<element name="Charisma" type="tns:Attribut" maxOccurs="1" minOccurs="1"></element>
+    		<element name="Fingerfertigkeit" type="tns:Attribut" maxOccurs="1" minOccurs="1"></element>
+    		<element name="Gewandheit" type="tns:Attribut" maxOccurs="1" minOccurs="1"></element>
+    		<element name="Konstitution" type="tns:Attribut" maxOccurs="1" minOccurs="1"></element>
+    		<element name="Körperkraft" type="tns:Attribut" maxOccurs="1" minOccurs="1"></element>
+    	</sequence>
+    </group>
+
+
+
+
+
+    <complexType name="Charakter"><attributeGroup ref="tns:Attribute"></attributeGroup></complexType>
+    <attributeGroup name="NewAttributeGroup"></attributeGroup>
+
+    <element name="Name" type="string"></element>
+
+    <element name="Geschlecht" type="string"></element>
+
+    <element name="Spezies" type="string"></element>
+
+    <element name="Kultur" type="string"></element>
+</schema>
