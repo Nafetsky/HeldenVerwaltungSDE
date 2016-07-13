@@ -312,21 +312,21 @@
 			<Merkmal>Handwerk</Merkmal>
 		</Talent>
 	</Talente>
-	<Zauber />
-	<Rituale />
-	<Liturgien>
-		<Liturgie>
-			<Name>Kleiner Bannstrahl</Name>
+	<Zauber>
+		<Zauber>
+			<Name>Gardianum</Name>
 			<Attribut1>MU</Attribut1>
-			<Attribut2>IN</Attribut2>
+			<Attribut2>KL</Attribut2>
 			<Attribut3>CH</Attribut3>
-			<Fertigkeitswert>1</Fertigkeitswert>
+			<Fertigkeitswert>2</Fertigkeitswert>
 			<Steigerungskosten>B</Steigerungskosten>
-			<Kategorie>Liturgie</Kategorie>
-			<Merkmal>TRADITION_Praios</Merkmal>
-			<Merkmal>ASPEKT_Antimagie</Merkmal>
-		</Liturgie>
-	</Liturgien>
+			<Kategorie>Zauber</Kategorie>
+			<Merkmal>REPÄSENTATION_MAGIER</Merkmal>
+			<Merkmal>MERKMAL_Antimagie</Merkmal>
+		</Zauber>
+	</Zauber>
+	<Rituale />
+	<Liturgien />
 	<Zeremonien />
 	<Kampftechniken>
 		<Kampftechnik>
@@ -458,27 +458,46 @@
 			<Sonderfertigkeitshinzugewinn>
 				<Name>Athlet</Name>
 				<Kosten>20</Kosten>
-				<Kategorie>allgemein</Kategorie>
+				<Kategorie>Allgemein</Kategorie>
 			</Sonderfertigkeitshinzugewinn>
 		</Ereignis>
 		<Ereignis>
-			<Datum>2016-07-12+02:00</Datum>
+			<Datum>2016-07-13+02:00</Datum>
 			<Fertigkeitsänderung>
-				<Name>Kleiner Bannstrahl</Name>
-				<Änderung>2</Änderung>
-				<neuerWert>1</neuerWert>
+				<Name>Gardianum</Name>
+				<Änderung>3</Änderung>
+				<neuerWert>2</neuerWert>
 				<NeueFertigkeit>
-					<Name>Kleiner Bannstrahl</Name>
+					<Name>Gardianum</Name>
 					<Attribut1>MU</Attribut1>
-					<Attribut2>IN</Attribut2>
+					<Attribut2>KL</Attribut2>
 					<Attribut3>CH</Attribut3>
-					<Fertigkeitswert>1</Fertigkeitswert>
+					<Fertigkeitswert>2</Fertigkeitswert>
 					<Steigerungskosten>B</Steigerungskosten>
-					<Kategorie>Liturgie</Kategorie>
-					<Merkmal>TRADITION_Praios</Merkmal>
-					<Merkmal>ASPEKT_Antimagie</Merkmal>
+					<Kategorie>Zauber</Kategorie>
+					<Merkmal>REPÄSENTATION_MAGIER</Merkmal>
+					<Merkmal>MERKMAL_Antimagie</Merkmal>
 				</NeueFertigkeit>
 			</Fertigkeitsänderung>
 		</Ereignis>
 	</Steigerungshistorie>
 </ns2:Charakter>
+<Ereignis>
+	<Datum>2016-07-13+02:00</Datum>
+	<Fertigkeitsänderung>
+		<Name>Gardianum</Name>
+		<Änderung>3</Änderung>
+		<neuerWert>2</neuerWert>
+		<NeueFertigkeit>
+			<Name>Gardianum</Name>
+			<Attribut1>MU</Attribut1>
+			<Attribut2>KL</Attribut2>
+			<Attribut3>CH</Attribut3>
+			<Fertigkeitswert>2</Fertigkeitswert>
+			<Steigerungskosten>B</Steigerungskosten>
+			<Kategorie>Liturgie</Kategorie>
+			<Merkmal>REPÄSENTATION_MAGIER</Merkmal>
+			<Merkmal>MERKMAL_Antimagie</Merkmal>
+		</NeueFertigkeit>
+	</Fertigkeitsänderung>
+</Ereignis>

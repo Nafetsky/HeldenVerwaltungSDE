@@ -1,6 +1,7 @@
 package utils;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.text.SimpleDateFormat;
@@ -17,6 +18,7 @@ import generated.Attributskürzel;
 import generated.Charakter;
 import generated.Fertigkeit;
 import generated.Fertigkeitskategorie;
+import generated.MerkmalMagie;
 import generated.ObjectFactory;
 import generated.Sonderfertigkeit;
 import generated.Steigerungskategorie;
@@ -24,6 +26,7 @@ import generated.Steigerungskategorie;
 public class CharacterModifyerTest {
 
 	private static final String SMALL_ANATHEMA = "Kleiner Bannstrahl";
+	private static final String GARDIANUM = "Gardianum";
 	Charakter barundar;
 	JAXBContext jaxbContext;
 	ObjectFactory factory;
@@ -90,7 +93,28 @@ public class CharacterModifyerTest {
 				+ "<Merkmal>ASPEKT_Antimagie</Merkmal></NeueFertigkeit></Fertigkeitsänderung></Ereignis>";
 		assertTrue(StringUtils.contains(barundarAsXml, newEvent));
 		assertEquals(2, modifier.getCostForSkillIncreasment(SMALL_ANATHEMA));
+	}
 
+	@Test
+	public void testAddSpell() {
+		CharacterModifier modifier = new CharacterModifier(barundar);
+		Fertigkeit fertigkeit = makeGardianum();
+		modifier.addSkill(fertigkeit);
+		for (int i = 0; i < 2; ++i) {
+			modifier.increaseSkillByOne(GARDIANUM);
+		}
+		modifier.saveChanges();
+		String barundarAsXml = marshallHelper.marshall(barundar);
+		assertTrue(StringUtils.contains(barundarAsXml, "<Zauber><Zauber><Name>" + GARDIANUM
+				+ "</Name><Attribut1>MU</Attribut1><Attribut2>KL</Attribut2>"
+				+ "<Attribut3>CH</Attribut3><Fertigkeitswert>2</Fertigkeitswert><Steigerungskosten>B</Steigerungskosten><Kategorie>Zauber</Kategorie><Merkmal>REPÄSENTATION_MAGIER</Merkmal><Merkmal>Antimagie</Merkmal></Zauber></Zauber>"));
+		String newEvent = makeCurrentEventHead() + "</Datum><Fertigkeitsänderung><Name>" + GARDIANUM
+				+ "</Name><Änderung>3</Änderung><neuerWert>2</neuerWert>" + "<NeueFertigkeit><Name>" + GARDIANUM
+				+ "</Name><Attribut1>MU</Attribut1><Attribut2>KL</Attribut2><Attribut3>CH</Attribut3>"
+				+ "<Fertigkeitswert>2</Fertigkeitswert><Steigerungskosten>B</Steigerungskosten><Kategorie>Zauber</Kategorie><Merkmal>REPÄSENTATION_MAGIER</Merkmal>"
+				+ "<Merkmal>Antimagie</Merkmal></NeueFertigkeit></Fertigkeitsänderung></Ereignis>";
+		assertTrue(StringUtils.contains(barundarAsXml, newEvent));
+		assertEquals(2, modifier.getCostForSkillIncreasment(GARDIANUM));
 	}
 
 	@Test
@@ -124,6 +148,19 @@ public class CharacterModifyerTest {
 	}
 
 	@Test
+	public void testRemoveAdvantage() {
+		CharacterModifier modifier = new CharacterModifier(barundar);
+		modifier.removeAdvantage("Dunkelsicht II");
+		modifier.saveChanges();
+		String barundarAsXml = marshallHelper.marshall(barundar);
+		assertFalse(StringUtils.contains(barundarAsXml,
+				"<Vorteil><Name>Dunkelsicht II</Name><Kosten>20</Kosten></Vorteil>"));
+		String newEvent = makeCurrentEventHead() + "</Datum>"
+				+ "<Vorteil><Name>Dunkelsicht II</Name><Kosten>-20</Kosten></Vorteil></Ereignis>";
+		assertTrue(StringUtils.contains(barundarAsXml, newEvent));
+	}
+
+	@Test
 	public void testAddDisadvantage() {
 		CharacterModifier modifier = new CharacterModifier(barundar);
 		modifier.addDisadvantage("Schwacher Karmalkörper", 15);
@@ -133,6 +170,19 @@ public class CharacterModifyerTest {
 				"<Nachteil><Name>Schwacher Karmalkörper</Name><Kosten>15</Kosten></Nachteil></Nachteile>"));
 		String newEvent = makeCurrentEventHead() + "</Datum>"
 				+ "<Nachteil><Name>Schwacher Karmalkörper</Name><Kosten>15</Kosten></Nachteil>";
+		assertTrue(StringUtils.contains(barundarAsXml, newEvent));
+	}
+
+	@Test
+	public void testRemoveDisadvantage() {
+		CharacterModifier modifier = new CharacterModifier(barundar);
+		modifier.removeDisadvantage("Aberglaube (Schlechte Eigenschaft)");
+		modifier.saveChanges();
+		String barundarAsXml = marshallHelper.marshall(barundar);
+		assertFalse(StringUtils.contains(barundarAsXml,
+				"<Nachteil><Name>Aberglaube (Schlechte Eigenschaft)</Name><Kosten>5</Kosten></Nachteil>"));
+		String newEvent = makeCurrentEventHead() + "</Datum>"
+				+ "<Nachteil><Name>Aberglaube (Schlechte Eigenschaft)</Name><Kosten>-5</Kosten></Nachteil></Ereignis>";
 		assertTrue(StringUtils.contains(barundarAsXml, newEvent));
 	}
 
@@ -151,6 +201,42 @@ public class CharacterModifyerTest {
 		assertTrue(StringUtils.contains(barundarAsXml, "</Nachteile><AP>2352</AP>"));
 		assertTrue(StringUtils.contains(barundarAsXml,
 				makeCurrentEventHead() + "</Datum><AP>100</AP><neueAP>2352</neueAP></Ereignis>"));
+	}
+
+	@Test
+	public void testBuyLife() {
+		CharacterModifier modifier = new CharacterModifier(barundar);
+		for (int i = 0; i < 6; ++i) {
+			modifier.buyLifePoint();
+		}
+		modifier.saveChanges();
+		String barundarAsXml = marshallHelper.marshall(barundar);
+		assertTrue(StringUtils.contains(barundarAsXml, "</AP><LeP>6</LeP>"));
+		String newEvent = makeCurrentEventHead() + "</Datum><LePGekauft>6</LePGekauft></Ereignis>";
+		assertTrue(StringUtils.contains(barundarAsXml, newEvent));
+	}
+
+	@Test
+	public void testBuyAsP() {
+		CharacterModifier modifier = new CharacterModifier(barundar);
+		modifier.buyAstralPoint();
+		modifier.saveChanges();
+		String barundarAsXml = marshallHelper.marshall(barundar);
+		assertTrue(StringUtils.contains(barundarAsXml, "</AP><AsP>1</AsP>"));
+		String newEvent = makeCurrentEventHead() + "</Datum><AsPGekauft>1</AsPGekauft></Ereignis>";
+		assertTrue(StringUtils.contains(barundarAsXml, newEvent));
+	}
+
+	@Test
+	public void testBuyKaP() {
+		CharacterModifier modifier = new CharacterModifier(barundar);
+		modifier.buyKarmaPoint();
+		modifier.buyKarmaPoint();
+		modifier.saveChanges();
+		String barundarAsXml = marshallHelper.marshall(barundar);
+		assertTrue(StringUtils.contains(barundarAsXml, "</AP><KaP>2</KaP>"));
+		String newEvent = makeCurrentEventHead() + "</Datum><KaPGekauft>2</KaPGekauft></Ereignis>";
+		assertTrue(StringUtils.contains(barundarAsXml, newEvent));
 	}
 
 	@Test
@@ -187,6 +273,20 @@ public class CharacterModifyerTest {
 		fertigkeit.setKategorie(Fertigkeitskategorie.LITURGIE);
 		fertigkeit.getMerkmal().add("TRADITION_Praios");
 		fertigkeit.getMerkmal().add("ASPEKT_Antimagie");
+		return fertigkeit;
+	}
+
+	private Fertigkeit makeGardianum() {
+		Fertigkeit fertigkeit = factory.createFertigkeit();
+		fertigkeit.setAttribut1(Attributskürzel.MU);
+		fertigkeit.setAttribut2(Attributskürzel.KL);
+		fertigkeit.setAttribut3(Attributskürzel.CH);
+		fertigkeit.setFertigkeitswert(0);
+		fertigkeit.setSteigerungskosten(Steigerungskategorie.B);
+		fertigkeit.setName(GARDIANUM);
+		fertigkeit.setKategorie(Fertigkeitskategorie.ZAUBER);
+		fertigkeit.getMerkmal().add("REPÄSENTATION_MAGIER");
+		fertigkeit.getMerkmal().add(MerkmalMagie.ANTIMAGIE.value());
 		return fertigkeit;
 	}
 }

@@ -57,6 +57,21 @@ public class CharacterModifier {
 		changes.setAP(apDifference);
 		changes.setNeueAP(charakter.getAP());
 	}
+	
+	public void buyLifePoint(){
+		charakter.setLeP(handleNullInteger(charakter.getLeP(), 1));
+		changes.setLePGekauft(handleNullInteger(changes.getLePGekauft(),1));
+	}
+	
+	public void buyAstralPoint(){
+		charakter.setAsP(handleNullInteger(charakter.getAsP(),1));
+		changes.setAsPGekauft(handleNullInteger(changes.getAsPGekauft(),1));
+	}
+	
+	public void buyKarmaPoint(){
+		charakter.setKaP(handleNullInteger(charakter.getKaP(),1));
+		changes.setKaPGekauft(handleNullInteger(changes.getKaPGekauft(),1));
+	}
 
 	public void addAdvantage(String name, int cost) {
 		Vorteil advantage = factory.createVorteil();
@@ -65,6 +80,17 @@ public class CharacterModifier {
 		changes.getVorteil().add(advantage);
 		charakter.getVorteile().getVorteil().add(advantage);
 	}
+	
+	public void removeAdvantage(String name) {
+		for(Vorteil advantage:charakter.getVorteile().getVorteil()){
+			if(StringUtils.equals(advantage.getName(), name)){
+				advantage.setKosten(advantage.getKosten()*-1);
+				changes.getVorteil().add(advantage);
+				charakter.getVorteile().getVorteil().remove(advantage);
+				return;
+			}
+		}
+	}
 
 	public void addDisadvantage(String name, int cost) {
 		Nachteil disadvantage = factory.createNachteil();
@@ -72,6 +98,17 @@ public class CharacterModifier {
 		disadvantage.setKosten(cost);
 		changes.getNachteil().add(disadvantage);
 		charakter.getNachteile().getNachteil().add(disadvantage);
+	}
+	
+	public void removeDisadvantage(String name) {
+		for(Nachteil disadvantage:charakter.getNachteile().getNachteil()){
+			if(StringUtils.equals(disadvantage.getName(), name)){
+				disadvantage.setKosten(disadvantage.getKosten()*-1);
+				changes.getNachteil().add(disadvantage);
+				charakter.getNachteile().getNachteil().remove(disadvantage);
+				return;
+			}
+		}
 	}
 
 	public int getCostForSkillIncreasment(String name) {
@@ -184,6 +221,13 @@ public class CharacterModifier {
 		change.setNeuerWert(skill.getCurrentValue());
 		change.setNeueFertigkeit(newSkill);
 		return change;
+	}
+	
+	private int handleNullInteger(Integer reference, int modifier){
+		if(reference==null){
+			reference = 0;
+		}
+		return reference + modifier;
 	}
 
 }
