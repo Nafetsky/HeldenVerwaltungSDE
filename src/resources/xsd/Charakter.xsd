@@ -10,6 +10,7 @@
 			<element name="Geschlecht" type="tns:Geschlecht" />
 			<element name="Spezies" type="tns:Spezies" />
 			<element name="Kultur" type="string" />
+			<element name="Angaben" type="tns:Angabe" minOccurs="0"/>
 			<element name="Eigenschaftswerte"
 				type="tns:Eigenschaftswerte" />
 
@@ -309,6 +310,18 @@
     		<element name="BasisZähigkeit" type="int"/>
     		<element name="BasisGeschwindigkeit" type="int"/>
     		<element name="Kosten" type="int"/>
+    	</sequence>
+    </complexType>
+    
+    <complexType name="Angabe">
+    	<sequence>
+    		<element name="Größe" type="int"/>
+    		<element name="Gewicht" type="int"/>
+    		<element name="Haarfarbe" type="string"/>
+    		<element name="Augenfarbe" type="string"/>
+    		<element name="Geburtstag" type="string"/>
+    		<element name="Alter" type="int"/>
+    		<element name="Sonstiges" type="string" minOccurs="0" maxOccurs="unbounded"/>
     	</sequence>
     </complexType>
 </schema>

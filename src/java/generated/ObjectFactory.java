@@ -2,7 +2,7 @@
 // Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.8-b130911.1802 generiert 
 // Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2016.07.13 um 11:02:17 AM CEST 
+// Generiert: 2016.07.13 um 01:40:54 PM CEST 
 //
 
 
@@ -62,6 +62,14 @@ public class ObjectFactory {
      */
     public Liturgien createLiturgien() {
         return new Liturgien();
+    }
+
+    /**
+     * Create an instance of {@link Angabe }
+     * 
+     */
+    public Angabe createAngabe() {
+        return new Angabe();
     }
 
     /**

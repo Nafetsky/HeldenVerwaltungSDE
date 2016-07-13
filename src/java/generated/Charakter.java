@@ -2,7 +2,7 @@
 // Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.8-b130911.1802 generiert 
 // Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2016.07.13 um 11:02:17 AM CEST 
+// Generiert: 2016.07.13 um 01:40:54 PM CEST 
 //
 
 
@@ -29,6 +29,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="Geschlecht" type="{http://www.example.org/Charakter/}Geschlecht"/>
  *         &lt;element name="Spezies" type="{http://www.example.org/Charakter/}Spezies"/>
  *         &lt;element name="Kultur" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="Angaben" type="{http://www.example.org/Charakter/}Angabe" minOccurs="0"/>
  *         &lt;element name="Eigenschaftswerte" type="{http://www.example.org/Charakter/}Eigenschaftswerte"/>
  *         &lt;element name="Vorteile" type="{http://www.example.org/Charakter/}Vorteile"/>
  *         &lt;element name="Nachteile" type="{http://www.example.org/Charakter/}Nachteile"/>
@@ -58,6 +59,7 @@ import javax.xml.bind.annotation.XmlType;
     "geschlecht",
     "spezies",
     "kultur",
+    "angaben",
     "eigenschaftswerte",
     "vorteile",
     "nachteile",
@@ -85,6 +87,8 @@ public class Charakter {
     protected Spezies spezies;
     @XmlElement(name = "Kultur", required = true)
     protected String kultur;
+    @XmlElement(name = "Angaben")
+    protected Angabe angaben;
     @XmlElement(name = "Eigenschaftswerte", required = true)
     protected Eigenschaftswerte eigenschaftswerte;
     @XmlElement(name = "Vorteile", required = true)
@@ -210,6 +214,30 @@ public class Charakter {
      */
     public void setKultur(String value) {
         this.kultur = value;
+    }
+
+    /**
+     * Ruft den Wert der angaben-Eigenschaft ab.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Angabe }
+     *     
+     */
+    public Angabe getAngaben() {
+        return angaben;
+    }
+
+    /**
+     * Legt den Wert der angaben-Eigenschaft fest.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Angabe }
+     *     
+     */
+    public void setAngaben(Angabe value) {
+        this.angaben = value;
     }
 
     /**
