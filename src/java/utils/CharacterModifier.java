@@ -9,8 +9,10 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.lang3.StringUtils;
 
+import dataBase.Ability;
 import dataBase.SpecialSkillGroup;
 import generated.Charakter;
+import generated.Eigenschaftssteigerung;
 import generated.Ereignis;
 import generated.Fertigkeit;
 import generated.Fertigkeitsmodifikation;
@@ -51,26 +53,26 @@ public class CharacterModifier {
 		charakter.getSteigerungshistorie().getEreignis().add(changes);
 		clearChanges();
 	}
-	
-	public void changeApBy(int apDifference){
-		charakter.setAP(charakter.getAP()+apDifference);
+
+	public void changeApBy(int apDifference) {
+		charakter.setAP(charakter.getAP() + apDifference);
 		changes.setAP(apDifference);
 		changes.setNeueAP(charakter.getAP());
 	}
-	
-	public void buyLifePoint(){
+
+	public void buyLifePoint() {
 		charakter.setLeP(handleNullInteger(charakter.getLeP(), 1));
-		changes.setLePGekauft(handleNullInteger(changes.getLePGekauft(),1));
+		changes.setLePGekauft(handleNullInteger(changes.getLePGekauft(), 1));
 	}
-	
-	public void buyAstralPoint(){
-		charakter.setAsP(handleNullInteger(charakter.getAsP(),1));
-		changes.setAsPGekauft(handleNullInteger(changes.getAsPGekauft(),1));
+
+	public void buyAstralPoint() {
+		charakter.setAsP(handleNullInteger(charakter.getAsP(), 1));
+		changes.setAsPGekauft(handleNullInteger(changes.getAsPGekauft(), 1));
 	}
-	
-	public void buyKarmaPoint(){
-		charakter.setKaP(handleNullInteger(charakter.getKaP(),1));
-		changes.setKaPGekauft(handleNullInteger(changes.getKaPGekauft(),1));
+
+	public void buyKarmaPoint() {
+		charakter.setKaP(handleNullInteger(charakter.getKaP(), 1));
+		changes.setKaPGekauft(handleNullInteger(changes.getKaPGekauft(), 1));
 	}
 
 	public void addAdvantage(String name, int cost) {
@@ -80,11 +82,11 @@ public class CharacterModifier {
 		changes.getVorteil().add(advantage);
 		charakter.getVorteile().getVorteil().add(advantage);
 	}
-	
+
 	public void removeAdvantage(String name) {
-		for(Vorteil advantage:charakter.getVorteile().getVorteil()){
-			if(StringUtils.equals(advantage.getName(), name)){
-				advantage.setKosten(advantage.getKosten()*-1);
+		for (Vorteil advantage : charakter.getVorteile().getVorteil()) {
+			if (StringUtils.equals(advantage.getName(), name)) {
+				advantage.setKosten(advantage.getKosten() * -1);
 				changes.getVorteil().add(advantage);
 				charakter.getVorteile().getVorteil().remove(advantage);
 				return;
@@ -99,11 +101,11 @@ public class CharacterModifier {
 		changes.getNachteil().add(disadvantage);
 		charakter.getNachteile().getNachteil().add(disadvantage);
 	}
-	
+
 	public void removeDisadvantage(String name) {
-		for(Nachteil disadvantage:charakter.getNachteile().getNachteil()){
-			if(StringUtils.equals(disadvantage.getName(), name)){
-				disadvantage.setKosten(disadvantage.getKosten()*-1);
+		for (Nachteil disadvantage : charakter.getNachteile().getNachteil()) {
+			if (StringUtils.equals(disadvantage.getName(), name)) {
+				disadvantage.setKosten(disadvantage.getKosten() * -1);
 				changes.getNachteil().add(disadvantage);
 				charakter.getNachteile().getNachteil().remove(disadvantage);
 				return;
@@ -140,7 +142,7 @@ public class CharacterModifier {
 		}
 		changes.getFertigkeitsänderung().add(change);
 	}
-	
+
 	public void increaseSkillByOne(String name) {
 		Skill skillable = finder.findSkill(name);
 		if (skillable instanceof SkillBase && skillable.getCurrentValue() == 0) {
@@ -158,11 +160,11 @@ public class CharacterModifier {
 			handleAsNewChange(skill);
 		}
 	}
-	
-	public void addFeat(Sonderfertigkeit feat){
+
+	public void addFeat(Sonderfertigkeit feat) {
 		List<Sonderfertigkeit> list = charakter.getSonderfertigkeiten().getSonderfertigkeit();
-		for(Sonderfertigkeit oldFeat:list){
-			if(StringUtils.equals(oldFeat.getName(),feat.getName())){
+		for (Sonderfertigkeit oldFeat : list) {
+			if (StringUtils.equals(oldFeat.getName(), feat.getName())) {
 				return;
 			}
 		}
@@ -172,6 +174,15 @@ public class CharacterModifier {
 
 	private boolean handleExistingChange(Skill skill) {
 		switch (skill.getGroup()) {
+		case ABILITY:
+			List<Eigenschaftssteigerung> abilityChanges = changes.getEigenschaftssteigerung();
+			for (Eigenschaftssteigerung newChange : abilityChanges) {
+				if (StringUtils.equals(Ability.getAbility(newChange.getEigenschaft()).getName(), skill.getName())) {
+					newChange.setSteigerung(newChange.getSteigerung() + 1);
+					newChange.setNeuerWert(newChange.getNeuerWert() + 1);
+					return true;
+				}
+			}
 		case BASE:
 		case SPELL:
 		case RITUAL:
@@ -194,24 +205,41 @@ public class CharacterModifier {
 					return true;
 				}
 			}
+		default:
+			break;
 		}
 		return false;
 	}
 
 	private void handleAsNewChange(Skill skill) {
-		Fertigkeitsmodifikation change = makeNewSkillChangeEntry(skill, null);
 		switch (skill.getGroup()) {
+		case ABILITY:
+			Eigenschaftssteigerung abilityChange = makeNewAbilityCahngeEntry((SkillAbility)skill);
+			changes.getEigenschaftssteigerung().add(abilityChange);
+			break;
 		case BASE:
 		case SPELL:
 		case RITUAL:
 		case LITURGY:
 		case ZEREMONY:
+			Fertigkeitsmodifikation change = makeNewSkillChangeEntry(skill, null);
 			changes.getFertigkeitsänderung().add(change);
 			break;
 		case COMBAT:
+			change = makeNewSkillChangeEntry(skill, null);
 			changes.getKampftechnikänderung().add(change);
 			break;
+		default:
+			break;
 		}
+	}
+
+	private Eigenschaftssteigerung makeNewAbilityCahngeEntry(SkillAbility skill) {
+		Eigenschaftssteigerung change = factory.createEigenschaftssteigerung();
+		change.setEigenschaft(skill.getAbility().getKürzel());
+		change.setNeuerWert(skill.getCurrentValue());
+		change.setSteigerung(1);
+		return change;
 	}
 
 	private Fertigkeitsmodifikation makeNewSkillChangeEntry(Skill skill, Fertigkeit newSkill) {
@@ -222,9 +250,9 @@ public class CharacterModifier {
 		change.setNeueFertigkeit(newSkill);
 		return change;
 	}
-	
-	private int handleNullInteger(Integer reference, int modifier){
-		if(reference==null){
+
+	private int handleNullInteger(Integer reference, int modifier) {
+		if (reference == null) {
 			reference = 0;
 		}
 		return reference + modifier;

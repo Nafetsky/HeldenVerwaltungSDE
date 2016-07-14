@@ -266,8 +266,9 @@
 			<element name="AP" type="int" maxOccurs="1" minOccurs="0" />
 			<element name="neueAP" type="int" maxOccurs="1"
 				minOccurs="0" />
+			<element name="Eigenschaftssteigerung" type="tns:Eigenschaftssteigerung" maxOccurs="8" minOccurs="0"></element>
 			<element name="Sonderfertigkeitshinzugewinn"
-				maxOccurs="unbounded" type="tns:Sonderfertigkeit" minOccurs="0" />
+				maxOccurs="unbounded" type="tns:Sonderfertigkeit" minOccurs="0"/>
 			<element name="Vorteil" maxOccurs="unbounded"
 				type="tns:Vorteil" minOccurs="0" />
 			<element name="Nachteil" maxOccurs="unbounded"
@@ -279,8 +280,20 @@
 			<element name="LePGekauft" type="int" maxOccurs="1"
 				minOccurs="0">
 			</element>
-			<element name="AsPGekauft" type="int" maxOccurs="1" minOccurs="0"></element>
-			<element name="KaPGekauft" type="int" maxOccurs="1" minOccurs="0"></element>
+			<element name="AsPGekauft" type="int" maxOccurs="1"
+				minOccurs="0">
+			</element>
+			<element name="KaPGekauft" type="int" maxOccurs="1"
+				minOccurs="0">
+			</element>
+		</sequence>
+	</complexType>
+	
+	<complexType name="Eigenschaftssteigerung">
+		<sequence>
+			<element name="Eigenschaft" type="tns:Attributskürzel"/>
+			<element name="Steigerung" type="int"/>
+			<element name="neuerWert" type="int"/>
 		</sequence>
 	</complexType>
 

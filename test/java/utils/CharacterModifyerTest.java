@@ -49,6 +49,20 @@ public class CharacterModifyerTest {
 	}
 
 	@Test
+	public void testIncreaseAbility() throws Exception {
+		CharacterModifier modifier = new CharacterModifier(barundar);
+		modifier.increaseSkillByOne("Gewandheit");
+		modifier.increaseSkillByOne("Gewandheit");
+		modifier.saveChanges();
+		String barundarAsXml = marshallHelper.marshall(barundar);
+		assertTrue(StringUtils.contains(barundarAsXml,
+				"Kürzel=\"FF\"/><Gewandheit Attributswert=\"16\" Kürzel=\"GE\"/><Konstitution"));
+		String newEvent = makeCurrentEventHead()
+				+ "</Datum><Eigenschaftssteigerung><Eigenschaft>GE</Eigenschaft><Steigerung>2</Steigerung><neuerWert>16</neuerWert></Eigenschaftssteigerung></Ereignis>";
+		assertTrue(StringUtils.contains(barundarAsXml, newEvent));
+	}
+
+	@Test
 	public void testAddBaseSkill() throws Exception {
 		CharacterModifier modifier = new CharacterModifier(barundar);
 		modifier.increaseSkillByOne("Betören");

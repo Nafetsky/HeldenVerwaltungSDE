@@ -2,7 +2,7 @@
 // Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.8-b130911.1802 generiert 
 // Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2016.07.13 um 01:40:54 PM CEST 
+// Generiert: 2016.07.14 um 01:13:59 PM CEST 
 //
 
 
@@ -32,6 +32,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *         &lt;element name="Grund" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="AP" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
  *         &lt;element name="neueAP" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
+ *         &lt;element name="Eigenschaftssteigerung" type="{http://www.example.org/Charakter/}Eigenschaftssteigerung" maxOccurs="8" minOccurs="0"/>
  *         &lt;element name="Sonderfertigkeitshinzugewinn" type="{http://www.example.org/Charakter/}Sonderfertigkeit" maxOccurs="unbounded" minOccurs="0"/>
  *         &lt;element name="Vorteil" type="{http://www.example.org/Charakter/}Vorteil" maxOccurs="unbounded" minOccurs="0"/>
  *         &lt;element name="Nachteil" type="{http://www.example.org/Charakter/}Nachteil" maxOccurs="unbounded" minOccurs="0"/>
@@ -54,6 +55,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
     "grund",
     "ap",
     "neueAP",
+    "eigenschaftssteigerung",
     "sonderfertigkeitshinzugewinn",
     "vorteil",
     "nachteil",
@@ -73,6 +75,8 @@ public class Ereignis {
     @XmlElement(name = "AP")
     protected Integer ap;
     protected Integer neueAP;
+    @XmlElement(name = "Eigenschaftssteigerung")
+    protected List<Eigenschaftssteigerung> eigenschaftssteigerung;
     @XmlElement(name = "Sonderfertigkeitshinzugewinn")
     protected List<Sonderfertigkeit> sonderfertigkeitshinzugewinn;
     @XmlElement(name = "Vorteil")
@@ -184,6 +188,35 @@ public class Ereignis {
      */
     public void setNeueAP(Integer value) {
         this.neueAP = value;
+    }
+
+    /**
+     * Gets the value of the eigenschaftssteigerung property.
+     * 
+     * <p>
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the eigenschaftssteigerung property.
+     * 
+     * <p>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     *    getEigenschaftssteigerung().add(newItem);
+     * </pre>
+     * 
+     * 
+     * <p>
+     * Objects of the following type(s) are allowed in the list
+     * {@link Eigenschaftssteigerung }
+     * 
+     * 
+     */
+    public List<Eigenschaftssteigerung> getEigenschaftssteigerung() {
+        if (eigenschaftssteigerung == null) {
+            eigenschaftssteigerung = new ArrayList<Eigenschaftssteigerung>();
+        }
+        return this.eigenschaftssteigerung;
     }
 
     /**

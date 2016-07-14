@@ -4,10 +4,14 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
+import dataBase.Ability;
 import dataBase.BaseSkills;
 import dataBase.SpecialSkillGroup;
+import generated.Attribut;
+import generated.Attributskürzel;
 import generated.Basistalent;
 import generated.Charakter;
+import generated.Eigenschaftswerte;
 import generated.Fertigkeit;
 import generated.Kampftechnik;
 import generated.ObjectFactory;
@@ -24,6 +28,10 @@ public class SkillFinder {
 
 	public Skill findSkill(String name) {
 		Skill skill = null;
+		skill = findAbilty(name);
+		if (skill != null) {
+			return skill;
+		}
 		skill = findBaseSkill(name);
 		if (skill != null) {
 			return skill;
@@ -39,6 +47,15 @@ public class SkillFinder {
 		}
 		throw new IllegalArgumentException(
 				name + " is no existent skill for the current character " + charakter.getName());
+	}
+
+	private Skill findAbilty(String name) {
+		for(Ability ability:Ability.values()){
+			if(StringUtils.equals(name, ability.getName())){
+				return new SkillAbility(getAbilty(ability.getAcronym()));
+			}
+		}
+		return null;
 	}
 
 	private Skill findBaseSkill(String name) {
@@ -103,6 +120,30 @@ public class SkillFinder {
 			}
 		}
 		return null;
+	}
+	
+	public Attribut getAbilty(Attributskürzel acronym){
+		Eigenschaftswerte abilitys = charakter.getEigenschaftswerte();
+		switch(acronym){
+		case MU:
+			return abilitys.getMut();
+		case KL:
+			return abilitys.getKlugheit();
+		case IN:
+			return abilitys.getIntuition();
+		case CH:
+			return abilitys.getCharisma();
+		case FF:
+			return abilitys.getFingerfertigkeit();
+		case GE:
+			return abilitys.getGewandheit();
+		case KK:
+			return abilitys.getKörperkraft();
+		case KO:
+			return abilitys.getKonstitution();
+		default:
+			throw new UnsupportedOperationException(acronym.name() + " is no valid Attributskürzel");
+		}
 	}
 
 }

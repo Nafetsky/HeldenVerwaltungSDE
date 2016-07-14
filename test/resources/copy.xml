@@ -12,7 +12,7 @@
 	</Spezies>
 	<Kultur>Ambosszwerg</Kultur>
 	<Eigenschaftswerte>
-		<Mut Attributswert="16" Kürzel="MU" />
+		<Mut Attributswert="17" Kürzel="MU" />
 		<Klugheit Attributswert="14" Kürzel="KL" />
 		<Intuition Attributswert="14" Kürzel="IN" />
 		<Charisma Attributswert="9" Kürzel="CH" />
@@ -312,19 +312,7 @@
 			<Merkmal>Handwerk</Merkmal>
 		</Talent>
 	</Talente>
-	<Zauber>
-		<Zauber>
-			<Name>Gardianum</Name>
-			<Attribut1>MU</Attribut1>
-			<Attribut2>KL</Attribut2>
-			<Attribut3>CH</Attribut3>
-			<Fertigkeitswert>2</Fertigkeitswert>
-			<Steigerungskosten>B</Steigerungskosten>
-			<Kategorie>Zauber</Kategorie>
-			<Merkmal>REPÄSENTATION_MAGIER</Merkmal>
-			<Merkmal>MERKMAL_Antimagie</Merkmal>
-		</Zauber>
-	</Zauber>
+	<Zauber />
 	<Rituale />
 	<Liturgien />
 	<Zeremonien />
@@ -462,42 +450,12 @@
 			</Sonderfertigkeitshinzugewinn>
 		</Ereignis>
 		<Ereignis>
-			<Datum>2016-07-13+02:00</Datum>
-			<Fertigkeitsänderung>
-				<Name>Gardianum</Name>
-				<Änderung>3</Änderung>
-				<neuerWert>2</neuerWert>
-				<NeueFertigkeit>
-					<Name>Gardianum</Name>
-					<Attribut1>MU</Attribut1>
-					<Attribut2>KL</Attribut2>
-					<Attribut3>CH</Attribut3>
-					<Fertigkeitswert>2</Fertigkeitswert>
-					<Steigerungskosten>B</Steigerungskosten>
-					<Kategorie>Zauber</Kategorie>
-					<Merkmal>REPÄSENTATION_MAGIER</Merkmal>
-					<Merkmal>MERKMAL_Antimagie</Merkmal>
-				</NeueFertigkeit>
-			</Fertigkeitsänderung>
+			<Datum>2016-07-14+02:00</Datum>
+			<Eigenschaftssteigerung>
+				<Eigenschaft>MU</Eigenschaft>
+				<Steigerung>1</Steigerung>
+				<neuerWert>17</neuerWert>
+			</Eigenschaftssteigerung>
 		</Ereignis>
 	</Steigerungshistorie>
 </ns2:Charakter>
-<Ereignis>
-	<Datum>2016-07-13+02:00</Datum>
-	<Fertigkeitsänderung>
-		<Name>Gardianum</Name>
-		<Änderung>3</Änderung>
-		<neuerWert>2</neuerWert>
-		<NeueFertigkeit>
-			<Name>Gardianum</Name>
-			<Attribut1>MU</Attribut1>
-			<Attribut2>KL</Attribut2>
-			<Attribut3>CH</Attribut3>
-			<Fertigkeitswert>2</Fertigkeitswert>
-			<Steigerungskosten>B</Steigerungskosten>
-			<Kategorie>Liturgie</Kategorie>
-			<Merkmal>REPÄSENTATION_MAGIER</Merkmal>
-			<Merkmal>MERKMAL_Antimagie</Merkmal>
-		</NeueFertigkeit>
-	</Fertigkeitsänderung>
-</Ereignis>

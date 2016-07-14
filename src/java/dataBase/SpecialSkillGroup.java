@@ -2,6 +2,7 @@ package dataBase;
 
 public enum SpecialSkillGroup {
 	
+	ABILITY("Eigenschaft"),
 	BASE("Basis"),
 	SPELL("Zauber"),
 	RITUAL("Ritual"),
