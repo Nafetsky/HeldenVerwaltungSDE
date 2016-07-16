@@ -23,7 +23,7 @@ public enum BaseSkills {
 	CONVINCE("Bekehren& Überzeugen", MerkmalProfan.GESELLSCHAFT, CostCategory.B),
 	COZEN("Betören", MerkmalProfan.GESELLSCHAFT, CostCategory.B),
 	INTIMIDATE("Einschüchtern", MerkmalProfan.GESELLSCHAFT, CostCategory.B),
-	ETIQUETTE("", MerkmalProfan.GESELLSCHAFT, CostCategory.B),
+	ETIQUETTE("Etikette", MerkmalProfan.GESELLSCHAFT, CostCategory.B),
 	STREETSMARTS("Gassenwissen", MerkmalProfan.GESELLSCHAFT, CostCategory.C),
 	SENSE_MOTIVE("Menschenkenntnis", MerkmalProfan.GESELLSCHAFT, CostCategory.C),
 	PERSUADE("Überreden", MerkmalProfan.GESELLSCHAFT, CostCategory.C),
@@ -99,6 +99,23 @@ public enum BaseSkills {
 		}
 		
 		throw new IllegalArgumentException(name + " is no valid baseSkill");
+	}
+	
+	public static int getAmountByCategory(MerkmalProfan merkmal){
+		switch(merkmal){
+		case KÖRPER:
+			return 14;
+		case GESELLSCHAFT:
+			return 9;
+		case NATUR:
+			return 7;
+		case WISSEN:
+			return 12;
+		case HANDWERK:
+			return 17;
+		default:
+			return 0;
+		}
 	}
 	
 

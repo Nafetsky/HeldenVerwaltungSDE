@@ -2,10 +2,14 @@ package utils;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 
+import dataBase.FeatGroup;
 import generated.Charakter;
+import generated.Sonderfertigkeit;
 
 public class SkilFinderTest {
 	
@@ -35,6 +39,14 @@ public class SkilFinderTest {
 	public void testgetCostBaseSkillIncreaseClimb(){
 		Skill skill = finder.findSkill("Klettern");
 		assertEquals(2, skill.getCostForNextLevel());
+	}
+	
+	@Test
+	public void testGetAllFeatsByGroup(){
+		List<Sonderfertigkeit> feats = finder.getAllFeatsByGroup(FeatGroup.COMMON);
+		assertEquals(4, feats.size());
+		feats = finder.getAllFeatsByGroup(FeatGroup.COMBAT);
+		assertEquals(5, feats.size());
 	}
 	
 	

@@ -12,7 +12,7 @@
 	</Spezies>
 	<Kultur>Ambosszwerg</Kultur>
 	<Eigenschaftswerte>
-		<Mut Attributswert="17" Kürzel="MU" />
+		<Mut Attributswert="16" Kürzel="MU" />
 		<Klugheit Attributswert="14" Kürzel="KL" />
 		<Intuition Attributswert="14" Kürzel="IN" />
 		<Charisma Attributswert="9" Kürzel="CH" />
@@ -311,6 +311,111 @@
 			<Fertigkeitswert>2</Fertigkeitswert>
 			<Merkmal>Handwerk</Merkmal>
 		</Talent>
+		<Talent>
+			<Name>Gaukeleien</Name>
+			<Fertigkeitswert>0</Fertigkeitswert>
+			<Merkmal>Körper</Merkmal>
+		</Talent>
+		<Talent>
+			<Name>Schwimmen</Name>
+			<Fertigkeitswert>0</Fertigkeitswert>
+			<Merkmal>Körper</Merkmal>
+		</Talent>
+		<Talent>
+			<Name>Singen</Name>
+			<Fertigkeitswert>0</Fertigkeitswert>
+			<Merkmal>Körper</Merkmal>
+		</Talent>
+		<Talent>
+			<Name>Sinnesschärfe</Name>
+			<Fertigkeitswert>0</Fertigkeitswert>
+			<Merkmal>Körper</Merkmal>
+		</Talent>
+		<Talent>
+			<Name>Tanzen</Name>
+			<Fertigkeitswert>0</Fertigkeitswert>
+			<Merkmal>Körper</Merkmal>
+		</Talent>
+		<Talent>
+			<Name>Taschendiebstahl</Name>
+			<Fertigkeitswert>0</Fertigkeitswert>
+			<Merkmal>Körper</Merkmal>
+		</Talent>
+		<Talent>
+			<Name>Betören</Name>
+			<Fertigkeitswert>0</Fertigkeitswert>
+			<Merkmal>Gesellschaft</Merkmal>
+		</Talent>
+		<Talent>
+			<Name>Fährtensuchen</Name>
+			<Fertigkeitswert>0</Fertigkeitswert>
+			<Merkmal>Natur</Merkmal>
+		</Talent>
+		<Talent>
+			<Name>Brett-&amp; Glückspiele</Name>
+			<Fertigkeitswert>0</Fertigkeitswert>
+			<Merkmal>Wissen</Merkmal>
+		</Talent>
+		<Talent>
+			<Name>Retchskunde</Name>
+			<Fertigkeitswert>0</Fertigkeitswert>
+			<Merkmal>Wissen</Merkmal>
+		</Talent>
+		<Talent>
+			<Name>Sphärenkunde</Name>
+			<Fertigkeitswert>0</Fertigkeitswert>
+			<Merkmal>Wissen</Merkmal>
+		</Talent>
+		<Talent>
+			<Name>Sternenkunde</Name>
+			<Fertigkeitswert>0</Fertigkeitswert>
+			<Merkmal>Wissen</Merkmal>
+		</Talent>
+		<Talent>
+			<Name>Alchemie</Name>
+			<Fertigkeitswert>0</Fertigkeitswert>
+			<Merkmal>Handwerk</Merkmal>
+		</Talent>
+		<Talent>
+			<Name>Fahrzeuge</Name>
+			<Fertigkeitswert>0</Fertigkeitswert>
+			<Merkmal>Handwerk</Merkmal>
+		</Talent>
+		<Talent>
+			<Name>Handel</Name>
+			<Fertigkeitswert>0</Fertigkeitswert>
+			<Merkmal>Handwerk</Merkmal>
+		</Talent>
+		<Talent>
+			<Name>Heilkunde Gift</Name>
+			<Fertigkeitswert>0</Fertigkeitswert>
+			<Merkmal>Handwerk</Merkmal>
+		</Talent>
+		<Talent>
+			<Name>Heilkunde Krankheit</Name>
+			<Fertigkeitswert>0</Fertigkeitswert>
+			<Merkmal>Handwerk</Merkmal>
+		</Talent>
+		<Talent>
+			<Name>Lebensmittelverarbeitung</Name>
+			<Fertigkeitswert>0</Fertigkeitswert>
+			<Merkmal>Handwerk</Merkmal>
+		</Talent>
+		<Talent>
+			<Name>Musizieren</Name>
+			<Fertigkeitswert>0</Fertigkeitswert>
+			<Merkmal>Handwerk</Merkmal>
+		</Talent>
+		<Talent>
+			<Name>Schlösserknacken</Name>
+			<Fertigkeitswert>0</Fertigkeitswert>
+			<Merkmal>Handwerk</Merkmal>
+		</Talent>
+		<Talent>
+			<Name>Steinbearbeitung</Name>
+			<Fertigkeitswert>0</Fertigkeitswert>
+			<Merkmal>Handwerk</Merkmal>
+		</Talent>
 	</Talente>
 	<Zauber />
 	<Rituale />
@@ -398,7 +503,7 @@
 		<Sonderfertigkeit>
 			<Name>Athlet</Name>
 			<Kosten>20</Kosten>
-			<Kategorie>allgemein</Kategorie>
+			<Kategorie>Allgemein</Kategorie>
 		</Sonderfertigkeit>
 		<Talentspezialisierung>
 			<Name>Maurerarbeiten</Name>
@@ -407,6 +512,10 @@
 		<Talentspezialisierung>
 			<Name>Verhütten</Name>
 			<Fertigkeit>Metallbearbeitung</Fertigkeit>
+		</Talentspezialisierung>
+		<Talentspezialisierung>
+			<Name>Gargylgleiten</Name>
+			<Fertigkeit>Fliegen</Fertigkeit>
 		</Talentspezialisierung>
 	</Sonderfertigkeiten>
 	<Steigerungshistorie>
@@ -450,12 +559,11 @@
 			</Sonderfertigkeitshinzugewinn>
 		</Ereignis>
 		<Ereignis>
-			<Datum>2016-07-14+02:00</Datum>
-			<Eigenschaftssteigerung>
-				<Eigenschaft>MU</Eigenschaft>
-				<Steigerung>1</Steigerung>
-				<neuerWert>17</neuerWert>
-			</Eigenschaftssteigerung>
+			<Datum>2016-07-15+02:00</Datum>
+			<Talentspezialisierungshinzugewinn>
+				<Name>Gargylgleiten</Name>
+				<Fertigkeit>Fliegen</Fertigkeit>
+			</Talentspezialisierungshinzugewinn>
 		</Ereignis>
 	</Steigerungshistorie>
 </ns2:Charakter>

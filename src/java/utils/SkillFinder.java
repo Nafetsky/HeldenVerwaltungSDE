@@ -1,11 +1,13 @@
 package utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
 import dataBase.Ability;
 import dataBase.BaseSkills;
+import dataBase.FeatGroup;
 import dataBase.SpecialSkillGroup;
 import generated.Attribut;
 import generated.Attributskürzel;
@@ -15,6 +17,7 @@ import generated.Eigenschaftswerte;
 import generated.Fertigkeit;
 import generated.Kampftechnik;
 import generated.ObjectFactory;
+import generated.Sonderfertigkeit;
 
 public class SkillFinder {
 
@@ -50,8 +53,8 @@ public class SkillFinder {
 	}
 
 	private Skill findAbilty(String name) {
-		for(Ability ability:Ability.values()){
-			if(StringUtils.equals(name, ability.getName())){
+		for (Ability ability : Ability.values()) {
+			if (StringUtils.equals(name, ability.getName())) {
 				return new SkillAbility(getAbilty(ability.getAcronym()));
 			}
 		}
@@ -71,6 +74,7 @@ public class SkillFinder {
 			baseSkillXml.setFertigkeitswert(0);
 			baseSkillXml.setName(name);
 			baseSkillXml.setMerkmal(skillData.getMerkmal());
+			charakter.getTalente().getTalent().add(baseSkillXml);
 			return new SkillBase(baseSkillXml);
 
 		} catch (IllegalArgumentException e) {
@@ -121,10 +125,10 @@ public class SkillFinder {
 		}
 		return null;
 	}
-	
-	public Attribut getAbilty(Attributskürzel acronym){
+
+	public Attribut getAbilty(Attributskürzel acronym) {
 		Eigenschaftswerte abilitys = charakter.getEigenschaftswerte();
-		switch(acronym){
+		switch (acronym) {
 		case MU:
 			return abilitys.getMut();
 		case KL:
@@ -143,6 +147,37 @@ public class SkillFinder {
 			return abilitys.getKonstitution();
 		default:
 			throw new UnsupportedOperationException(acronym.name() + " is no valid Attributskürzel");
+		}
+	}
+	
+	public List<Sonderfertigkeit> getAllFeatsByGroup(FeatGroup group){
+		List<Sonderfertigkeit> list = new ArrayList<Sonderfertigkeit>();
+		for(Sonderfertigkeit feat:charakter.getSonderfertigkeiten().getSonderfertigkeit()){
+			if(StringUtils.equals(feat.getKategorie(), group.getName())){
+				list.add(feat);
+			}
+		}
+		return list;
+	}
+	
+	@Deprecated
+	/**
+	 * not useful, skills are already sorted in a Charakter
+	 * @param group
+	 * @return
+	 */
+	public List<Fertigkeit> getAllSpecialSkills(SpecialSkillGroup group) {
+		List<Fertigkeit> list = new ArrayList<Fertigkeit>();
+		switch (group) {
+		case SPELL:
+		case RITUAL:
+		case LITURGY:
+		case ZEREMONY:
+			
+			return list;
+		default:
+			throw new UnsupportedOperationException(
+					group.getName() + " is not supported by SkillFinder.getAllSpecialSkills yet");
 		}
 	}
 

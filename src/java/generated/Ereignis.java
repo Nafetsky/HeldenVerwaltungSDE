@@ -2,7 +2,7 @@
 // Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.8-b130911.1802 generiert 
 // Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2016.07.14 um 01:13:59 PM CEST 
+// Generiert: 2016.07.15 um 03:34:02 PM CEST 
 //
 
 
@@ -34,6 +34,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *         &lt;element name="neueAP" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
  *         &lt;element name="Eigenschaftssteigerung" type="{http://www.example.org/Charakter/}Eigenschaftssteigerung" maxOccurs="8" minOccurs="0"/>
  *         &lt;element name="Sonderfertigkeitshinzugewinn" type="{http://www.example.org/Charakter/}Sonderfertigkeit" maxOccurs="unbounded" minOccurs="0"/>
+ *         &lt;element name="Talentspezialisierungshinzugewinn" type="{http://www.example.org/Charakter/}Talentspezialisierung" maxOccurs="unbounded" minOccurs="0"/>
  *         &lt;element name="Vorteil" type="{http://www.example.org/Charakter/}Vorteil" maxOccurs="unbounded" minOccurs="0"/>
  *         &lt;element name="Nachteil" type="{http://www.example.org/Charakter/}Nachteil" maxOccurs="unbounded" minOccurs="0"/>
  *         &lt;element name="Fertigkeitsänderung" type="{http://www.example.org/Charakter/}Fertigkeitsmodifikation" maxOccurs="unbounded" minOccurs="0"/>
@@ -57,6 +58,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
     "neueAP",
     "eigenschaftssteigerung",
     "sonderfertigkeitshinzugewinn",
+    "talentspezialisierungshinzugewinn",
     "vorteil",
     "nachteil",
     "fertigkeits\u00e4nderung",
@@ -79,6 +81,8 @@ public class Ereignis {
     protected List<Eigenschaftssteigerung> eigenschaftssteigerung;
     @XmlElement(name = "Sonderfertigkeitshinzugewinn")
     protected List<Sonderfertigkeit> sonderfertigkeitshinzugewinn;
+    @XmlElement(name = "Talentspezialisierungshinzugewinn")
+    protected List<Talentspezialisierung> talentspezialisierungshinzugewinn;
     @XmlElement(name = "Vorteil")
     protected List<Vorteil> vorteil;
     @XmlElement(name = "Nachteil")
@@ -246,6 +250,35 @@ public class Ereignis {
             sonderfertigkeitshinzugewinn = new ArrayList<Sonderfertigkeit>();
         }
         return this.sonderfertigkeitshinzugewinn;
+    }
+
+    /**
+     * Gets the value of the talentspezialisierungshinzugewinn property.
+     * 
+     * <p>
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the talentspezialisierungshinzugewinn property.
+     * 
+     * <p>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     *    getTalentspezialisierungshinzugewinn().add(newItem);
+     * </pre>
+     * 
+     * 
+     * <p>
+     * Objects of the following type(s) are allowed in the list
+     * {@link Talentspezialisierung }
+     * 
+     * 
+     */
+    public List<Talentspezialisierung> getTalentspezialisierungshinzugewinn() {
+        if (talentspezialisierungshinzugewinn == null) {
+            talentspezialisierungshinzugewinn = new ArrayList<Talentspezialisierung>();
+        }
+        return this.talentspezialisierungshinzugewinn;
     }
 
     /**

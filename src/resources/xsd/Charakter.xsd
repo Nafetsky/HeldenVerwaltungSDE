@@ -269,6 +269,8 @@
 			<element name="Eigenschaftssteigerung" type="tns:Eigenschaftssteigerung" maxOccurs="8" minOccurs="0"></element>
 			<element name="Sonderfertigkeitshinzugewinn"
 				maxOccurs="unbounded" type="tns:Sonderfertigkeit" minOccurs="0"/>
+			<element name="Talentspezialisierungshinzugewinn"
+				maxOccurs="unbounded" type="tns:Talentspezialisierung" minOccurs="0"/>
 			<element name="Vorteil" maxOccurs="unbounded"
 				type="tns:Vorteil" minOccurs="0" />
 			<element name="Nachteil" maxOccurs="unbounded"

@@ -398,7 +398,7 @@
 		<Sonderfertigkeit>
 			<Name>Athlet</Name>
 			<Kosten>20</Kosten>
-			<Kategorie>allgemein</Kategorie>
+			<Kategorie>Allgemein</Kategorie>
 		</Sonderfertigkeit>
 		<Talentspezialisierung>
 			<Name>Maurerarbeiten</Name>

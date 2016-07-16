@@ -10,6 +10,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import org.apache.commons.lang3.StringUtils;
 
 import dataBase.Ability;
+import dataBase.FeatGroup;
 import dataBase.SpecialSkillGroup;
 import generated.Charakter;
 import generated.Eigenschaftssteigerung;
@@ -19,6 +20,7 @@ import generated.Fertigkeitsmodifikation;
 import generated.Nachteil;
 import generated.ObjectFactory;
 import generated.Sonderfertigkeit;
+import generated.Talentspezialisierung;
 import generated.Vorteil;
 
 public class CharacterModifier {
@@ -51,6 +53,8 @@ public class CharacterModifier {
 
 	public void saveChanges() {
 		charakter.getSteigerungshistorie().getEreignis().add(changes);
+		CharakterCleaner cleaner = new CharakterCleaner(charakter);
+		cleaner.cleanUpCharakter();
 		clearChanges();
 	}
 
@@ -161,6 +165,28 @@ public class CharacterModifier {
 		}
 	}
 
+	public void addSkillSpecialisation(String name, String skillName){
+		Talentspezialisierung feat = factory.createTalentspezialisierung();
+		feat.setName(name);
+		feat.setFertigkeit(skillName);
+		List<Talentspezialisierung> list = charakter.getSonderfertigkeiten().getTalentspezialisierung();
+		for (Talentspezialisierung oldFeat : list) {
+			if (StringUtils.equals(oldFeat.getName(), feat.getName())) {
+				return;
+			}
+		}
+		list.add(feat);
+		changes.getTalentspezialisierungshinzugewinn().add(feat);
+	}
+	
+	public void addFeat(String name, int cost, FeatGroup group){
+		Sonderfertigkeit feat = factory.createSonderfertigkeit();
+		feat.setName(name);
+		feat.setKosten(cost);
+		feat.setKategorie(group.getName());
+		addFeat(feat);
+	}
+	
 	public void addFeat(Sonderfertigkeit feat) {
 		List<Sonderfertigkeit> list = charakter.getSonderfertigkeiten().getSonderfertigkeit();
 		for (Sonderfertigkeit oldFeat : list) {
