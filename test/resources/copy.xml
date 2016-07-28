@@ -424,7 +424,7 @@
 	<Kampftechniken>
 		<Kampftechnik>
 			<Name>Armbrüste</Name>
-			<Kampftechnikwert>8</Kampftechnikwert>
+			<Kampftechnikwert>10</Kampftechnikwert>
 			<Leiteigenschaft>FF</Leiteigenschaft>
 			<Steigerungskosten>B</Steigerungskosten>
 		</Kampftechnik>
@@ -513,10 +513,6 @@
 			<Name>Verhütten</Name>
 			<Fertigkeit>Metallbearbeitung</Fertigkeit>
 		</Talentspezialisierung>
-		<Talentspezialisierung>
-			<Name>Gargylgleiten</Name>
-			<Fertigkeit>Fliegen</Fertigkeit>
-		</Talentspezialisierung>
 	</Sonderfertigkeiten>
 	<Steigerungshistorie>
 		<Ereignis>
@@ -559,11 +555,12 @@
 			</Sonderfertigkeitshinzugewinn>
 		</Ereignis>
 		<Ereignis>
-			<Datum>2016-07-15+02:00</Datum>
-			<Talentspezialisierungshinzugewinn>
-				<Name>Gargylgleiten</Name>
-				<Fertigkeit>Fliegen</Fertigkeit>
-			</Talentspezialisierungshinzugewinn>
+			<Datum>2016-07-17+02:00</Datum>
+			<Kampftechnikänderung>
+				<Name>Armbrüste</Name>
+				<Änderung>2</Änderung>
+				<neuerWert>10</neuerWert>
+			</Kampftechnikänderung>
 		</Ereignis>
 	</Steigerungshistorie>
 </ns2:Charakter>

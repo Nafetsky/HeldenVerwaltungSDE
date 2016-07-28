@@ -9,6 +9,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.lang3.StringUtils;
 
+import controle.AddSkillDialogResult;
 import dataBase.Ability;
 import dataBase.FeatGroup;
 import dataBase.SpecialSkillGroup;
@@ -16,10 +17,12 @@ import generated.Charakter;
 import generated.Eigenschaftssteigerung;
 import generated.Ereignis;
 import generated.Fertigkeit;
+import generated.Fertigkeitskategorie;
 import generated.Fertigkeitsmodifikation;
 import generated.Nachteil;
 import generated.ObjectFactory;
 import generated.Sonderfertigkeit;
+import generated.Steigerungskategorie;
 import generated.Talentspezialisierung;
 import generated.Vorteil;
 
@@ -121,6 +124,30 @@ public class CharacterModifier {
 		Skill skillable = finder.findSkill(name);
 		return skillable.getCostForNextLevel();
 	}
+	
+	public Skill addSkill(AddSkillDialogResult result) {
+		if(result == null){
+			return null;
+		}
+		Fertigkeit skill = factory.createFertigkeit();
+		
+		skill.setName(result.name);
+		
+		skill.setAttribut1(result.abilitys[0]);
+		skill.setAttribut2(result.abilitys[1]);
+		skill.setAttribut3(result.abilitys[2]);
+		
+		skill.setFertigkeitswert(0);
+		skill.setKategorie(Fertigkeitskategorie.fromValue(result.group.getName()));
+		
+		skill.setSteigerungskosten(Steigerungskategorie.fromValue(result.costCategory.name()));
+		
+		skill.getMerkmal().add(result.attributes[0]);
+		skill.getMerkmal().add(result.attributes[1]);
+		
+		addSkill(skill);
+		return new SkillSpecial(skill, SpecialSkillGroup.getFromFertigkeitskategorie(skill.getKategorie()));
+	}
 
 	public void addSkill(Fertigkeit fertigkeit) {
 		Fertigkeitsmodifikation change = null;
@@ -179,12 +206,13 @@ public class CharacterModifier {
 		changes.getTalentspezialisierungshinzugewinn().add(feat);
 	}
 	
-	public void addFeat(String name, int cost, FeatGroup group){
+	public Sonderfertigkeit addFeat(String name, int cost, FeatGroup group){
 		Sonderfertigkeit feat = factory.createSonderfertigkeit();
 		feat.setName(name);
 		feat.setKosten(cost);
 		feat.setKategorie(group.getName());
 		addFeat(feat);
+		return feat;
 	}
 	
 	public void addFeat(Sonderfertigkeit feat) {

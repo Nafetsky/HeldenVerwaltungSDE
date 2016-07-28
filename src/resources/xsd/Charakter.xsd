@@ -3,6 +3,21 @@
 	targetNamespace="http://www.example.org/Charakter/">
 
 	<element name="Charakter" type="tns:Charakter" />
+	<element name="metaDate" type="tns:MetaData"/>
+	
+
+	<complexType name="MetaData">
+		<sequence>
+			<element name="Name" type="tns:MetaDataLine" minOccurs="0" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	
+	<complexType name="MetaDataLine">
+		<sequence>
+			<element name="Name" type="string"/>
+			<element name="Datei" type="string"/>
+		</sequence>
+	</complexType>
 
 	<complexType name="Charakter">
 		<sequence>
@@ -10,18 +25,15 @@
 			<element name="Geschlecht" type="tns:Geschlecht" />
 			<element name="Spezies" type="tns:Spezies" />
 			<element name="Kultur" type="string" />
-			<element name="Angaben" type="tns:Angabe" minOccurs="0"/>
-			<element name="Eigenschaftswerte"
-				type="tns:Eigenschaftswerte" />
+			<element name="Angaben" type="tns:Angabe" minOccurs="0" />
+			<element name="Eigenschaftswerte" type="tns:Eigenschaftswerte" />
 
 			<element name="Vorteile" type="tns:Vorteile"></element>
 			<element name="Nachteile" type="tns:Nachteile"></element>
 			<element name="AP" type="int" />
-			<element name="LeP" type="int" maxOccurs="1"
-				minOccurs="0">
+			<element name="LeP" type="int" maxOccurs="1" minOccurs="0">
 			</element>
-			<element name="AsP" type="int" maxOccurs="1"
-				minOccurs="0">
+			<element name="AsP" type="int" maxOccurs="1" minOccurs="0">
 			</element>
 			<element name="KaP" type="int" maxOccurs="1" minOccurs="0"></element>
 			<element name="Talente" type="tns:Talente"></element>
@@ -30,8 +42,7 @@
 			<element name="Liturgien" type="tns:Liturgien"></element>
 			<element name="Zeremonien" type="tns:Zeremonien"></element>
 			<element name="Kampftechniken" type="tns:Kampftechniken"></element>
-			<element name="Sonderfertigkeiten"
-				type="tns:Sonderfertigkeiten" />
+			<element name="Sonderfertigkeiten" type="tns:Sonderfertigkeiten" />
 			<element name="Steigerungshistorie" type="tns:Historie" />
 		</sequence>
 	</complexType>
@@ -151,11 +162,10 @@
 				minOccurs="0" maxOccurs="unbounded" />
 		</sequence>
 	</complexType>
-
 	<complexType name="Basistalent">
 		<sequence>
-			<element name="Name" type="string"/>
-			<element name="Fertigkeitswert" type ="int"/>
+			<element name="Name" type="string" />
+			<element name="Fertigkeitswert" type="int" />
 			<element name="Merkmal" type="tns:MerkmalProfan" />
 		</sequence>
 	</complexType>
@@ -231,7 +241,7 @@
 	<complexType name="Sonderfertigkeit">
 		<sequence>
 			<element name="Name" type="string" />
-			<element name="Kosten" type="int" maxOccurs="1" minOccurs="0"/>
+			<element name="Kosten" type="int" maxOccurs="1" minOccurs="0" />
 			<element name="Kategorie" type="tns:Merkmal" minOccurs="0" />
 		</sequence>
 	</complexType>
@@ -249,7 +259,7 @@
 			<element name="Kampftechnikwert" type="int" />
 			<element name="Leiteigenschaft" type="tns:Attributskürzel" />
 			<element name="Steigerungskosten" type="tns:Steigerungskategorie" />
-			<element name="Basistechnik" type="boolean" minOccurs="0"/>
+			<element name="Basistechnik" type="boolean" minOccurs="0" />
 		</sequence>
 	</complexType>
 
@@ -264,17 +274,17 @@
 			<element name="Datum" type="date" />
 			<element name="Grund" type="string" />
 			<element name="AP" type="int" maxOccurs="1" minOccurs="0" />
-			<element name="neueAP" type="int" maxOccurs="1"
+			<element name="neueAP" type="int" maxOccurs="1" minOccurs="0" />
+			<element name="Eigenschaftssteigerung" type="tns:Eigenschaftssteigerung"
+				maxOccurs="8" minOccurs="0"></element>
+			<element name="Sonderfertigkeitshinzugewinn" maxOccurs="unbounded"
+				type="tns:Sonderfertigkeit" minOccurs="0" />
+			<element name="Talentspezialisierungshinzugewinn" maxOccurs="unbounded"
+				type="tns:Talentspezialisierung" minOccurs="0" />
+			<element name="Vorteil" maxOccurs="unbounded" type="tns:Vorteil"
 				minOccurs="0" />
-			<element name="Eigenschaftssteigerung" type="tns:Eigenschaftssteigerung" maxOccurs="8" minOccurs="0"></element>
-			<element name="Sonderfertigkeitshinzugewinn"
-				maxOccurs="unbounded" type="tns:Sonderfertigkeit" minOccurs="0"/>
-			<element name="Talentspezialisierungshinzugewinn"
-				maxOccurs="unbounded" type="tns:Talentspezialisierung" minOccurs="0"/>
-			<element name="Vorteil" maxOccurs="unbounded"
-				type="tns:Vorteil" minOccurs="0" />
-			<element name="Nachteil" maxOccurs="unbounded"
-				type="tns:Nachteil" minOccurs="0" />
+			<element name="Nachteil" maxOccurs="unbounded" type="tns:Nachteil"
+				minOccurs="0" />
 			<element name="Fertigkeitsänderung" maxOccurs="unbounded"
 				type="tns:Fertigkeitsmodifikation" minOccurs="0" />
 			<element name="Kampftechnikänderung" maxOccurs="unbounded"
@@ -290,12 +300,12 @@
 			</element>
 		</sequence>
 	</complexType>
-	
+
 	<complexType name="Eigenschaftssteigerung">
 		<sequence>
-			<element name="Eigenschaft" type="tns:Attributskürzel"/>
-			<element name="Steigerung" type="int"/>
-			<element name="neuerWert" type="int"/>
+			<element name="Eigenschaft" type="tns:Attributskürzel" />
+			<element name="Steigerung" type="int" />
+			<element name="neuerWert" type="int" />
 		</sequence>
 	</complexType>
 
@@ -304,39 +314,36 @@
 			<element name="Name" type="string" />
 			<element name="Änderung" type="int" />
 			<element name="neuerWert" type="int" />
-			<element name="NeueFertigkeit" type="tns:Fertigkeit" minOccurs="0" />
+			<element name="NeueFertigkeit" type="tns:Fertigkeit"
+				minOccurs="0" />
 		</sequence>
 	</complexType>
 
-	<!--
-	<complexType name="Kampftechniksmodifikation">
+	<!-- <complexType name="Kampftechniksmodifikation"> <sequence> <element 
+		name="Name" type="string" /> <element name="Änderung" type="int" /> </sequence> 
+		</complexType> -->
+
+	<complexType name="Spezies">
 		<sequence>
 			<element name="Name" type="string" />
-			<element name="Änderung" type="int" />
+			<element name="BasisLeben" type="int" />
+			<element name="BasisSeelenkraft" type="int" />
+			<element name="BasisZähigkeit" type="int" />
+			<element name="BasisGeschwindigkeit" type="int" />
+			<element name="Kosten" type="int" />
 		</sequence>
 	</complexType>
-	-->
 
-    <complexType name="Spezies">
-    	<sequence>
-    		<element name="Name" type="string"/>
-    		<element name="BasisLeben" type="int"/>
-    		<element name="BasisSeelenkraft" type="int"/>
-    		<element name="BasisZähigkeit" type="int"/>
-    		<element name="BasisGeschwindigkeit" type="int"/>
-    		<element name="Kosten" type="int"/>
-    	</sequence>
-    </complexType>
-    
-    <complexType name="Angabe">
-    	<sequence>
-    		<element name="Größe" type="int"/>
-    		<element name="Gewicht" type="int"/>
-    		<element name="Haarfarbe" type="string"/>
-    		<element name="Augenfarbe" type="string"/>
-    		<element name="Geburtstag" type="string"/>
-    		<element name="Alter" type="int"/>
-    		<element name="Sonstiges" type="string" minOccurs="0" maxOccurs="unbounded"/>
-    	</sequence>
-    </complexType>
+	<complexType name="Angabe">
+		<sequence>
+			<element name="Größe" type="int" />
+			<element name="Gewicht" type="int" />
+			<element name="Haarfarbe" type="string" />
+			<element name="Augenfarbe" type="string" />
+			<element name="Geburtstag" type="string" />
+			<element name="Alter" type="int" />
+			<element name="Sonstiges" type="string" minOccurs="0"
+				maxOccurs="unbounded" />
+		</sequence>
+	</complexType>
 </schema>

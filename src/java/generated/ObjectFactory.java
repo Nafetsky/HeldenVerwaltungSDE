@@ -2,7 +2,7 @@
 // Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.8-b130911.1802 generiert 
 // Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2016.07.15 um 03:34:02 PM CEST 
+// Generiert: 2016.07.28 um 08:51:00 PM CEST 
 //
 
 
@@ -32,6 +32,7 @@ import javax.xml.namespace.QName;
 public class ObjectFactory {
 
     private final static QName _Charakter_QNAME = new QName("http://www.example.org/Charakter/", "Charakter");
+    private final static QName _MetaDate_QNAME = new QName("http://www.example.org/Charakter/", "metaDate");
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: generated
@@ -46,6 +47,14 @@ public class ObjectFactory {
      */
     public Charakter createCharakter() {
         return new Charakter();
+    }
+
+    /**
+     * Create an instance of {@link MetaData }
+     * 
+     */
+    public MetaData createMetaData() {
+        return new MetaData();
     }
 
     /**
@@ -118,6 +127,14 @@ public class ObjectFactory {
      */
     public Historie createHistorie() {
         return new Historie();
+    }
+
+    /**
+     * Create an instance of {@link MetaDataLine }
+     * 
+     */
+    public MetaDataLine createMetaDataLine() {
+        return new MetaDataLine();
     }
 
     /**
@@ -247,6 +264,15 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "http://www.example.org/Charakter/", name = "Charakter")
     public JAXBElement<Charakter> createCharakter(Charakter value) {
         return new JAXBElement<Charakter>(_Charakter_QNAME, Charakter.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link MetaData }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://www.example.org/Charakter/", name = "metaDate")
+    public JAXBElement<MetaData> createMetaDate(MetaData value) {
+        return new JAXBElement<MetaData>(_MetaDate_QNAME, MetaData.class, null, value);
     }
 
 }

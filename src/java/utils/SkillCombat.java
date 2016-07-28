@@ -47,4 +47,9 @@ public class SkillCombat implements Skill {
 		return combatSkill.getKampftechnikwert();
 	}
 
+	@Override
+	public CostCategory getCostCategory() {
+		return CostCategory.getCostCategory(combatSkill.getSteigerungskosten());
+	}
+
 }

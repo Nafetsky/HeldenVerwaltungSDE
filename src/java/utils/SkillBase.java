@@ -1,6 +1,7 @@
 package utils;
 
 import dataBase.BaseSkills;
+import dataBase.CostCategory;
 import dataBase.SpecialSkillGroup;
 import generated.Basistalent;
 
@@ -42,6 +43,11 @@ public class SkillBase implements Skill {
 	
 	public Basistalent getBasistalent(){
 		return baseSkill;
+	}
+
+	@Override
+	public CostCategory getCostCategory() {
+		return skillData.getCategory();
 	}
 
 }

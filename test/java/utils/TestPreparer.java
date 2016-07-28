@@ -8,20 +8,37 @@ import generated.Charakter;
 
 public class TestPreparer {
 	
-	static final String TEST_RESOURCES_BARUNDAR_XML = "test/resources/Barundar.xml";
+	static final String TEST_RESOURCES_BARUNDAR_XML = "Barundar.xml";
+	static final String TEST_RESOURCES_VITUS_XML = "VitusSanin.xml";
+	static final String PATH_PREFIX = "test/resources/";
 
 	public MarshallingHelper getMarshallingHelper(){
 		return MarshallingHelper.getInstance();
 	}
 
 	public Charakter getBarundar() throws Exception {
-		File file = new File(TestPreparer.TEST_RESOURCES_BARUNDAR_XML);
+		File file = openFile(TestPreparer.TEST_RESOURCES_BARUNDAR_XML);
+		return MarshallingHelper.getInstance().unmarshall(file);
+	}
+	
+	public Charakter getVitus() throws Exception {
+		File file = openFile(TestPreparer.TEST_RESOURCES_VITUS_XML);
 		return MarshallingHelper.getInstance().unmarshall(file);
 	}
 	
 	public String getBarundarOrig() throws Exception{
 		byte[] encoded = Files.readAllBytes(Paths.get(TestPreparer.TEST_RESOURCES_BARUNDAR_XML));
 		return new String(encoded, "UTF-8").replaceAll(">\\p{Space}*<", "><").replaceAll("><", ">\r\n<");
+	}
+	
+	private File openFile(String name){
+		File file =null;
+		file = new File(name);
+		if(file!=null && file.exists()){
+			return file;
+		}
+		
+		return new File(PATH_PREFIX+name);
 	}
 
 

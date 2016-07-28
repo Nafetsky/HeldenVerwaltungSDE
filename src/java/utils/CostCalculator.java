@@ -2,7 +2,6 @@ package utils;
 
 import java.util.List;
 
-import dataBase.AbilityCategory;
 import dataBase.BaseSkills;
 import dataBase.CostCategory;
 import generated.Basistalent;
@@ -55,19 +54,6 @@ public class CostCalculator {
 			sumCosts += calcCostSkill(special.getFertigkeitswert(), CostCategory.getCostCategory(special.getSteigerungskosten()), false);
 		}
 		return sumCosts;
-	}
-	
-	public static int calcCost(int level, AbilityCategory abil, CostCategory cost, boolean baseSkill) {
-		switch (abil) {
-		case SKILL:
-			return calcCostSkill(level, cost, baseSkill);
-		case COMBAT:
-			return calcCostCombat(level, cost, baseSkill);
-		case ATTRIBUTE:
-			return calcCostBaseAbility(level, cost);
-		default:
-			return 0;
-		}
 	}
 
 	private static int calculateIncreasedLevel(int level) {

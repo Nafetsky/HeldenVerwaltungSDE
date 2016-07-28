@@ -1,6 +1,7 @@
 package utils;
 
 import dataBase.Ability;
+import dataBase.CostCategory;
 import dataBase.SpecialSkillGroup;
 import generated.Attribut;
 
@@ -60,6 +61,11 @@ public class SkillAbility implements Skill {
 	
 	public Attribut getAbility(){
 		return ability;
+	}
+
+	@Override
+	public CostCategory getCostCategory() {
+		return CostCategory.E;
 	}
 
 }

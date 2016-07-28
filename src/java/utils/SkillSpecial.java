@@ -1,5 +1,7 @@
 package utils;
 
+import org.apache.commons.lang3.StringUtils;
+
 import dataBase.CostCategory;
 import dataBase.SpecialSkillGroup;
 import generated.Fertigkeit;
@@ -41,6 +43,27 @@ public class SkillSpecial implements Skill {
 	@Override
 	public int getCurrentValue() {
 		return skill.getFertigkeitswert();
+	}
+
+	@Override
+	public CostCategory getCostCategory() {
+		return CostCategory.getCostCategory(skill.getSteigerungskosten());
+	}
+	
+	private static final String REPRESENTATION = "REPRÄSENTATION_";
+	private static final String TRADIDTION = "TRADIDTION_";
+	public String getAtributes(){
+		String prefix ="";
+		String attributes = "";
+		for(String attribute:skill.getMerkmal()){
+			if(StringUtils.startsWith(attribute, REPRESENTATION) || StringUtils.startsWith(attribute, TRADIDTION)){
+				prefix =attribute.replace(REPRESENTATION, "").replace(TRADIDTION,"");
+			}
+			else{
+				attributes += attribute + ", ";
+			}
+		}
+		return prefix+" "+attributes.substring(0, attributes.length()-2);
 	}
 
 }
