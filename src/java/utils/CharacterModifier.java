@@ -9,16 +9,17 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.lang3.StringUtils;
 
+import controle.AddNewCombatSkillDialogResult;
 import controle.AddSkillDialogResult;
 import dataBase.Ability;
 import dataBase.FeatGroup;
 import dataBase.SpecialSkillGroup;
-import generated.Charakter;
 import generated.Eigenschaftssteigerung;
 import generated.Ereignis;
 import generated.Fertigkeit;
 import generated.Fertigkeitskategorie;
 import generated.Fertigkeitsmodifikation;
+import generated.Kampftechnik;
 import generated.Nachteil;
 import generated.ObjectFactory;
 import generated.Sonderfertigkeit;
@@ -27,12 +28,12 @@ import generated.Talentspezialisierung;
 import generated.Vorteil;
 
 public class CharacterModifier {
-	Charakter charakter;
+	WrappedCharakter charakter;
 	ObjectFactory factory;
 	Ereignis changes;
 	SkillFinder finder;
 
-	public CharacterModifier(Charakter charakter) {
+	public CharacterModifier(WrappedCharakter charakter) {
 		this.charakter = charakter;
 		finder = new SkillFinder(this.charakter);
 		factory = new ObjectFactory();
@@ -54,15 +55,20 @@ public class CharacterModifier {
 		}
 	}
 
-	public void saveChanges() {
-		charakter.getSteigerungshistorie().getEreignis().add(changes);
+	public void saveChanges(String reason) {
+		changes.setGrund(reason);
+		if(charakter.isCharakter()){
+			charakter.getSteigerungshistorie().getEreignis().add(changes);
+		}
 		CharakterCleaner cleaner = new CharakterCleaner(charakter);
 		cleaner.cleanUpCharakter();
 		clearChanges();
 	}
 
 	public void changeApBy(int apDifference) {
-		charakter.setAP(charakter.getAP() + apDifference);
+		if(charakter.isCharakter()){
+			charakter.setAP(charakter.getAP() + apDifference);
+		}
 		changes.setAP(apDifference);
 		changes.setNeueAP(charakter.getAP());
 	}
@@ -147,6 +153,28 @@ public class CharacterModifier {
 		
 		addSkill(skill);
 		return new SkillSpecial(skill, SpecialSkillGroup.getFromFertigkeitskategorie(skill.getKategorie()));
+	}
+	
+	public Skill addSkill(AddNewCombatSkillDialogResult result) {
+		if(result == null){
+			return null;
+		}
+		Kampftechnik combatSkill = factory.createKampftechnik();
+		combatSkill.setName(result.name);
+		combatSkill.setLeiteigenschaft(result.getAbility());
+		combatSkill.setSteigerungskosten(Steigerungskategorie.fromValue(result.costCategory.name()));
+		combatSkill.setKampftechnikwert(6);
+		
+		return addCombatSkill(combatSkill);
+	}
+
+	private Skill addCombatSkill(Kampftechnik skill) {
+		Skill wrappedSkill = new SkillCombat(skill);
+		Fertigkeitsmodifikation change = makeNewCombatSkillChangeEntry(wrappedSkill, skill);
+		charakter.getKampftechniken().getKampftechnik().add(skill);
+		changes.getFertigkeitsänderung().add(change);
+		return wrappedSkill;
+		
 	}
 
 	public void addSkill(Fertigkeit fertigkeit) {
@@ -276,11 +304,11 @@ public class CharacterModifier {
 		case RITUAL:
 		case LITURGY:
 		case ZEREMONY:
-			Fertigkeitsmodifikation change = makeNewSkillChangeEntry(skill, null);
+			Fertigkeitsmodifikation change = makeNewSkillChangeEntry(skill, (Fertigkeit)null);
 			changes.getFertigkeitsänderung().add(change);
 			break;
 		case COMBAT:
-			change = makeNewSkillChangeEntry(skill, null);
+			change = makeNewCombatSkillChangeEntry(skill, (Kampftechnik)null);
 			changes.getKampftechnikänderung().add(change);
 			break;
 		default:
@@ -302,6 +330,15 @@ public class CharacterModifier {
 		change.setÄnderung(1);
 		change.setNeuerWert(skill.getCurrentValue());
 		change.setNeueFertigkeit(newSkill);
+		return change;
+	}
+	
+	private Fertigkeitsmodifikation makeNewCombatSkillChangeEntry(Skill skill, Kampftechnik newSkill) {
+		Fertigkeitsmodifikation change = factory.createFertigkeitsmodifikation();
+		change.setName(skill.getName());
+		change.setÄnderung(0);
+		change.setNeuerWert(skill.getCurrentValue());
+		change.setNeueKampftechnik(newSkill);
 		return change;
 	}
 

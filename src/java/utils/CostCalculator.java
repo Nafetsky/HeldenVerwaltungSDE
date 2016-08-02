@@ -11,8 +11,20 @@ import generated.Fertigkeit;
 import generated.Talente;
 
 public class CostCalculator {
-
 	
+	public static int calcUsedAP(WrappedCharakter charakter){
+		int usedAp = 0;
+		
+		if(charakter.isCharakter()){
+			usedAp = CostCalculator.calcUsedAP(charakter.charakter);
+		}
+		else{
+			
+		}
+		return usedAp;
+	}
+
+
 	public static int calcUsedAP(Charakter charakter){
 		int usedAp = 0;
 		usedAp += charakter.getSpezies().getKosten();

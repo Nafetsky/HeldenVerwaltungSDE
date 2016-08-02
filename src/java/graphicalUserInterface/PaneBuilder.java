@@ -18,11 +18,14 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.JTree;
 import javax.swing.SwingConstants;
 
 import org.apache.commons.lang3.StringUtils;
 
 import controle.AddFeatDialogResult;
+import controle.AddNewCharakterDialogResult;
+import controle.AddNewCombatSkillDialogResult;
 import controle.AddSkillDialogResult;
 import controle.MasterControleProgramm;
 import dataBase.Ability;
@@ -30,27 +33,37 @@ import dataBase.BaseSkills;
 import dataBase.FeatGroup;
 import dataBase.SpecialSkillGroup;
 import generated.Attribut;
-import generated.Charakter;
 import generated.Fertigkeit;
 import generated.Kampftechnik;
 import generated.MerkmalMagie;
 import generated.MerkmalProfan;
 import generated.Sonderfertigkeit;
+import utils.CostCalculator;
 import utils.Skill;
 import utils.SkillCombat;
 import utils.SkillFinder;
 import utils.SkillSpecial;
+import utils.WrappedCharakter;
 
 public class PaneBuilder {
 
-	Charakter charakter;
+	WrappedCharakter charakter;
 	SkillFinder finder;
 	MasterControleProgramm controleInstance;
+	List<String> charakterNames;
+	TreeGenerator treeGenerator;
 
-	public PaneBuilder(Charakter charakter, MasterControleProgramm controleInstance) {
+	public PaneBuilder(WrappedCharakter charakter, MasterControleProgramm controleInstance,
+			List<String> charakterNames) {
 		this.charakter = charakter;
 		finder = new SkillFinder(charakter);
 		this.controleInstance = controleInstance;
+		this.charakterNames = charakterNames;
+		treeGenerator = new TreeGenerator();
+	}
+
+	public boolean hasData() {
+		return null != charakter;
 	}
 
 	JMenuBar makeMenuBar() {
@@ -60,24 +73,59 @@ public class PaneBuilder {
 
 		menuBar.add(popup);
 
+		JMenuItem menuPopupNew = new JMenuItem("neuen Charakter erstellen");
+		menuPopupNew.addActionListener((ActionEvent e) -> {
+			AddNewCharakterDialogResult addNew = InputPopups.getAddNewCharakterDialogResult(popup);
+			controleInstance.handleNewCharakter(addNew);
+		});
+		popup.add(menuPopupNew);
+
 		JMenuItem menuPopupSave = new JMenuItem("Charakter speichern");
 		menuPopupSave.addActionListener((ActionEvent e) -> {
-			controleInstance.handleSaveActiveCharakter();
+			String result = InputPopups.getSaveDialogResult(popup);
+			if (null != result) {
+				controleInstance.handleSaveActiveCharakter(result);
+			}
 		});
 		popup.add(menuPopupSave);
 
 		JMenuItem menuPopupPrint = new JMenuItem("Charakter ausgeben");
 		menuPopupPrint.addActionListener((ActionEvent e) -> {
-			controleInstance.hanldePrintCharakter();
+			controleInstance.handlePrintCharakter();
 		});
 		popup.add(menuPopupPrint);
+
+		JMenuItem menuPopupNewCulture = new JMenuItem("Neue Kultur erstellen");
+		menuPopupNewCulture.addActionListener((ActionEvent e) -> {
+			String result = InputPopups.getNewCultureDialogResult(popup);
+			if (null != result) {
+				controleInstance.handleNewCulture(result);
+			}
+		});
+		popup.add(menuPopupNewCulture);
+
 		return menuBar;
 	}
 
 	public Component makeBaseInfos() {
-		JPanel baseSkillPanel = new JPanel();
-		baseSkillPanel.setLayout(new BoxLayout(baseSkillPanel, BoxLayout.Y_AXIS));
-		return baseSkillPanel;
+		JPanel baseInfosPanel = new JPanel();
+		baseInfosPanel.setLayout(new BoxLayout(baseInfosPanel, BoxLayout.Y_AXIS));
+		JLabel lableAllAP = new JLabel("Gesamte AP");
+		JTextField fieldAllAp = new JTextField();
+		fieldAllAp.setEditable(false);
+		fieldAllAp.setText(Integer.toString(charakter.getAP()));
+
+		JLabel lableUsedAP = new JLabel("Eingesetzte AP");
+		JTextField fieldUsedAp = new JTextField();
+		fieldUsedAp.setEditable(false);
+		fieldUsedAp.setText(Integer.toString(CostCalculator.calcUsedAP(charakter)));
+
+		baseInfosPanel.add(lableAllAP);
+		baseInfosPanel.add(fieldAllAp);
+		baseInfosPanel.add(lableUsedAP);
+		baseInfosPanel.add(fieldUsedAp);
+
+		return baseInfosPanel;
 	}
 
 	public Component makeAbilityPane() {
@@ -127,21 +175,22 @@ public class PaneBuilder {
 			// makeSkillTable(BaseSkills.getAmountByCategory(merkmal), merkmal);
 			baseSkillPanel.add(baseSkillsByCategory);
 		}
-
-		baseSkillPanel.add(makeFeatsComponent(FeatGroup.COMMON, tabbedPane));
+		if (charakter.isCharakter() || charakter.isProfession()) {
+			baseSkillPanel.add(makeFeatsComponent(FeatGroup.COMMON, tabbedPane));
+		}
 
 		JScrollPane scrollableBaseSkillPanel = new JScrollPane(baseSkillPanel);
 		return scrollableBaseSkillPanel;
 	}
-	
-	public Component makeCombatPane(JTabbedPane tabbedPane){
+
+	public Component makeCombatPane(JTabbedPane tabbedPane) {
 		JPanel combatSkillPane = new JPanel();
 		combatSkillPane.setLayout(new BoxLayout(combatSkillPane, BoxLayout.Y_AXIS));
 		JPanel skillTabel = new JPanel();
 		skillTabel.setLayout(new GridLayout(charakter.getKampftechniken().getKampftechnik().size(), 5));
-		for(Kampftechnik combatSkillXML:charakter.getKampftechniken().getKampftechnik()){
-			Skill skill = new SkillCombat(combatSkillXML); 
-			JLabel labelName =new JLabel(skill.getName());
+		for (Kampftechnik combatSkillXML : charakter.getKampftechniken().getKampftechnik()) {
+			Skill skill = new SkillCombat(combatSkillXML);
+			JLabel labelName = new JLabel(skill.getName());
 			skillTabel.add(labelName);
 			JTextField fieldAbilityAcronym = new JTextField(combatSkillXML.getLeiteigenschaft().value());
 			fieldAbilityAcronym.setEnabled(false);
@@ -150,16 +199,43 @@ public class PaneBuilder {
 			fieldSkillValue.setText(Integer.toString(skill.getCurrentValue()));
 			fieldSkillValue.setEnabled(false);
 			skillTabel.add(fieldSkillValue);
-			JLabel labelCost = new JLabel(  Integer.toString(skill.getCostForNextLevel()) + " AP");
+			JLabel labelCost = new JLabel(Integer.toString(skill.getCostForNextLevel()) + " AP");
 			JButton buttonIncreaseSkill = makeIncreaseSkillButton(skill, fieldSkillValue, labelCost);
 			skillTabel.add(buttonIncreaseSkill);
 			skillTabel.add(labelCost);
-			
+
 		}
 		combatSkillPane.add(skillTabel);
-		
+
+		JButton addNewCombatSkillButton = new JButton("Neue Kampftechnik erlernen");
+		addNewCombatSkillButton.addActionListener((ActionEvent e) -> {
+			AddNewCombatSkillDialogResult toAddCombatSkillResultDialog = InputPopups
+					.getAddCombatSkillResultDialog(combatSkillPane);
+			Skill skill = controleInstance.handleNewCombatSkill(toAddCombatSkillResultDialog);
+			if(null!=skill){
+				((JPanel) skillTabel).setLayout(new GridLayout(charakter.getKampftechniken().getKampftechnik().size(), 5));
+				
+				JLabel labelName = new JLabel(skill.getName());
+				skillTabel.add(labelName);
+				JTextField fieldAbilityAcronym = new JTextField(toAddCombatSkillResultDialog.getAbility().value());
+				fieldAbilityAcronym.setEnabled(false);
+				skillTabel.add(fieldAbilityAcronym);
+				JTextField fieldSkillValue = new JTextField();
+				fieldSkillValue.setText(Integer.toString(skill.getCurrentValue()));
+				fieldSkillValue.setEnabled(false);
+				skillTabel.add(fieldSkillValue);
+				JLabel labelCost = new JLabel(Integer.toString(skill.getCostForNextLevel()) + " AP");
+				JButton buttonIncreaseSkill = makeIncreaseSkillButton(skill, fieldSkillValue, labelCost);
+				skillTabel.add(buttonIncreaseSkill);
+				skillTabel.add(labelCost);
+				
+				tabbedPane.repaint();
+			}
+		});
+		combatSkillPane.add(addNewCombatSkillButton);
+
 		combatSkillPane.add(makeFeatsComponent(FeatGroup.COMBAT, tabbedPane));
-		
+
 		JScrollPane scrollableCombatSkillPanel = new JScrollPane(combatSkillPane);
 		return scrollableCombatSkillPanel;
 	}
@@ -167,14 +243,15 @@ public class PaneBuilder {
 	public Component makeMagicPane(JTabbedPane tabbedPane) {
 		JPanel magicSkillPane = new JPanel();
 		magicSkillPane.setLayout(new BoxLayout(magicSkillPane, BoxLayout.Y_AXIS));
-		addCompleteSkillPane(tabbedPane, magicSkillPane, "Neuen Zauber lernen", SpecialSkillGroup.SPELL, charakter.getZauber().getZauber());
+		addCompleteSkillPane(tabbedPane, magicSkillPane, "Neuen Zauber lernen", SpecialSkillGroup.SPELL,
+				charakter.getZauber().getZauber());
 
 		magicSkillPane.add(makeFeatsComponent(FeatGroup.MAGIC, tabbedPane));
-		
-		addCompleteSkillPane(tabbedPane, magicSkillPane, "Neues Ritual lernen", SpecialSkillGroup.RITUAL, charakter.getRituale().getRitual());
-		
+
+		addCompleteSkillPane(tabbedPane, magicSkillPane, "Neues Ritual lernen", SpecialSkillGroup.RITUAL,
+				charakter.getRituale().getRitual());
+
 		JScrollPane scrollableMagicSkillPanel = new JScrollPane(magicSkillPane);
-	
 
 		return scrollableMagicSkillPanel;
 	}
@@ -182,15 +259,16 @@ public class PaneBuilder {
 	public Component makePriestPane(JTabbedPane tabbedPane) {
 		JPanel priestSkillPane = new JPanel();
 		priestSkillPane.setLayout(new BoxLayout(priestSkillPane, BoxLayout.Y_AXIS));
-		
-		addCompleteSkillPane(tabbedPane, priestSkillPane, "Neue Liturgie lernen", SpecialSkillGroup.LITURGY, charakter.getLiturgien().getLiturgie());
+
+		addCompleteSkillPane(tabbedPane, priestSkillPane, "Neue Liturgie lernen", SpecialSkillGroup.LITURGY,
+				charakter.getLiturgien().getLiturgie());
 
 		priestSkillPane.add(makeFeatsComponent(FeatGroup.ORDAINED, tabbedPane));
-		
-		addCompleteSkillPane(tabbedPane, priestSkillPane, "Neue Zeremonie lernen", SpecialSkillGroup.ZEREMONY, charakter.getZeremonien().getZeremonie());
-		
-		JScrollPane scrollableMagicSkillPanel = new JScrollPane(priestSkillPane);
 
+		addCompleteSkillPane(tabbedPane, priestSkillPane, "Neue Zeremonie lernen", SpecialSkillGroup.ZEREMONY,
+				charakter.getZeremonien().getZeremonie());
+
+		JScrollPane scrollableMagicSkillPanel = new JScrollPane(priestSkillPane);
 
 		return scrollableMagicSkillPanel;
 	}
@@ -207,8 +285,7 @@ public class PaneBuilder {
 							: "Repräsentation"));
 			toAddSkillResultDialog.group = skillGroup;
 			Skill skill = controleInstance.handleNewSkill(toAddSkillResultDialog);
-			((JPanel) skillTableFromXml)
-					.setLayout(new GridLayout(skills.size(), 7));
+			((JPanel) skillTableFromXml).setLayout(new GridLayout(skills.size(), 7));
 			fillSingleSkillRow((JPanel) skillTableFromXml, true, skill);
 			tabbedPane.repaint();
 		});
@@ -368,6 +445,27 @@ public class PaneBuilder {
 			}
 		}
 		return null;
+	}
+
+	public JTree getCurrentTree() {
+		return treeGenerator.getCurrentTree(charakterNames, this);
+	}
+
+	public void switchActiveCharakter(String newActiveCharakter) {
+		controleInstance.switchActiveCharakter(newActiveCharakter);
+
+	}
+
+	public boolean handlesCharakter() {
+		return charakter.isCharakter();
+	}
+
+	public boolean handlesCulture() {
+		return charakter.isCulture();
+	}
+
+	public boolean handlesProfession() {
+		return charakter.isProfession();
 	}
 
 }

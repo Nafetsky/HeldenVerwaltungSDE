@@ -20,7 +20,7 @@ public class SkilFinderTest {
 	public void init() throws Exception{
 		TestPreparer test = new TestPreparer();
 		barundar = test.getBarundar();
-		finder = new SkillFinder(barundar);
+		finder = new SkillFinder(WrappedCharakter.getWrappedCharakter(barundar));
 	}
 	
 	@Test

@@ -4,11 +4,12 @@
 
 	<element name="Charakter" type="tns:Charakter" />
 	<element name="metaDate" type="tns:MetaData"/>
+	<element name="Kultur" type="tns:Schablone"/>
 	
 
 	<complexType name="MetaData">
 		<sequence>
-			<element name="Name" type="tns:MetaDataLine" minOccurs="0" maxOccurs="unbounded"/>
+			<element name="Charakters" type="tns:MetaDataLine" minOccurs="0" maxOccurs="unbounded"/>
 		</sequence>
 	</complexType>
 	
@@ -16,6 +17,7 @@
 		<sequence>
 			<element name="Name" type="string"/>
 			<element name="Datei" type="string"/>
+			<element name="Spezies" type="string" minOccurs="0" maxOccurs="unbounded"/>
 		</sequence>
 	</complexType>
 
@@ -44,6 +46,20 @@
 			<element name="Kampftechniken" type="tns:Kampftechniken"></element>
 			<element name="Sonderfertigkeiten" type="tns:Sonderfertigkeiten" />
 			<element name="Steigerungshistorie" type="tns:Historie" />
+		</sequence>
+	</complexType>
+	
+	<complexType name="Schablone">
+		<sequence>
+			<element name="Name" type="string" />
+			<element name="Eigenschaftswerte" type="tns:Eigenschaftswerte" />
+			<element name="Talente" type="tns:Talente"></element>
+			<element name="Zauber" type="tns:Zauber"></element>
+			<element name="Rituale" type="tns:Rituale"></element>
+			<element name="Liturgien" type="tns:Liturgien"></element>
+			<element name="Zeremonien" type="tns:Zeremonien"></element>
+			<element name="Kampftechniken" type="tns:Kampftechniken"></element>
+			<element name="Sonderfertigkeiten" type="tns:Sonderfertigkeiten" />
 		</sequence>
 	</complexType>
 
@@ -314,8 +330,10 @@
 			<element name="Name" type="string" />
 			<element name="Änderung" type="int" />
 			<element name="neuerWert" type="int" />
-			<element name="NeueFertigkeit" type="tns:Fertigkeit"
-				minOccurs="0" />
+			<choice>
+				<element name="NeueFertigkeit" type="tns:Fertigkeit" minOccurs="0" />
+				<element name="NeueKampftechnik" type="tns:Kampftechnik" minOccurs="0" />
+			</choice>
 		</sequence>
 	</complexType>
 

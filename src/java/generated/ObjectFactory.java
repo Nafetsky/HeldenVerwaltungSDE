@@ -2,7 +2,7 @@
 // Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.8-b130911.1802 generiert 
 // Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2016.07.28 um 08:51:00 PM CEST 
+// Generiert: 2016.08.01 um 07:53:25 PM CEST 
 //
 
 
@@ -32,6 +32,7 @@ import javax.xml.namespace.QName;
 public class ObjectFactory {
 
     private final static QName _Charakter_QNAME = new QName("http://www.example.org/Charakter/", "Charakter");
+    private final static QName _Kultur_QNAME = new QName("http://www.example.org/Charakter/", "Kultur");
     private final static QName _MetaDate_QNAME = new QName("http://www.example.org/Charakter/", "metaDate");
 
     /**
@@ -47,6 +48,14 @@ public class ObjectFactory {
      */
     public Charakter createCharakter() {
         return new Charakter();
+    }
+
+    /**
+     * Create an instance of {@link Schablone }
+     * 
+     */
+    public Schablone createSchablone() {
+        return new Schablone();
     }
 
     /**
@@ -264,6 +273,15 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "http://www.example.org/Charakter/", name = "Charakter")
     public JAXBElement<Charakter> createCharakter(Charakter value) {
         return new JAXBElement<Charakter>(_Charakter_QNAME, Charakter.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link Schablone }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://www.example.org/Charakter/", name = "Kultur")
+    public JAXBElement<Schablone> createKultur(Schablone value) {
+        return new JAXBElement<Schablone>(_Kultur_QNAME, Schablone.class, null, value);
     }
 
     /**

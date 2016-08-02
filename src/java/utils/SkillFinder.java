@@ -12,7 +12,6 @@ import dataBase.SpecialSkillGroup;
 import generated.Attribut;
 import generated.Attributskürzel;
 import generated.Basistalent;
-import generated.Charakter;
 import generated.Eigenschaftswerte;
 import generated.Fertigkeit;
 import generated.Kampftechnik;
@@ -21,10 +20,11 @@ import generated.Sonderfertigkeit;
 
 public class SkillFinder {
 
-	Charakter charakter;
+	WrappedCharakter charakter;
+	
 	ObjectFactory factory;
 
-	public SkillFinder(Charakter charakter) {
+	public SkillFinder(WrappedCharakter charakter) {
 		this.charakter = charakter;
 		factory = new ObjectFactory();
 	}

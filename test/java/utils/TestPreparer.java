@@ -18,12 +18,12 @@ public class TestPreparer {
 
 	public Charakter getBarundar() throws Exception {
 		File file = openFile(TestPreparer.TEST_RESOURCES_BARUNDAR_XML);
-		return MarshallingHelper.getInstance().unmarshall(file);
+		return MarshallingHelper.getInstance().unmarshallCharakter(file);
 	}
 	
 	public Charakter getVitus() throws Exception {
 		File file = openFile(TestPreparer.TEST_RESOURCES_VITUS_XML);
-		return MarshallingHelper.getInstance().unmarshall(file);
+		return MarshallingHelper.getInstance().unmarshallCharakter(file);
 	}
 	
 	public String getBarundarOrig() throws Exception{
