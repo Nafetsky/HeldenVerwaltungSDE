@@ -2,7 +2,7 @@
 // Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.8-b130911.1802 generiert 
 // Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2016.08.01 um 07:53:25 PM CEST 
+// Generiert: 2016.08.27 um 11:15:28 PM CEST 
 //
 
 
@@ -107,6 +107,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link Sprache }
+     * 
+     */
+    public Sprache createSprache() {
+        return new Sprache();
+    }
+
+    /**
      * Create an instance of {@link Talentspezialisierung }
      * 
      */
@@ -144,6 +152,14 @@ public class ObjectFactory {
      */
     public MetaDataLine createMetaDataLine() {
         return new MetaDataLine();
+    }
+
+    /**
+     * Create an instance of {@link Kommunikatives }
+     * 
+     */
+    public Kommunikatives createKommunikatives() {
+        return new Kommunikatives();
     }
 
     /**
@@ -256,6 +272,14 @@ public class ObjectFactory {
      */
     public Fertigkeit createFertigkeit() {
         return new Fertigkeit();
+    }
+
+    /**
+     * Create an instance of {@link Schrift }
+     * 
+     */
+    public Schrift createSchrift() {
+        return new Schrift();
     }
 
     /**

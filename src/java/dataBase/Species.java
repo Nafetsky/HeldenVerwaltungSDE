@@ -9,12 +9,12 @@ public enum Species {
 	HALF_ELF("Halb-Elf", 5, -4, -6, 8, 0),
 	DWARF("Zwerg", 8, -4, -4, 6, 61);
 
-	public String name;
-	public int baseLife;
-	public int spiritualToughnes;
-	public int physicalToughness;
-	public int speed;
-	public int cost;
+	private final String name;
+	private final int baseLife;
+	private final int spiritualToughnes;
+	private final int physicalToughness;
+	private final int speed;
+	private final int cost;
 
 	private Species(String name, int baseLife, int spiritualToughnes, int physicalToughness, int speed, int cost) {
 		this.name = name;
@@ -27,11 +27,35 @@ public enum Species {
 	
 	public static Species getEnumToName(String name){
 		for(Species species:Species.values()){
-			if(StringUtils.equals(species.name, name)){
+			if(StringUtils.equals(species.getName(), name)){
 				return species;
 			}
 		}
 		throw new IllegalArgumentException(name +" is no valid species name");
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public int getBaseLife() {
+		return baseLife;
+	}
+
+	public int getSpiritualToughnes() {
+		return spiritualToughnes;
+	}
+
+	public int getPhysicalToughness() {
+		return physicalToughness;
+	}
+
+	public int getSpeed() {
+		return speed;
+	}
+
+	public int getCost() {
+		return cost;
 	}
 
 }

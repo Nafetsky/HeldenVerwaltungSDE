@@ -2,7 +2,7 @@
 // Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.8-b130911.1802 generiert 
 // Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2016.08.01 um 07:53:25 PM CEST 
+// Generiert: 2016.08.27 um 11:15:28 PM CEST 
 //
 
 
@@ -31,6 +31,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="Kultur" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="Angaben" type="{http://www.example.org/Charakter/}Angabe" minOccurs="0"/>
  *         &lt;element name="Eigenschaftswerte" type="{http://www.example.org/Charakter/}Eigenschaftswerte"/>
+ *         &lt;element name="Kommunikatives" type="{http://www.example.org/Charakter/}Kommunikatives" minOccurs="0"/>
  *         &lt;element name="Vorteile" type="{http://www.example.org/Charakter/}Vorteile"/>
  *         &lt;element name="Nachteile" type="{http://www.example.org/Charakter/}Nachteile"/>
  *         &lt;element name="AP" type="{http://www.w3.org/2001/XMLSchema}int"/>
@@ -61,6 +62,7 @@ import javax.xml.bind.annotation.XmlType;
     "kultur",
     "angaben",
     "eigenschaftswerte",
+    "kommunikatives",
     "vorteile",
     "nachteile",
     "ap",
@@ -91,6 +93,8 @@ public class Charakter {
     protected Angabe angaben;
     @XmlElement(name = "Eigenschaftswerte", required = true)
     protected Eigenschaftswerte eigenschaftswerte;
+    @XmlElement(name = "Kommunikatives")
+    protected Kommunikatives kommunikatives;
     @XmlElement(name = "Vorteile", required = true)
     protected Vorteile vorteile;
     @XmlElement(name = "Nachteile", required = true)
@@ -262,6 +266,30 @@ public class Charakter {
      */
     public void setEigenschaftswerte(Eigenschaftswerte value) {
         this.eigenschaftswerte = value;
+    }
+
+    /**
+     * Ruft den Wert der kommunikatives-Eigenschaft ab.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Kommunikatives }
+     *     
+     */
+    public Kommunikatives getKommunikatives() {
+        return kommunikatives;
+    }
+
+    /**
+     * Legt den Wert der kommunikatives-Eigenschaft fest.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Kommunikatives }
+     *     
+     */
+    public void setKommunikatives(Kommunikatives value) {
+        this.kommunikatives = value;
     }
 
     /**

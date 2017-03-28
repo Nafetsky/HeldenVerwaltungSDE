@@ -17,6 +17,7 @@ import generated.Fertigkeit;
 import generated.Kampftechnik;
 import generated.ObjectFactory;
 import generated.Sonderfertigkeit;
+import generated.Talentspezialisierung;
 
 public class SkillFinder {
 
@@ -179,6 +180,19 @@ public class SkillFinder {
 			throw new UnsupportedOperationException(
 					group.getName() + " is not supported by SkillFinder.getAllSpecialSkills yet");
 		}
+	}
+
+	public String getSkillSpecialisations(String name) {
+		String result = "";
+		for(Talentspezialisierung feat:charakter.getSonderfertigkeiten().getTalentspezialisierung()){
+			if(StringUtils.equals(feat.getFertigkeit(), name)){
+				if(StringUtils.isNotEmpty(result)){
+					result += ", ";
+				}
+				result += feat.getName();
+			}
+		}
+		return result;
 	}
 
 }

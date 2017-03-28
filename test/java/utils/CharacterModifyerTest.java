@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 
+import dataBase.BaseSkills;
 import generated.Attributskürzel;
 import generated.Charakter;
 import generated.Fertigkeit;
@@ -269,6 +270,15 @@ public class CharacterModifyerTest {
 		String newEvent = makeCurrentEventHead()
 				+ "</Datum><Grund>test</Grund><Sonderfertigkeitshinzugewinn><Name>Wuchtschlag III</Name><Kosten>25</Kosten><Kategorie>Kampf</Kategorie></Sonderfertigkeitshinzugewinn></Ereignis>";
 		assertTrue(StringUtils.contains(barundarAsXml, newEvent));
+	}
+	
+	@Test
+	public void testAddSkillSpecialisation() {
+		CharacterModifier modifier = new CharacterModifier(WrappedCharakter.getWrappedCharakter(barundar));
+		modifier.addSkillSpecialisation("Maurer", BaseSkills.STONECRAFT.getName());
+		modifier.saveChanges("test");
+		String barundarAsXml = marshallHelper.marshall(barundar);
+		System.out.println(barundarAsXml);
 	}
 
 	private String makeCurrentEventHead() {

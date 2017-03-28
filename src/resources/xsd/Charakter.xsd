@@ -3,21 +3,23 @@
 	targetNamespace="http://www.example.org/Charakter/">
 
 	<element name="Charakter" type="tns:Charakter" />
-	<element name="metaDate" type="tns:MetaData"/>
-	<element name="Kultur" type="tns:Schablone"/>
-	
+	<element name="metaDate" type="tns:MetaData" />
+	<element name="Kultur" type="tns:Schablone" />
+
 
 	<complexType name="MetaData">
 		<sequence>
-			<element name="Charakters" type="tns:MetaDataLine" minOccurs="0" maxOccurs="unbounded"/>
+			<element name="Charakters" type="tns:MetaDataLine" minOccurs="0"
+				maxOccurs="unbounded" />
 		</sequence>
 	</complexType>
-	
+
 	<complexType name="MetaDataLine">
 		<sequence>
-			<element name="Name" type="string"/>
-			<element name="Datei" type="string"/>
-			<element name="Spezies" type="string" minOccurs="0" maxOccurs="unbounded"/>
+			<element name="Name" type="string" />
+			<element name="Datei" type="string" />
+			<element name="Spezies" type="string" minOccurs="0"
+				maxOccurs="unbounded" />
 		</sequence>
 	</complexType>
 
@@ -29,6 +31,7 @@
 			<element name="Kultur" type="string" />
 			<element name="Angaben" type="tns:Angabe" minOccurs="0" />
 			<element name="Eigenschaftswerte" type="tns:Eigenschaftswerte" />
+			<element name="Kommunikatives" type="tns:Kommunikatives" minOccurs="0"/>
 
 			<element name="Vorteile" type="tns:Vorteile"></element>
 			<element name="Nachteile" type="tns:Nachteile"></element>
@@ -48,11 +51,13 @@
 			<element name="Steigerungshistorie" type="tns:Historie" />
 		</sequence>
 	</complexType>
-	
+
 	<complexType name="Schablone">
 		<sequence>
 			<element name="Name" type="string" />
 			<element name="Eigenschaftswerte" type="tns:Eigenschaftswerte" />
+			<element name="Kommunikatives" type="tns:Kommunikatives" minOccurs="0"/>
+			<element name="Vorteile" type="tns:Vorteile" />
 			<element name="Talente" type="tns:Talente"></element>
 			<element name="Zauber" type="tns:Zauber"></element>
 			<element name="Rituale" type="tns:Rituale"></element>
@@ -105,6 +110,29 @@
 			<enumeration value="KK"></enumeration>
 		</restriction>
 	</simpleType>
+
+	<complexType name="Kommunikatives">
+		<sequence>
+			<element name="Sprachen" type="tns:Sprache" minOccurs="0"
+				maxOccurs="unbounded" />
+			<element name="Schriften" type="tns:Schrift" minOccurs="0"
+				maxOccurs="unbounded" />
+		</sequence>
+	</complexType>
+
+	<complexType name="Sprache">
+		<sequence>
+			<element name="Name" type="string"/>
+			<element name="Stufe" type="int"/>
+		</sequence>
+	</complexType>
+
+	<complexType name="Schrift">
+		<sequence>
+			<element name="Name" type="string"/>
+			<element name="Komplexität" type="tns:Steigerungskategorie"/>
+		</sequence>
+	</complexType>
 
 	<complexType name="Vorteile">
 		<sequence>
@@ -293,6 +321,7 @@
 			<element name="neueAP" type="int" maxOccurs="1" minOccurs="0" />
 			<element name="Eigenschaftssteigerung" type="tns:Eigenschaftssteigerung"
 				maxOccurs="8" minOccurs="0"></element>
+			<element name="Kommunikatives" type="tns:Kommunikatives" minOccurs="0"/>
 			<element name="Sonderfertigkeitshinzugewinn" maxOccurs="unbounded"
 				type="tns:Sonderfertigkeit" minOccurs="0" />
 			<element name="Talentspezialisierungshinzugewinn" maxOccurs="unbounded"
@@ -331,8 +360,10 @@
 			<element name="Änderung" type="int" />
 			<element name="neuerWert" type="int" />
 			<choice>
-				<element name="NeueFertigkeit" type="tns:Fertigkeit" minOccurs="0" />
-				<element name="NeueKampftechnik" type="tns:Kampftechnik" minOccurs="0" />
+				<element name="NeueFertigkeit" type="tns:Fertigkeit"
+					minOccurs="0" />
+				<element name="NeueKampftechnik" type="tns:Kampftechnik"
+					minOccurs="0" />
 			</choice>
 		</sequence>
 	</complexType>

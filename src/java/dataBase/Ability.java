@@ -10,8 +10,8 @@ public enum Ability {
 	CHARISMA("Charisma", Attributskürzel.CH),
 	DEXTERITY("Fingerfertigkeit", Attributskürzel.FF),
 	AGILITY("Gewandheit", Attributskürzel.GE),
-	STRENGTH("Körperkraft", Attributskürzel.KK),
-	CONSTITUTION("Konstitution", Attributskürzel.KO);
+	CONSTITUTION("Konstitution", Attributskürzel.KO),
+	STRENGTH("Körperkraft", Attributskürzel.KK);
 	
 	String name;
 	Attributskürzel acronym;
@@ -43,10 +43,10 @@ public enum Ability {
 			return Ability.DEXTERITY;
 		case GE:
 			return Ability.AGILITY;
-		case KK:
-			return Ability.STRENGTH;
 		case KO:
 			return Ability.CONSTITUTION;
+		case KK:
+			return Ability.STRENGTH;
 		default:
 			throw new UnsupportedOperationException(acronym.name() + " is no valid Attributskürzel");
 		}

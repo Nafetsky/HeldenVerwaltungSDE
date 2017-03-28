@@ -2,7 +2,7 @@
 // Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.8-b130911.1802 generiert 
 // Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2016.08.01 um 07:53:25 PM CEST 
+// Generiert: 2016.08.27 um 11:15:28 PM CEST 
 //
 
 
@@ -33,6 +33,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *         &lt;element name="AP" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
  *         &lt;element name="neueAP" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
  *         &lt;element name="Eigenschaftssteigerung" type="{http://www.example.org/Charakter/}Eigenschaftssteigerung" maxOccurs="8" minOccurs="0"/>
+ *         &lt;element name="Kommunikatives" type="{http://www.example.org/Charakter/}Kommunikatives" minOccurs="0"/>
  *         &lt;element name="Sonderfertigkeitshinzugewinn" type="{http://www.example.org/Charakter/}Sonderfertigkeit" maxOccurs="unbounded" minOccurs="0"/>
  *         &lt;element name="Talentspezialisierungshinzugewinn" type="{http://www.example.org/Charakter/}Talentspezialisierung" maxOccurs="unbounded" minOccurs="0"/>
  *         &lt;element name="Vorteil" type="{http://www.example.org/Charakter/}Vorteil" maxOccurs="unbounded" minOccurs="0"/>
@@ -57,6 +58,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
     "ap",
     "neueAP",
     "eigenschaftssteigerung",
+    "kommunikatives",
     "sonderfertigkeitshinzugewinn",
     "talentspezialisierungshinzugewinn",
     "vorteil",
@@ -79,6 +81,8 @@ public class Ereignis {
     protected Integer neueAP;
     @XmlElement(name = "Eigenschaftssteigerung")
     protected List<Eigenschaftssteigerung> eigenschaftssteigerung;
+    @XmlElement(name = "Kommunikatives")
+    protected Kommunikatives kommunikatives;
     @XmlElement(name = "Sonderfertigkeitshinzugewinn")
     protected List<Sonderfertigkeit> sonderfertigkeitshinzugewinn;
     @XmlElement(name = "Talentspezialisierungshinzugewinn")
@@ -221,6 +225,30 @@ public class Ereignis {
             eigenschaftssteigerung = new ArrayList<Eigenschaftssteigerung>();
         }
         return this.eigenschaftssteigerung;
+    }
+
+    /**
+     * Ruft den Wert der kommunikatives-Eigenschaft ab.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Kommunikatives }
+     *     
+     */
+    public Kommunikatives getKommunikatives() {
+        return kommunikatives;
+    }
+
+    /**
+     * Legt den Wert der kommunikatives-Eigenschaft fest.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Kommunikatives }
+     *     
+     */
+    public void setKommunikatives(Kommunikatives value) {
+        this.kommunikatives = value;
     }
 
     /**
