@@ -1,8 +1,8 @@
 package utils;
 
-import dataBase.BaseSkills;
-import dataBase.CostCategory;
-import dataBase.SpecialSkillGroup;
+import database.BaseSkills;
+import database.CostCategory;
+import database.SpecialSkillGroup;
 import generated.Basistalent;
 
 public class SkillBase implements Skill {

@@ -1,36 +1,36 @@
-package dataBase;
+ï»¿package database;
 
 import org.apache.commons.lang3.StringUtils;
 
 import generated.MerkmalProfan;
 
 public enum BaseSkills {
-	FLY("Fliegen", MerkmalProfan.KÖRPER, CostCategory.B),
-	JUGGLERY("Gaukeleien", MerkmalProfan.KÖRPER, CostCategory.A),
-	CLIMB("Klettern", MerkmalProfan.KÖRPER, CostCategory.B),
-	BODY_CONTROL("Körperbeherrschung", MerkmalProfan.KÖRPER, CostCategory.D),
-	STRENGHT_SURGE("Kraftakt", MerkmalProfan.KÖRPER, CostCategory.B),
-	RIDE("Reiten", MerkmalProfan.KÖRPER, CostCategory.B),
-	SWIM("Schwimmen", MerkmalProfan.KÖRPER, CostCategory.B),
-	COMPOSURE("Selbstbeherrschung", MerkmalProfan.KÖRPER, CostCategory.D),
-	SING("Singen", MerkmalProfan.KÖRPER, CostCategory.A),
-	PERCEPTION("Sinnesschärfe", MerkmalProfan.KÖRPER, CostCategory.D),
-	DANCE("Tanzen", MerkmalProfan.KÖRPER, CostCategory.A),
-	PICKPOCKETING("Taschendiebstahl", MerkmalProfan.KÖRPER, CostCategory.B),
-	STEALTH("Verbergen", MerkmalProfan.KÖRPER, CostCategory.C),
-	CAROUSE("Zechen", MerkmalProfan.KÖRPER, CostCategory.A),
+	FLY("Fliegen", MerkmalProfan.KÃ–RPER, CostCategory.B),
+	JUGGLERY("Gaukeleien", MerkmalProfan.KÃ–RPER, CostCategory.A),
+	CLIMB("Klettern", MerkmalProfan.KÃ–RPER, CostCategory.B),
+	BODY_CONTROL("KÃ¶rperbeherrschung", MerkmalProfan.KÃ–RPER, CostCategory.D),
+	STRENGHT_SURGE("Kraftakt", MerkmalProfan.KÃ–RPER, CostCategory.B),
+	RIDE("Reiten", MerkmalProfan.KÃ–RPER, CostCategory.B),
+	SWIM("Schwimmen", MerkmalProfan.KÃ–RPER, CostCategory.B),
+	COMPOSURE("Selbstbeherrschung", MerkmalProfan.KÃ–RPER, CostCategory.D),
+	SING("Singen", MerkmalProfan.KÃ–RPER, CostCategory.A),
+	PERCEPTION("SinnesschÃ¤rfe", MerkmalProfan.KÃ–RPER, CostCategory.D),
+	DANCE("Tanzen", MerkmalProfan.KÃ–RPER, CostCategory.A),
+	PICKPOCKETING("Taschendiebstahl", MerkmalProfan.KÃ–RPER, CostCategory.B),
+	STEALTH("Verbergen", MerkmalProfan.KÃ–RPER, CostCategory.C),
+	CAROUSE("Zechen", MerkmalProfan.KÃ–RPER, CostCategory.A),
 	
-	CONVINCE("Bekehren& Überzeugen", MerkmalProfan.GESELLSCHAFT, CostCategory.B),
-	COZEN("Betören", MerkmalProfan.GESELLSCHAFT, CostCategory.B),
-	INTIMIDATE("Einschüchtern", MerkmalProfan.GESELLSCHAFT, CostCategory.B),
+	CONVINCE("Bekehren& Ãœberzeugen", MerkmalProfan.GESELLSCHAFT, CostCategory.B),
+	COZEN("BetÃ¶ren", MerkmalProfan.GESELLSCHAFT, CostCategory.B),
+	INTIMIDATE("EinschÃ¼chtern", MerkmalProfan.GESELLSCHAFT, CostCategory.B),
 	ETIQUETTE("Etikette", MerkmalProfan.GESELLSCHAFT, CostCategory.B),
 	STREETSMARTS("Gassenwissen", MerkmalProfan.GESELLSCHAFT, CostCategory.C),
 	SENSE_MOTIVE("Menschenkenntnis", MerkmalProfan.GESELLSCHAFT, CostCategory.C),
-	PERSUADE("Überreden", MerkmalProfan.GESELLSCHAFT, CostCategory.C),
+	PERSUADE("Ãœberreden", MerkmalProfan.GESELLSCHAFT, CostCategory.C),
 	DISGUISE("Verkleiden", MerkmalProfan.GESELLSCHAFT, CostCategory.B),
 	WILLPOWER("Willenskraft", MerkmalProfan.GESELLSCHAFT, CostCategory.D),
 	
-	TRACK("Fährtensuchen", MerkmalProfan.NATUR, CostCategory.C),
+	TRACK("FÃ¤hrtensuchen", MerkmalProfan.NATUR, CostCategory.C),
 	BINDING("Fesseln", MerkmalProfan.NATUR, CostCategory.A),
 	FISHING("Fischen& Angeln", MerkmalProfan.NATUR, CostCategory.A),
 	PATHFINDING("Orientierung", MerkmalProfan.NATUR, CostCategory.B),
@@ -38,17 +38,17 @@ public enum BaseSkills {
 	ZOOLOGY("Tierkunde", MerkmalProfan.NATUR, CostCategory.C),
 	SURVIVAL("Wildnisleben", MerkmalProfan.NATUR, CostCategory.C),
 	
-	GAMBLE("Brett-& Glückspiele", MerkmalProfan.WISSEN, CostCategory.A),
+	GAMBLE("Brett-& GlÃ¼ckspiele", MerkmalProfan.WISSEN, CostCategory.A),
 	GEOGRAPHY("Geographie", MerkmalProfan.WISSEN, CostCategory.B),
 	HISTORY("Geschichtswissen", MerkmalProfan.WISSEN, CostCategory.B),
-	RELIGION("Götter& Kulte", MerkmalProfan.WISSEN, CostCategory.B),
+	RELIGION("GÃ¶tter& Kulte", MerkmalProfan.WISSEN, CostCategory.B),
 	WARCRAFT("Kriegskunst", MerkmalProfan.WISSEN, CostCategory.B),
 	SPELLCRAFT("Magiekunde", MerkmalProfan.WISSEN, CostCategory.C),
 	MECHANIC("Mechanik", MerkmalProfan.WISSEN, CostCategory.B),
 	MATH("Rechnen", MerkmalProfan.WISSEN, CostCategory.A),
 	LAW("Rechtskunde", MerkmalProfan.WISSEN, CostCategory.A),
 	LORE("Sagen& Legenden", MerkmalProfan.WISSEN, CostCategory.B),
-	SPHEROLOGY("Sphärenkunde", MerkmalProfan.WISSEN, CostCategory.B),
+	SPHEROLOGY("SphÃ¤renkunde", MerkmalProfan.WISSEN, CostCategory.B),
 	ASTROLOGY("Sternenkunde", MerkmalProfan.WISSEN, CostCategory.A),
 	
 	ALCHEMY("Alchemie", MerkmalProfan.HANDWERK, CostCategory.C),
@@ -65,7 +65,7 @@ public enum BaseSkills {
 	DRAWING("Malen& Zeichnen", MerkmalProfan.HANDWERK, CostCategory.A),
 	METALCRAFT("Metallbearbeitung", MerkmalProfan.HANDWERK, CostCategory.C),
 	MUSIC_MAKING("Musizieren", MerkmalProfan.HANDWERK, CostCategory.A),
-	LOCKPICKING("Schlösserknacken", MerkmalProfan.HANDWERK, CostCategory.C),
+	LOCKPICKING("SchlÃ¶sserknacken", MerkmalProfan.HANDWERK, CostCategory.C),
 	STONECRAFT("Steinbearbeitung", MerkmalProfan.HANDWERK, CostCategory.A),
 	TAILORING("Stoffbearbeitung", MerkmalProfan.HANDWERK, CostCategory.A);
 	
@@ -103,7 +103,7 @@ public enum BaseSkills {
 	
 	public static int getAmountByCategory(MerkmalProfan merkmal){
 		switch(merkmal){
-		case KÖRPER:
+		case KÃ–RPER:
 			return 14;
 		case GESELLSCHAFT:
 			return 9;

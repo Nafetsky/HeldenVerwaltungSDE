@@ -1,8 +1,8 @@
 //
 // Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.8-b130911.1802 generiert 
 // Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// ƒnderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2016.08.27 um 11:15:28 PM CEST 
+// √Ñnderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
+// Generiert: 2017.05.05 um 11:28:12 PM CEST 
 //
 
 
@@ -19,7 +19,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 
 /**
- * <p>Java-Klasse f¸r Ereignis complex type.
+ * <p>Java-Klasse f√ºr Ereignis complex type.
  * 
  * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
  * 
@@ -38,8 +38,8 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *         &lt;element name="Talentspezialisierungshinzugewinn" type="{http://www.example.org/Charakter/}Talentspezialisierung" maxOccurs="unbounded" minOccurs="0"/>
  *         &lt;element name="Vorteil" type="{http://www.example.org/Charakter/}Vorteil" maxOccurs="unbounded" minOccurs="0"/>
  *         &lt;element name="Nachteil" type="{http://www.example.org/Charakter/}Nachteil" maxOccurs="unbounded" minOccurs="0"/>
- *         &lt;element name="Fertigkeits‰nderung" type="{http://www.example.org/Charakter/}Fertigkeitsmodifikation" maxOccurs="unbounded" minOccurs="0"/>
- *         &lt;element name="Kampftechnik‰nderung" type="{http://www.example.org/Charakter/}Fertigkeitsmodifikation" maxOccurs="unbounded" minOccurs="0"/>
+ *         &lt;element name="Fertigkeits√§nderung" type="{http://www.example.org/Charakter/}Fertigkeitsmodifikation" maxOccurs="unbounded" minOccurs="0"/>
+ *         &lt;element name="Kampftechnik√§nderung" type="{http://www.example.org/Charakter/}Fertigkeitsmodifikation" maxOccurs="unbounded" minOccurs="0"/>
  *         &lt;element name="LePGekauft" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
  *         &lt;element name="AsPGekauft" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
  *         &lt;element name="KaPGekauft" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
@@ -92,9 +92,9 @@ public class Ereignis {
     @XmlElement(name = "Nachteil")
     protected List<Nachteil> nachteil;
     @XmlElement(name = "Fertigkeits\u00e4nderung")
-    protected List<Fertigkeitsmodifikation> fertigkeits‰nderung;
+    protected List<Fertigkeitsmodifikation> fertigkeits√§nderung;
     @XmlElement(name = "Kampftechnik\u00e4nderung")
-    protected List<Fertigkeitsmodifikation> kampftechnik‰nderung;
+    protected List<Fertigkeitsmodifikation> kampftechnik√§nderung;
     @XmlElement(name = "LePGekauft")
     protected Integer lePGekauft;
     @XmlElement(name = "AsPGekauft")
@@ -368,18 +368,18 @@ public class Ereignis {
     }
 
     /**
-     * Gets the value of the fertigkeits‰nderung property.
+     * Gets the value of the fertigkeits√§nderung property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the fertigkeits‰nderung property.
+     * This is why there is not a <CODE>set</CODE> method for the fertigkeits√§nderung property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
-     *    getFertigkeits‰nderung().add(newItem);
+     *    getFertigkeits√§nderung().add(newItem);
      * </pre>
      * 
      * 
@@ -389,26 +389,26 @@ public class Ereignis {
      * 
      * 
      */
-    public List<Fertigkeitsmodifikation> getFertigkeits‰nderung() {
-        if (fertigkeits‰nderung == null) {
-            fertigkeits‰nderung = new ArrayList<Fertigkeitsmodifikation>();
+    public List<Fertigkeitsmodifikation> getFertigkeits√§nderung() {
+        if (fertigkeits√§nderung == null) {
+            fertigkeits√§nderung = new ArrayList<Fertigkeitsmodifikation>();
         }
-        return this.fertigkeits‰nderung;
+        return this.fertigkeits√§nderung;
     }
 
     /**
-     * Gets the value of the kampftechnik‰nderung property.
+     * Gets the value of the kampftechnik√§nderung property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the kampftechnik‰nderung property.
+     * This is why there is not a <CODE>set</CODE> method for the kampftechnik√§nderung property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
-     *    getKampftechnik‰nderung().add(newItem);
+     *    getKampftechnik√§nderung().add(newItem);
      * </pre>
      * 
      * 
@@ -418,11 +418,11 @@ public class Ereignis {
      * 
      * 
      */
-    public List<Fertigkeitsmodifikation> getKampftechnik‰nderung() {
-        if (kampftechnik‰nderung == null) {
-            kampftechnik‰nderung = new ArrayList<Fertigkeitsmodifikation>();
+    public List<Fertigkeitsmodifikation> getKampftechnik√§nderung() {
+        if (kampftechnik√§nderung == null) {
+            kampftechnik√§nderung = new ArrayList<Fertigkeitsmodifikation>();
         }
-        return this.kampftechnik‰nderung;
+        return this.kampftechnik√§nderung;
     }
 
     /**

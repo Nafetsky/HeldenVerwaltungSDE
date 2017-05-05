@@ -5,12 +5,12 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
-import dataBase.Ability;
-import dataBase.BaseSkills;
-import dataBase.FeatGroup;
-import dataBase.SpecialSkillGroup;
+import database.Ability;
+import database.BaseSkills;
+import database.FeatGroup;
+import database.SpecialSkillGroup;
 import generated.Attribut;
-import generated.Attributskürzel;
+import generated.AttributskÃ¼rzel;
 import generated.Basistalent;
 import generated.Eigenschaftswerte;
 import generated.Fertigkeit;
@@ -31,7 +31,7 @@ public class SkillFinder {
 	}
 
 	public Skill findSkill(String name) {
-		Skill skill = null;
+		Skill skill;
 		skill = findAbilty(name);
 		if (skill != null) {
 			return skill;
@@ -127,7 +127,7 @@ public class SkillFinder {
 		return null;
 	}
 
-	public Attribut getAbilty(Attributskürzel acronym) {
+	public Attribut getAbilty(AttributskÃ¼rzel acronym) {
 		Eigenschaftswerte abilitys = charakter.getEigenschaftswerte();
 		switch (acronym) {
 		case MU:
@@ -143,16 +143,16 @@ public class SkillFinder {
 		case GE:
 			return abilitys.getGewandheit();
 		case KK:
-			return abilitys.getKörperkraft();
+			return abilitys.getKÃ¶rperkraft();
 		case KO:
 			return abilitys.getKonstitution();
 		default:
-			throw new UnsupportedOperationException(acronym.name() + " is no valid Attributskürzel");
+			throw new UnsupportedOperationException(acronym.name() + " is no valid Attributskï¿½rzel");
 		}
 	}
 	
 	public List<Sonderfertigkeit> getAllFeatsByGroup(FeatGroup group){
-		List<Sonderfertigkeit> list = new ArrayList<Sonderfertigkeit>();
+		List<Sonderfertigkeit> list = new ArrayList<>();
 		for(Sonderfertigkeit feat:charakter.getSonderfertigkeiten().getSonderfertigkeit()){
 			if(StringUtils.equals(feat.getKategorie(), group.getName())){
 				list.add(feat);
@@ -168,7 +168,7 @@ public class SkillFinder {
 	 * @return
 	 */
 	public List<Fertigkeit> getAllSpecialSkills(SpecialSkillGroup group) {
-		List<Fertigkeit> list = new ArrayList<Fertigkeit>();
+		List<Fertigkeit> list = new ArrayList<>();
 		switch (group) {
 		case SPELL:
 		case RITUAL:
@@ -183,16 +183,16 @@ public class SkillFinder {
 	}
 
 	public String getSkillSpecialisations(String name) {
-		String result = "";
+		StringBuilder result = new StringBuilder();
 		for(Talentspezialisierung feat:charakter.getSonderfertigkeiten().getTalentspezialisierung()){
 			if(StringUtils.equals(feat.getFertigkeit(), name)){
 				if(StringUtils.isNotEmpty(result)){
-					result += ", ";
+					result.append(", ");
 				}
-				result += feat.getName();
+				result.append(feat.getName());
 			}
 		}
-		return result;
+		return result.toString();
 	}
 
 }

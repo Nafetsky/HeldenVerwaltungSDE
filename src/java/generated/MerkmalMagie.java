@@ -1,8 +1,8 @@
 //
 // Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.8-b130911.1802 generiert 
 // Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2016.08.27 um 11:15:28 PM CEST 
+// Ã„nderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
+// Generiert: 2017.05.05 um 11:28:12 PM CEST 
 //
 
 
@@ -14,7 +14,7 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java-Klasse für MerkmalMagie.
+ * <p>Java-Klasse fÃ¼r MerkmalMagie.
  * 
  * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
  * <p>
@@ -22,13 +22,13 @@ import javax.xml.bind.annotation.XmlType;
  * &lt;simpleType name="MerkmalMagie">
  *   &lt;restriction base="{http://www.example.org/Charakter/}Merkmal">
  *     &lt;enumeration value="Antimagie"/>
- *     &lt;enumeration value="Dämonisch"/>
+ *     &lt;enumeration value="DÃ¤monisch"/>
  *     &lt;enumeration value="Einfluss"/>
  *     &lt;enumeration value="Elementar"/>
  *     &lt;enumeration value="Heilung"/>
  *     &lt;enumeration value="Hellsicht"/>
  *     &lt;enumeration value="Illusion"/>
- *     &lt;enumeration value="Sphären"/>
+ *     &lt;enumeration value="SphÃ¤ren"/>
  *     &lt;enumeration value="Objekt"/>
  *     &lt;enumeration value="Telekinese"/>
  *     &lt;enumeration value="Verwandlung"/>
@@ -44,7 +44,7 @@ public enum MerkmalMagie {
     @XmlEnumValue("Antimagie")
     ANTIMAGIE("Antimagie"),
     @XmlEnumValue("D\u00e4monisch")
-    DÄMONISCH("D\u00e4monisch"),
+    DÃ„MONISCH("D\u00e4monisch"),
     @XmlEnumValue("Einfluss")
     EINFLUSS("Einfluss"),
     @XmlEnumValue("Elementar")
@@ -56,7 +56,7 @@ public enum MerkmalMagie {
     @XmlEnumValue("Illusion")
     ILLUSION("Illusion"),
     @XmlEnumValue("Sph\u00e4ren")
-    SPHÄREN("Sph\u00e4ren"),
+    SPHÃ„REN("Sph\u00e4ren"),
     @XmlEnumValue("Objekt")
     OBJEKT("Objekt"),
     @XmlEnumValue("Telekinese")

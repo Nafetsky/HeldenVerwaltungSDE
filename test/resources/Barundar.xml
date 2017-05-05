@@ -21,6 +21,28 @@
 		<Konstitution Attributswert="16" Kürzel="KO"/>
 		<Körperkraft Attributswert="16" Kürzel="KK"/>
 	</Eigenschaftswerte>
+	<Kommunikatives>
+		<Sprachen>
+			<Name>Rogolan</Name>
+			<Stufe>4</Stufe>
+		</Sprachen>
+		<Sprachen>
+			<Name>Garethi</Name>
+			<Stufe>3</Stufe>
+		</Sprachen>
+		<Sprachen>
+			<Name>Bosperano</Name>
+			<Stufe>2</Stufe>
+		</Sprachen>
+		<Schriften>
+			<Name>Rogolan Runen</Name>
+			<Komplexität>A</Komplexität>
+		</Schriften>
+		<Schriften>
+			<Name>Kusliker Zeichen</Name>
+			<Komplexität>A</Komplexität>
+		</Schriften>
+	</Kommunikatives>
 	<Vorteile>
 		<Vorteil>
 			<Name>Adel I</Name>
@@ -122,7 +144,7 @@
 			<Merkmal>Körper</Merkmal>
 		</Talent>
 		<Talent>
-			<Name>Sinneschärfe</Name>
+			<Name>Sinnesschärfe</Name>
 			<Fertigkeitswert>8</Fertigkeitswert>
 			<Merkmal>Körper</Merkmal>
 		</Talent>
@@ -177,7 +199,7 @@
 			<Merkmal>Gesellschaft</Merkmal>
 		</Talent>
 		<Talent>
-			<Name>Fährtensuche</Name>
+			<Name>Fährtensuchen</Name>
 			<Fertigkeitswert>6</Fertigkeitswert>
 			<Merkmal>Natur</Merkmal>
 		</Talent>
@@ -257,7 +279,7 @@
 			<Merkmal>Wissen</Merkmal>
 		</Talent>
 		<Talent>
-			<Name>Spährenkunde</Name>
+			<Name>Sphärenkunde</Name>
 			<Fertigkeitswert>1</Fertigkeitswert>
 			<Merkmal>Wissen</Merkmal>
 		</Talent>
@@ -302,7 +324,7 @@
 			<Merkmal>Handwerk</Merkmal>
 		</Talent>
 		<Talent>
-			<Name>Steibearbeitung</Name>
+			<Name>Steinbearbeitung</Name>
 			<Fertigkeitswert>8</Fertigkeitswert>
 			<Merkmal>Handwerk</Merkmal>
 		</Talent>
@@ -406,6 +428,10 @@
 		</Talentspezialisierung>
 		<Talentspezialisierung>
 			<Name>Verhütten</Name>
+			<Fertigkeit>Metallbearbeitung</Fertigkeit>
+		</Talentspezialisierung>
+		<Talentspezialisierung>
+			<Name>Waffenschmied</Name>
 			<Fertigkeit>Metallbearbeitung</Fertigkeit>
 		</Talentspezialisierung>
 	</Sonderfertigkeiten>

@@ -1,7 +1,7 @@
 package utils;
 
-import dataBase.CostCategory;
-import dataBase.SpecialSkillGroup;
+import database.CostCategory;
+import database.SpecialSkillGroup;
 import generated.Kampftechnik;
 
 public class SkillCombat implements Skill {
@@ -20,8 +20,8 @@ public class SkillCombat implements Skill {
 		if (combatSkill.isBasistechnik() != null && !combatSkill.isBasistechnik()) {
 			isBaseSkill = false;
 		}
-		int newCost = CostCalculator.calcCostCombat(skillLevel + 1, category, isBaseSkill);
-		int currentCost = CostCalculator.calcCostCombat(skillLevel, category, isBaseSkill);
+		int newCost = CostCalculator.calcCostCombat(skillLevel + 1, category);
+		int currentCost = CostCalculator.calcCostCombat(skillLevel, category);
 
 		return newCost - currentCost;
 	}

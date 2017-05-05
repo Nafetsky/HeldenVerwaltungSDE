@@ -1,22 +1,22 @@
-package dataBase;
+ï»¿package database;
 
-import generated.Attributskürzel;
+import generated.AttributskÃ¼rzel;
 
 public enum Ability {
 	
-	VALOR("Mut", Attributskürzel.MU),
-	INTELLIGENCE("Klugheit", Attributskürzel.KL),
-	INTUITION("Intuition", Attributskürzel.IN),
-	CHARISMA("Charisma", Attributskürzel.CH),
-	DEXTERITY("Fingerfertigkeit", Attributskürzel.FF),
-	AGILITY("Gewandheit", Attributskürzel.GE),
-	CONSTITUTION("Konstitution", Attributskürzel.KO),
-	STRENGTH("Körperkraft", Attributskürzel.KK);
+	VALOR("Mut", AttributskÃ¼rzel.MU),
+	INTELLIGENCE("Klugheit", AttributskÃ¼rzel.KL),
+	INTUITION("Intuition", AttributskÃ¼rzel.IN),
+	CHARISMA("Charisma", AttributskÃ¼rzel.CH),
+	DEXTERITY("Fingerfertigkeit", AttributskÃ¼rzel.FF),
+	AGILITY("Gewandheit", AttributskÃ¼rzel.GE),
+	CONSTITUTION("Konstitution", AttributskÃ¼rzel.KO),
+	STRENGTH("KÃ¶perkraft", AttributskÃ¼rzel.KK);
 	
 	String name;
-	Attributskürzel acronym;
+	AttributskÃ¼rzel acronym;
 	
-	private Ability(String name, Attributskürzel acronym){
+	private Ability(String name, AttributskÃ¼rzel acronym){
 		this.name= name;
 		this.acronym = acronym;
 	}
@@ -25,11 +25,11 @@ public enum Ability {
 		return name;
 	}
 	
-	public Attributskürzel getAcronym(){
+	public AttributskÃ¼rzel getAcronym(){
 		return acronym;
 	}
 	
-	public static Ability getAbility(Attributskürzel acronym){
+	public static Ability getAbility(AttributskÃ¼rzel acronym){
 		switch(acronym){
 		case MU:
 			return Ability.VALOR;
@@ -48,7 +48,7 @@ public enum Ability {
 		case KK:
 			return Ability.STRENGTH;
 		default:
-			throw new UnsupportedOperationException(acronym.name() + " is no valid Attributskürzel");
+			throw new UnsupportedOperationException(acronym.name() + " is no valid AttributskÃ¯Â¿Â½rzel");
 		}
 	}
 	

@@ -33,10 +33,10 @@ import controle.AddNewScriptDialogResult;
 import controle.AddSkillDialogResult;
 import controle.AddVantageDialogResult;
 import controle.MasterControleProgramm;
-import dataBase.Ability;
-import dataBase.BaseSkills;
-import dataBase.FeatGroup;
-import dataBase.SpecialSkillGroup;
+import database.Ability;
+import database.BaseSkills;
+import database.FeatGroup;
+import database.SpecialSkillGroup;
 import generated.Attribut;
 import generated.Fertigkeit;
 import generated.Kampftechnik;
@@ -92,7 +92,7 @@ public class PaneBuilder {
 
 		JMenuItem menuPopupSave = new JMenuItem("Charakter speichern");
 		menuPopupSave.addActionListener((ActionEvent e) -> {
-			String result = InputPopups.getSaveDialogResult(popup);
+			String result = InputPopups.getSaveDialogResult();
 			if (null != result) {
 				controleInstance.handleSaveActiveCharakter(result);
 			}
@@ -105,7 +105,7 @@ public class PaneBuilder {
 
 		JMenuItem menuPopupNewCulture = new JMenuItem("Neue Kultur erstellen");
 		menuPopupNewCulture.addActionListener((ActionEvent e) -> {
-			String result = InputPopups.getNewCultureDialogResult(popup);
+			String result = InputPopups.getNewCultureDialogResult();
 			if (null != result) {
 				controleInstance.handleNewCulture(result);
 			}
@@ -114,7 +114,7 @@ public class PaneBuilder {
 
 		JMenuItem menuPopupNewProfession = new JMenuItem("Neue Profession erstellen");
 		menuPopupNewProfession.addActionListener((ActionEvent e) -> {
-			String result = InputPopups.getNewProfessionDialogResult(popup);
+			String result = InputPopups.getNewProfessionDialogResult();
 			if (null != result) {
 				controleInstance.handleNewProfession(result);
 			}
@@ -175,9 +175,9 @@ public class PaneBuilder {
 			baseInfosPanel.add(lableUsedAP);
 			baseInfosPanel.add(fieldUsedAp);
 
-			JButton bAddAp = new JButton("AP hinzufügen");
+			JButton bAddAp = new JButton("AP hinzufï¿½gen");
 			bAddAp.addActionListener((ActionEvent e) -> {
-				String addUpString = JOptionPane.showInputDialog(baseInfosPanel, "Wie viele Ap hinzufügen?");
+				String addUpString = JOptionPane.showInputDialog(baseInfosPanel, "Wie viele Ap hinzufï¿½gen?");
 				try {
 					int addUp = Integer.parseInt(addUpString);
 					controleInstance.handleAddAp(addUp);
@@ -220,7 +220,7 @@ public class PaneBuilder {
 		JButton bAddLanguage = new JButton();
 		bAddLanguage.setText("Sprache lernen");
 		bAddLanguage.addActionListener((ActionEvent e) -> {
-			String language = JOptionPane.showInputDialog(pCommunicatives, "Welche Sprache soll hinzugefügt werden?");
+			String language = JOptionPane.showInputDialog(pCommunicatives, "Welche Sprache soll hinzugefï¿½gt werden?");
 			if (StringUtils.isNotEmpty(language)) {
 				controleInstance.handleIncreaseLangue(language);
 				pLanguages.setLayout(new GridLayout(charakter.getKommunikatives().getSprachen().size(), 3));
@@ -288,7 +288,7 @@ public class PaneBuilder {
 		DefaultTableModel tableModel = makeTable(data);
 		JTable vanteges = new JTable(tableModel);
 
-		JButton addButton = new JButton("Hinzufügen");
+		JButton addButton = new JButton("Hinzufï¿½gen");
 		addButton.addActionListener((ActionEvent e) -> {
 			AddVantageDialogResult result = InputPopups.getAddVanatgeDialogResult(baseInfosPanel);
 			if (result.isComplete()) {
@@ -330,7 +330,7 @@ public class PaneBuilder {
 		} else if (data.get(0) instanceof Schrift) {
 			for (Object script : data) {
 				tableModel.addRow(
-						new String[] { ((Schrift) script).getName(), ((Schrift) script).getKomplexität().toString() });
+						new String[] { ((Schrift) script).getName(), ((Schrift) script).getKomplexitÃ¤t().toString() });
 			}
 		}
 		return tableModel;
@@ -345,7 +345,7 @@ public class PaneBuilder {
 
 			JTextField field = new JTextField();
 			Attribut ability = finder.getAbilty(abilityAbstract.getAcronym());
-			Skill skillable = finder.findSkill(Ability.getAbility(ability.getKürzel()).getName());
+			Skill skillable = finder.findSkill(Ability.getAbility(ability.getKÃ¼rzel()).getName());
 			field.setText(new String(Integer.toString(ability.getAttributswert())));
 			field.setEnabled(false);
 			abilityPanel.add(field);
@@ -354,7 +354,7 @@ public class PaneBuilder {
 
 			JButton button = new JButton("+1");
 			button.addActionListener((ActionEvent e) -> {
-				controleInstance.handlencreaseSkill(Ability.getAbility(ability.getKürzel()).getName());
+				controleInstance.handlencreaseSkill(Ability.getAbility(ability.getKÃ¼rzel()).getName());
 				field.setText(new String(Integer.toString(ability.getAttributswert())));
 				costs.setText(Integer.toString(skillable.getCostForNextLevel()) + " AP");
 			});
@@ -493,7 +493,7 @@ public class PaneBuilder {
 				toAddSkillResultDialog = InputPopups.getAddSkillResultDialog(skillPane, "Tradition");
 			} else {
 				toAddSkillResultDialog = InputPopups.getAddSkillResultDialog(skillPane,
-						getNamesOfMagicAttributeValues(), "Repräsentation");
+						getNamesOfMagicAttributeValues(), "Reprï¿½sentation");
 			}
 
 			toAddSkillResultDialog.setGroup(skillGroup);
@@ -584,7 +584,7 @@ public class PaneBuilder {
 	}
 
 	private JButton buttonAddSkillSpecialisation(JPanel skillTable, JTextField fSpecialisations, String skillName) {
-		JButton buttonAddSkillSpecalisation = new JButton("Fertigkeitsspezialisierung hinzufügen");
+		JButton buttonAddSkillSpecalisation = new JButton("Fertigkeitsspezialisierung hinzufï¿½gen");
 		buttonAddSkillSpecalisation.addActionListener((ActionEvent e) -> {
 			AddFeatDialogResult result = getAddFeatResultDialog(skillTable, false);
 			if (result != null) {
@@ -608,7 +608,7 @@ public class PaneBuilder {
 
 		featComponent.add(featTableComponent);
 
-		JButton buttonAddFeat = new JButton("Sonderfertigkeit hinzufügen");
+		JButton buttonAddFeat = new JButton("Sonderfertigkeit hinzufï¿½gen");
 		buttonAddFeat.addActionListener((ActionEvent e) -> {
 			AddFeatDialogResult result = getAddFeatResultDialog(featComponent);
 			if (result != null) {

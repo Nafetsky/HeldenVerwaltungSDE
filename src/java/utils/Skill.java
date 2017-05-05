@@ -1,7 +1,7 @@
 package utils;
 
-import dataBase.CostCategory;
-import dataBase.SpecialSkillGroup;
+import database.CostCategory;
+import database.SpecialSkillGroup;
 
 public interface Skill {
 	

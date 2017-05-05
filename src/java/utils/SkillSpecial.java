@@ -2,8 +2,8 @@ package utils;
 
 import org.apache.commons.lang3.StringUtils;
 
-import dataBase.CostCategory;
-import dataBase.SpecialSkillGroup;
+import database.CostCategory;
+import database.SpecialSkillGroup;
 import generated.Fertigkeit;
 
 public class SkillSpecial implements Skill {
@@ -50,7 +50,7 @@ public class SkillSpecial implements Skill {
 		return CostCategory.getCostCategory(skill.getSteigerungskosten());
 	}
 	
-	private static final String REPRESENTATION = "REPRÄSENTATION_";
+	private static final String REPRESENTATION = "REPRï¿½SENTATION_";
 	private static final String TRADIDTION = "TRADIDTION_";
 	public String getAtributes(){
 		String prefix ="";

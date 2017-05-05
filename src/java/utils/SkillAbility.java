@@ -1,8 +1,8 @@
 package utils;
 
-import dataBase.Ability;
-import dataBase.CostCategory;
-import dataBase.SpecialSkillGroup;
+import database.Ability;
+import database.CostCategory;
+import database.SpecialSkillGroup;
 import generated.Attribut;
 
 public class SkillAbility implements Skill {
@@ -31,7 +31,7 @@ public class SkillAbility implements Skill {
 
 	@Override
 	public String getName() {
-		switch(ability.getKürzel()){
+		switch(ability.getKÃ¼rzel()){
 		case MU:
 			return Ability.VALOR.getName();
 		case KL:
@@ -49,7 +49,7 @@ public class SkillAbility implements Skill {
 		case KO:
 			return Ability.CONSTITUTION.getName();
 		default:
-			throw new UnsupportedOperationException(ability.getKürzel() + " is no valid Attributskürzel");
+			throw new UnsupportedOperationException(ability.getKÃ¼rzel() + " is no valid Attributskï¿½rzel");
 		}
 			
 	}

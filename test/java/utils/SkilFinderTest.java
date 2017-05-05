@@ -7,7 +7,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import dataBase.FeatGroup;
+import database.FeatGroup;
 import generated.Charakter;
 import generated.Sonderfertigkeit;
 
@@ -30,8 +30,8 @@ public class SkilFinderTest {
 	}
 	
 	@Test
-	public void testgetCostBaseSkillIncreaseLaqckingCozen(){
-		Skill skill = finder.findSkill("Betören");
+	public void testgetCostBaseSkillIncreaseLackingCozen(){
+		Skill skill = finder.findSkill("BetÃ¶ren");
 		assertEquals(2, skill.getCostForNextLevel());
 	}
 	

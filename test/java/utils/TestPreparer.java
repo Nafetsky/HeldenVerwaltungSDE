@@ -9,6 +9,7 @@ import generated.Charakter;
 public class TestPreparer {
 	
 	static final String TEST_RESOURCES_BARUNDAR_XML = "Barundar.xml";
+	static final String TEST_RESOURCES_BARUNDAR_ORIG_XML = "Barundar_orig.xml";
 	static final String TEST_RESOURCES_VITUS_XML = "VitusSanin.xml";
 	static final String PATH_PREFIX = "test/resources/";
 
@@ -27,7 +28,7 @@ public class TestPreparer {
 	}
 	
 	public String getBarundarOrig() throws Exception{
-		byte[] encoded = Files.readAllBytes(Paths.get(TestPreparer.TEST_RESOURCES_BARUNDAR_XML));
+		byte[] encoded = Files.readAllBytes(Paths.get(PATH_PREFIX + TestPreparer.TEST_RESOURCES_BARUNDAR_XML));
 		return new String(encoded, "UTF-8").replaceAll(">\\p{Space}*<", "><").replaceAll("><", ">\r\n<");
 	}
 	

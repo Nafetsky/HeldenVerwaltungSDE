@@ -1,8 +1,8 @@
 //
 // Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.8-b130911.1802 generiert 
 // Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2016.08.27 um 11:15:28 PM CEST 
+// Ã„nderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
+// Generiert: 2017.05.05 um 11:28:12 PM CEST 
 //
 
 
@@ -16,7 +16,7 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java-Klasse für Kampftechnik complex type.
+ * <p>Java-Klasse fÃ¼r Kampftechnik complex type.
  * 
  * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
  * 
@@ -27,7 +27,7 @@ import javax.xml.bind.annotation.XmlType;
  *       &lt;sequence>
  *         &lt;element name="Name" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="Kampftechnikwert" type="{http://www.w3.org/2001/XMLSchema}int"/>
- *         &lt;element name="Leiteigenschaft" type="{http://www.example.org/Charakter/}Attributskürzel"/>
+ *         &lt;element name="Leiteigenschaft" type="{http://www.example.org/Charakter/}AttributskÃ¼rzel"/>
  *         &lt;element name="Steigerungskosten" type="{http://www.example.org/Charakter/}Steigerungskategorie"/>
  *         &lt;element name="Basistechnik" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="0"/>
  *       &lt;/sequence>
@@ -54,7 +54,7 @@ public class Kampftechnik {
     protected int kampftechnikwert;
     @XmlElement(name = "Leiteigenschaft", required = true)
     @XmlSchemaType(name = "string")
-    protected Attributskürzel leiteigenschaft;
+    protected AttributskÃ¼rzel leiteigenschaft;
     @XmlElement(name = "Steigerungskosten", required = true)
     @XmlSchemaType(name = "string")
     protected Steigerungskategorie steigerungskosten;
@@ -106,10 +106,10 @@ public class Kampftechnik {
      * 
      * @return
      *     possible object is
-     *     {@link Attributskürzel }
+     *     {@link AttributskÃ¼rzel }
      *     
      */
-    public Attributskürzel getLeiteigenschaft() {
+    public AttributskÃ¼rzel getLeiteigenschaft() {
         return leiteigenschaft;
     }
 
@@ -118,10 +118,10 @@ public class Kampftechnik {
      * 
      * @param value
      *     allowed object is
-     *     {@link Attributskürzel }
+     *     {@link AttributskÃ¼rzel }
      *     
      */
-    public void setLeiteigenschaft(Attributskürzel value) {
+    public void setLeiteigenschaft(AttributskÃ¼rzel value) {
         this.leiteigenschaft = value;
     }
 

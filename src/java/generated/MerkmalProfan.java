@@ -1,8 +1,8 @@
 //
 // Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.8-b130911.1802 generiert 
 // Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2016.08.27 um 11:15:28 PM CEST 
+// Ã„nderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
+// Generiert: 2017.05.05 um 11:28:12 PM CEST 
 //
 
 
@@ -14,14 +14,14 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java-Klasse für MerkmalProfan.
+ * <p>Java-Klasse fÃ¼r MerkmalProfan.
  * 
  * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
  * <p>
  * <pre>
  * &lt;simpleType name="MerkmalProfan">
  *   &lt;restriction base="{http://www.example.org/Charakter/}Merkmal">
- *     &lt;enumeration value="Körper"/>
+ *     &lt;enumeration value="KÃ¶rper"/>
  *     &lt;enumeration value="Gesellschaft"/>
  *     &lt;enumeration value="Gesellschaft"/>
  *     &lt;enumeration value="Natur"/>
@@ -37,7 +37,7 @@ import javax.xml.bind.annotation.XmlType;
 public enum MerkmalProfan {
 
     @XmlEnumValue("K\u00f6rper")
-    KÖRPER("K\u00f6rper"),
+    KÃ–RPER("K\u00f6rper"),
     @XmlEnumValue("Gesellschaft")
     GESELLSCHAFT("Gesellschaft"),
     @XmlEnumValue("Natur")

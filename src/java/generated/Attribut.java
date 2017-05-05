@@ -1,8 +1,8 @@
 //
 // Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.8-b130911.1802 generiert 
 // Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2016.08.27 um 11:15:28 PM CEST 
+// Ã„nderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
+// Generiert: 2017.05.05 um 11:28:12 PM CEST 
 //
 
 
@@ -15,7 +15,7 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java-Klasse für Attribut complex type.
+ * <p>Java-Klasse fÃ¼r Attribut complex type.
  * 
  * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
  * 
@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;attribute name="Attributswert" type="{http://www.w3.org/2001/XMLSchema}int" />
- *       &lt;attribute name="Kürzel" type="{http://www.example.org/Charakter/}Attributskürzel" />
+ *       &lt;attribute name="KÃ¼rzel" type="{http://www.example.org/Charakter/}AttributskÃ¼rzel" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -39,7 +39,7 @@ public class Attribut {
     @XmlAttribute(name = "Attributswert")
     protected Integer attributswert;
     @XmlAttribute(name = "K\u00fcrzel")
-    protected Attributskürzel kürzel;
+    protected AttributskÃ¼rzel kÃ¼rzel;
 
     /**
      * Ruft den Wert der attributswert-Eigenschaft ab.
@@ -66,27 +66,27 @@ public class Attribut {
     }
 
     /**
-     * Ruft den Wert der kürzel-Eigenschaft ab.
+     * Ruft den Wert der kÃ¼rzel-Eigenschaft ab.
      * 
      * @return
      *     possible object is
-     *     {@link Attributskürzel }
+     *     {@link AttributskÃ¼rzel }
      *     
      */
-    public Attributskürzel getKürzel() {
-        return kürzel;
+    public AttributskÃ¼rzel getKÃ¼rzel() {
+        return kÃ¼rzel;
     }
 
     /**
-     * Legt den Wert der kürzel-Eigenschaft fest.
+     * Legt den Wert der kÃ¼rzel-Eigenschaft fest.
      * 
      * @param value
      *     allowed object is
-     *     {@link Attributskürzel }
+     *     {@link AttributskÃ¼rzel }
      *     
      */
-    public void setKürzel(Attributskürzel value) {
-        this.kürzel = value;
+    public void setKÃ¼rzel(AttributskÃ¼rzel value) {
+        this.kÃ¼rzel = value;
     }
 
 }

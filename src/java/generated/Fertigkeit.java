@@ -1,8 +1,8 @@
 //
 // Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.8-b130911.1802 generiert 
 // Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2016.08.27 um 11:15:28 PM CEST 
+// Ã„nderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
+// Generiert: 2017.05.05 um 11:28:12 PM CEST 
 //
 
 
@@ -18,7 +18,7 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java-Klasse für Fertigkeit complex type.
+ * <p>Java-Klasse fÃ¼r Fertigkeit complex type.
  * 
  * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
  * 
@@ -28,9 +28,9 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="Name" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="Attribut1" type="{http://www.example.org/Charakter/}Attributskürzel"/>
- *         &lt;element name="Attribut2" type="{http://www.example.org/Charakter/}Attributskürzel"/>
- *         &lt;element name="Attribut3" type="{http://www.example.org/Charakter/}Attributskürzel"/>
+ *         &lt;element name="Attribut1" type="{http://www.example.org/Charakter/}AttributskÃ¼rzel"/>
+ *         &lt;element name="Attribut2" type="{http://www.example.org/Charakter/}AttributskÃ¼rzel"/>
+ *         &lt;element name="Attribut3" type="{http://www.example.org/Charakter/}AttributskÃ¼rzel"/>
  *         &lt;element name="Fertigkeitswert" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *         &lt;element name="Steigerungskosten" type="{http://www.example.org/Charakter/}Steigerungskategorie"/>
  *         &lt;element name="Kategorie" type="{http://www.example.org/Charakter/}Fertigkeitskategorie"/>
@@ -60,13 +60,13 @@ public class Fertigkeit {
     protected String name;
     @XmlElement(name = "Attribut1", required = true)
     @XmlSchemaType(name = "string")
-    protected Attributskürzel attribut1;
+    protected AttributskÃ¼rzel attribut1;
     @XmlElement(name = "Attribut2", required = true)
     @XmlSchemaType(name = "string")
-    protected Attributskürzel attribut2;
+    protected AttributskÃ¼rzel attribut2;
     @XmlElement(name = "Attribut3", required = true)
     @XmlSchemaType(name = "string")
-    protected Attributskürzel attribut3;
+    protected AttributskÃ¼rzel attribut3;
     @XmlElement(name = "Fertigkeitswert")
     protected int fertigkeitswert;
     @XmlElement(name = "Steigerungskosten", required = true)
@@ -107,10 +107,10 @@ public class Fertigkeit {
      * 
      * @return
      *     possible object is
-     *     {@link Attributskürzel }
+     *     {@link AttributskÃ¼rzel }
      *     
      */
-    public Attributskürzel getAttribut1() {
+    public AttributskÃ¼rzel getAttribut1() {
         return attribut1;
     }
 
@@ -119,10 +119,10 @@ public class Fertigkeit {
      * 
      * @param value
      *     allowed object is
-     *     {@link Attributskürzel }
+     *     {@link AttributskÃ¼rzel }
      *     
      */
-    public void setAttribut1(Attributskürzel value) {
+    public void setAttribut1(AttributskÃ¼rzel value) {
         this.attribut1 = value;
     }
 
@@ -131,10 +131,10 @@ public class Fertigkeit {
      * 
      * @return
      *     possible object is
-     *     {@link Attributskürzel }
+     *     {@link AttributskÃ¼rzel }
      *     
      */
-    public Attributskürzel getAttribut2() {
+    public AttributskÃ¼rzel getAttribut2() {
         return attribut2;
     }
 
@@ -143,10 +143,10 @@ public class Fertigkeit {
      * 
      * @param value
      *     allowed object is
-     *     {@link Attributskürzel }
+     *     {@link AttributskÃ¼rzel }
      *     
      */
-    public void setAttribut2(Attributskürzel value) {
+    public void setAttribut2(AttributskÃ¼rzel value) {
         this.attribut2 = value;
     }
 
@@ -155,10 +155,10 @@ public class Fertigkeit {
      * 
      * @return
      *     possible object is
-     *     {@link Attributskürzel }
+     *     {@link AttributskÃ¼rzel }
      *     
      */
-    public Attributskürzel getAttribut3() {
+    public AttributskÃ¼rzel getAttribut3() {
         return attribut3;
     }
 
@@ -167,10 +167,10 @@ public class Fertigkeit {
      * 
      * @param value
      *     allowed object is
-     *     {@link Attributskürzel }
+     *     {@link AttributskÃ¼rzel }
      *     
      */
-    public void setAttribut3(Attributskürzel value) {
+    public void setAttribut3(AttributskÃ¼rzel value) {
         this.attribut3 = value;
     }
 

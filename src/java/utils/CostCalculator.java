@@ -4,10 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import dataBase.BaseSkills;
-import dataBase.CostCategory;
+import database.BaseSkills;
+import database.CostCategory;
 import generated.Basistalent;
-import generated.Charakter;
 import generated.Eigenschaftswerte;
 import generated.Fertigkeit;
 import generated.Kampftechnik;
@@ -26,33 +25,39 @@ import generated.Vorteile;
 
 public class CostCalculator {
 
-	public static int calcUsedAP(WrappedCharakter charakter) {
+	private CostCalculator() {
+		// no op
+	}
+
+	public static int calcUsedAP(WrappedCharakter charakterW) {
 		int usedAp = 0;
-
-		if (charakter.isCharakter()) {
-			usedAp = CostCalculator.calcUsedAP(charakter.charakter);
-		} else {
-
+		if(charakterW.isCharakter()){
+			usedAp += getAPOnlyRelevantOnCharakter(charakterW);
 		}
+		if(charakterW.isProfession()){
+			usedAp += getAPOnlyRelevantOnProfession(charakterW);
+		}
+		usedAp += calcAllBaseAbilityCosts(charakterW.getEigenschaftswerte());
+		usedAp += calcAdvantagesCosts(charakterW.getVorteile());
+		usedAp += calcDisadvantagesCosts(charakterW.getNachteile());
+		usedAp += calcKommunicatiesCosts(charakterW.getKommunikatives());
+		usedAp += calcAllBaseSkillCosts(charakterW.getTalente());
+		usedAp += calcCombatSkillsCosts(charakterW.getKampftechniken());
+		usedAp += calcAllSpecificSkillCosts(charakterW.getZauber().getZauber());
+		usedAp += calcAllSpecificSkillCosts(charakterW.getRituale().getRitual());
+		usedAp += calcAllSpecificSkillCosts(charakterW.getLiturgien().getLiturgie());
+		usedAp += calcAllSpecificSkillCosts(charakterW.getZeremonien().getZeremonie());
+
 		return usedAp;
 	}
 
-	public static int calcUsedAP(Charakter charakter) {
-		int usedAp = 0;
-		usedAp += charakter.getSpezies().getKosten();
-		usedAp += calcAllBaseAbilityCosts(charakter.getEigenschaftswerte());
-		usedAp += calcAdvantagesCosts(charakter.getVorteile());
-		usedAp += calcDisadvantagesCosts(charakter.getNachteile());
-		usedAp += calcKommunicatiesCosts(charakter.getKommunikatives());
-		usedAp += calcAllBaseSkillCosts(charakter.getTalente());
-		usedAp += calcFeatsCosts(charakter);
-		usedAp += calcCombatSkillsCosts(charakter.getKampftechniken());
-		usedAp += calcAllSpecificSkillCosts(charakter.getZauber().getZauber());
-		usedAp += calcAllSpecificSkillCosts(charakter.getRituale().getRitual());
-		usedAp += calcAllSpecificSkillCosts(charakter.getLiturgien().getLiturgie());
-		usedAp += calcAllSpecificSkillCosts(charakter.getZeremonien().getZeremonie());
-
-		return usedAp;
+	private static int getAPOnlyRelevantOnCharakter(WrappedCharakter charakter) {
+		int sum = charakter.charakter.getSpezies().getKosten();
+		sum += calcFeatsCosts(charakter);
+		return sum; 
+	}
+	private static int getAPOnlyRelevantOnProfession(WrappedCharakter charakter) {
+		return calcFeatsCosts(charakter);
 	}
 
 	static int calcAllBaseAbilityCosts(Eigenschaftswerte values) {
@@ -64,7 +69,7 @@ public class CostCalculator {
 		abilityCosts += calcCostBaseAbility(values.getFingerfertigkeit().getAttributswert());
 		abilityCosts += calcCostBaseAbility(values.getGewandheit().getAttributswert());
 		abilityCosts += calcCostBaseAbility(values.getKonstitution().getAttributswert());
-		abilityCosts += calcCostBaseAbility(values.getKörperkraft().getAttributswert());
+		abilityCosts += calcCostBaseAbility(values.getKÃ¶rperkraft().getAttributswert());
 		return abilityCosts;
 	}
 
@@ -92,7 +97,7 @@ public class CostCalculator {
 			}
 		}
 		for (Schrift script : kommunikatives.getSchriften()) {
-			sum += CostCategory.getCostCategory(script.getKomplexität()).getMultiplier() * 2;
+			sum += CostCategory.getCostCategory(script.getKomplexitÃ¤t()).getMultiplier() * 2;
 		}
 
 		return sum;
@@ -116,14 +121,14 @@ public class CostCalculator {
 		return sumCosts;
 	}
 
-	private static int calcFeatsCosts(Charakter charakter) {
+	private static int calcFeatsCosts(WrappedCharakter charakter) {
 		Sonderfertigkeiten sonderfertigkeiten = charakter.getSonderfertigkeiten();
 		int sum = 0;
 		for (Sonderfertigkeit feat : sonderfertigkeiten.getSonderfertigkeit()) {
 			sum += feat.getKosten();
 		}
-		Map<String, Integer> specialsMap = new HashMap<String, Integer>();
-		SkillFinder finder = new SkillFinder(WrappedCharakter.getWrappedCharakter(charakter));
+		Map<String, Integer> specialsMap = new HashMap<>();
+		SkillFinder finder = new SkillFinder(charakter);
 		for (Talentspezialisierung special : sonderfertigkeiten.getTalentspezialisierung()) {
 			int multiplier;
 			if (specialsMap.containsKey(special.getFertigkeit())) {
@@ -141,7 +146,8 @@ public class CostCalculator {
 	private static int calcCombatSkillsCosts(Kampftechniken kampftechniken) {
 		int sum = 0;
 		for (Kampftechnik combatSkill : kampftechniken.getKampftechnik()) {
-			sum += calcCostCombat(combatSkill.getKampftechnikwert(), CostCategory.getCostCategory(combatSkill.getSteigerungskosten()));
+			sum += calcCostCombat(combatSkill.getKampftechnikwert(),
+					CostCategory.getCostCategory(combatSkill.getSteigerungskosten()));
 		}
 		return sum;
 	}
@@ -163,20 +169,16 @@ public class CostCalculator {
 		}
 		return effectiveLevel * cost.getMultiplier();
 	}
-	
-	public static final int calcCostCombat(int level, CostCategory cost) {
-		return calcCostCombat(level, cost, true);
-	}
 
-	public static final int calcCostCombat(int level, CostCategory cost, boolean baseSkill) {
+	public static final int calcCostCombat(int level, CostCategory cost) {
 		if (level < 6) {
 			throw new ArithmeticException("Can't calculate costs for comabt skill below 6");
 		}
-		int effectiveLevel = baseSkill ? 0 : 1;
+		int effectiveLevel;
 		if (level < 13) {
-			effectiveLevel += level - 6;
+			effectiveLevel = level - 6;
 		} else {
-			effectiveLevel += 5;
+			effectiveLevel = 5;
 			effectiveLevel += calculateIncreasedLevel(level - 11);
 		}
 		return effectiveLevel * cost.getMultiplier();

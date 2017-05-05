@@ -1,8 +1,8 @@
 //
 // Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.8-b130911.1802 generiert 
 // Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2016.08.27 um 11:15:28 PM CEST 
+// Ã„nderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
+// Generiert: 2017.05.05 um 11:28:12 PM CEST 
 //
 
 
@@ -15,7 +15,7 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java-Klasse für Fertigkeitsmodifikation complex type.
+ * <p>Java-Klasse fÃ¼r Fertigkeitsmodifikation complex type.
  * 
  * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
  * 
@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="Name" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="Änderung" type="{http://www.w3.org/2001/XMLSchema}int"/>
+ *         &lt;element name="Ã„nderung" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *         &lt;element name="neuerWert" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *         &lt;choice>
  *           &lt;element name="NeueFertigkeit" type="{http://www.example.org/Charakter/}Fertigkeit" minOccurs="0"/>
@@ -52,7 +52,7 @@ public class Fertigkeitsmodifikation {
     @XmlElement(name = "Name", required = true)
     protected String name;
     @XmlElement(name = "\u00c4nderung")
-    protected int änderung;
+    protected int Ã¤nderung;
     protected int neuerWert;
     @XmlElement(name = "NeueFertigkeit")
     protected Fertigkeit neueFertigkeit;
@@ -84,19 +84,19 @@ public class Fertigkeitsmodifikation {
     }
 
     /**
-     * Ruft den Wert der änderung-Eigenschaft ab.
+     * Ruft den Wert der Ã¤nderung-Eigenschaft ab.
      * 
      */
-    public int getÄnderung() {
-        return änderung;
+    public int getÃ„nderung() {
+        return Ã¤nderung;
     }
 
     /**
-     * Legt den Wert der änderung-Eigenschaft fest.
+     * Legt den Wert der Ã¤nderung-Eigenschaft fest.
      * 
      */
-    public void setÄnderung(int value) {
-        this.änderung = value;
+    public void setÃ„nderung(int value) {
+        this.Ã¤nderung = value;
     }
 
     /**

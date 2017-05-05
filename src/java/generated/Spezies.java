@@ -1,8 +1,8 @@
 //
 // Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.8-b130911.1802 generiert 
 // Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2016.08.27 um 11:15:28 PM CEST 
+// Ã„nderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
+// Generiert: 2017.05.05 um 11:28:12 PM CEST 
 //
 
 
@@ -15,7 +15,7 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java-Klasse für Spezies complex type.
+ * <p>Java-Klasse fÃ¼r Spezies complex type.
  * 
  * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
  * 
@@ -27,7 +27,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="Name" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="BasisLeben" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *         &lt;element name="BasisSeelenkraft" type="{http://www.w3.org/2001/XMLSchema}int"/>
- *         &lt;element name="BasisZähigkeit" type="{http://www.w3.org/2001/XMLSchema}int"/>
+ *         &lt;element name="BasisZÃ¤higkeit" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *         &lt;element name="BasisGeschwindigkeit" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *         &lt;element name="Kosten" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *       &lt;/sequence>
@@ -56,7 +56,7 @@ public class Spezies {
     @XmlElement(name = "BasisSeelenkraft")
     protected int basisSeelenkraft;
     @XmlElement(name = "BasisZ\u00e4higkeit")
-    protected int basisZähigkeit;
+    protected int basisZÃ¤higkeit;
     @XmlElement(name = "BasisGeschwindigkeit")
     protected int basisGeschwindigkeit;
     @XmlElement(name = "Kosten")
@@ -119,19 +119,19 @@ public class Spezies {
     }
 
     /**
-     * Ruft den Wert der basisZähigkeit-Eigenschaft ab.
+     * Ruft den Wert der basisZÃ¤higkeit-Eigenschaft ab.
      * 
      */
-    public int getBasisZähigkeit() {
-        return basisZähigkeit;
+    public int getBasisZÃ¤higkeit() {
+        return basisZÃ¤higkeit;
     }
 
     /**
-     * Legt den Wert der basisZähigkeit-Eigenschaft fest.
+     * Legt den Wert der basisZÃ¤higkeit-Eigenschaft fest.
      * 
      */
-    public void setBasisZähigkeit(int value) {
-        this.basisZähigkeit = value;
+    public void setBasisZÃ¤higkeit(int value) {
+        this.basisZÃ¤higkeit = value;
     }
 
     /**

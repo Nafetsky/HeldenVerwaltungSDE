@@ -1,8 +1,8 @@
 //
 // Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.8-b130911.1802 generiert 
 // Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2016.08.27 um 11:15:28 PM CEST 
+// Ã„nderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
+// Generiert: 2017.05.05 um 11:28:12 PM CEST 
 //
 
 
@@ -13,12 +13,12 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java-Klasse für Attributskürzel.
+ * <p>Java-Klasse fÃ¼r AttributskÃ¼rzel.
  * 
  * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
  * <p>
  * <pre>
- * &lt;simpleType name="Attributskürzel">
+ * &lt;simpleType name="AttributskÃ¼rzel">
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
  *     &lt;enumeration value="MU"/>
  *     &lt;enumeration value="KL"/>
@@ -35,7 +35,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlType(name = "Attributsk\u00fcrzel")
 @XmlEnum
-public enum Attributskürzel {
+public enum AttributskÃ¼rzel {
 
     MU,
     KL,
@@ -50,7 +50,7 @@ public enum Attributskürzel {
         return name();
     }
 
-    public static Attributskürzel fromValue(String v) {
+    public static AttributskÃ¼rzel fromValue(String v) {
         return valueOf(v);
     }
 

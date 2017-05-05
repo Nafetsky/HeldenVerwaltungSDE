@@ -1,8 +1,8 @@
 //
 // Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.8-b130911.1802 generiert 
 // Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2016.08.27 um 11:15:28 PM CEST 
+// Ã„nderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
+// Generiert: 2017.05.05 um 11:28:12 PM CEST 
 //
 
 
@@ -16,7 +16,7 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java-Klasse für Eigenschaftssteigerung complex type.
+ * <p>Java-Klasse fÃ¼r Eigenschaftssteigerung complex type.
  * 
  * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
  * 
@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="Eigenschaft" type="{http://www.example.org/Charakter/}Attributskürzel"/>
+ *         &lt;element name="Eigenschaft" type="{http://www.example.org/Charakter/}AttributskÃ¼rzel"/>
  *         &lt;element name="Steigerung" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *         &lt;element name="neuerWert" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *       &lt;/sequence>
@@ -46,7 +46,7 @@ public class Eigenschaftssteigerung {
 
     @XmlElement(name = "Eigenschaft", required = true)
     @XmlSchemaType(name = "string")
-    protected Attributskürzel eigenschaft;
+    protected AttributskÃ¼rzel eigenschaft;
     @XmlElement(name = "Steigerung")
     protected int steigerung;
     protected int neuerWert;
@@ -56,10 +56,10 @@ public class Eigenschaftssteigerung {
      * 
      * @return
      *     possible object is
-     *     {@link Attributskürzel }
+     *     {@link AttributskÃ¼rzel }
      *     
      */
-    public Attributskürzel getEigenschaft() {
+    public AttributskÃ¼rzel getEigenschaft() {
         return eigenschaft;
     }
 
@@ -68,10 +68,10 @@ public class Eigenschaftssteigerung {
      * 
      * @param value
      *     allowed object is
-     *     {@link Attributskürzel }
+     *     {@link AttributskÃ¼rzel }
      *     
      */
-    public void setEigenschaft(Attributskürzel value) {
+    public void setEigenschaft(AttributskÃ¼rzel value) {
         this.eigenschaft = value;
     }
 
