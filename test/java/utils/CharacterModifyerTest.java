@@ -44,13 +44,13 @@ public class CharacterModifyerTest {
 	}
 
 	@Test
-	public void testMarhsalling() throws JAXBException, Exception {
+	public void testMarshalling() {
 		String barundarAsXml = marshallHelper.marshall(barundar);
 		assertEquals(barundarOrig, barundarAsXml.replaceAll("><", ">\r\n<"));
 	}
 
 	@Test
-	public void testIncreaseAbility() throws Exception {
+	public void testIncreaseAbility() {
 		CharacterModifier modifier = new CharacterModifier(WrappedCharakter.getWrappedCharakter(barundar));
 		modifier.increaseSkillByOne("Gewandheit");
 		modifier.increaseSkillByOne("Gewandheit");

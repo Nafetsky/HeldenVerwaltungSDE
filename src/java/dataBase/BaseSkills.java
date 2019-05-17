@@ -1,4 +1,4 @@
-﻿package database;
+package database;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -73,7 +73,7 @@ public enum BaseSkills {
 	MerkmalProfan merkmal;
 	CostCategory category;
 	
-	private BaseSkills(String name, MerkmalProfan merkmal, CostCategory category){
+	BaseSkills(String name, MerkmalProfan merkmal, CostCategory category){
 		this.name = name;
 		this.merkmal = merkmal;
 		this.category = category;

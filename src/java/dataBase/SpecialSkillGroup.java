@@ -4,8 +4,13 @@ import generated.Fertigkeitskategorie;
 
 public enum SpecialSkillGroup {
 
-	ABILITY("Eigenschaft"), BASE("Basis"), SPELL("Zauber"), RITUAL("Ritual"), LITURGY("Liturgie"), ZEREMONY(
-			"Zeremonie"), COMBAT("Kampftechnik");
+	ABILITY("Eigenschaft"),
+	BASE("Basis"),
+	SPELL("Zauber"),
+	RITUAL("Ritual"),
+	LITURGY("Liturgie"),
+	ZEREMONY("Zeremonie"),
+	COMBAT("Kampftechnik");
 
 	private String groupName;
 
@@ -20,7 +25,7 @@ public enum SpecialSkillGroup {
 	public static SpecialSkillGroup getFromFertigkeitskategorie(Fertigkeitskategorie fertigkeitskategorie) {
 		switch (fertigkeitskategorie) {
 		case ZAUBER:
-			return SpecialSkillGroup.SPELL;
+			return SPELL;
 		case RITUAL:
 			return RITUAL;
 		case LITURGIE:

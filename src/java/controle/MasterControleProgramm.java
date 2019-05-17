@@ -248,7 +248,7 @@ public class MasterControleProgramm {
 				try {
 					return loadCharacter(type, charakterLine);
 				} catch (JAXBException e) {
-					e.printStackTrace();
+					LOGGER.error("Unmarshalling of " + name + " failed", e);
 				}
 			}
 		}
@@ -289,7 +289,7 @@ public class MasterControleProgramm {
 	}
 
 	protected List<String> getAllCharakterNames() {
-		List<String> allCharakterNames = new ArrayList<String>();
+		List<String> allCharakterNames = new ArrayList<>();
 		for (MetaDataLine metaDate : metaData.getCharakters()) {
 			allCharakterNames.add(metaDate.getName());
 		}
@@ -309,7 +309,7 @@ public class MasterControleProgramm {
 					@SuppressWarnings("unused")
 					MasterControleProgramm control = new MasterControleProgramm();
 				} catch (Exception e) {
-					e.printStackTrace();
+					LOGGER.error("", e);
 				}
 			});
 	}
@@ -420,10 +420,9 @@ public class MasterControleProgramm {
 
 	public void handleChangeAge(String value) {
 		try {
-			Integer.parseInt(value);
 			activeCharakter.getAngaben().setAlter(Integer.parseInt(value));
 		} catch (NumberFormatException e) {
-
+			LOGGER.error(value + " is no valid age", e);
 		}
 
 	}

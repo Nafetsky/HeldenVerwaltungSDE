@@ -27,7 +27,7 @@ public class AddVantageDialogResult implements AddDialogResult{
 	}
 	@Override
 	public boolean isComplete(){
-		return StringUtils.isNoneEmpty(name)&&cost>-1;
+		return StringUtils.isNotEmpty(name)&&cost>-1;
 	}
 
 	public boolean isAdvantage() {

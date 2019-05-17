@@ -38,10 +38,10 @@ public class CharacterModifier {
 
 	private static final Logger LOGGER = Logger.getLogger(CharacterModifier.class);
 
-	WrappedCharakter charakter;
-	ObjectFactory factory;
-	Ereignis changes;
-	SkillFinder finder;
+	private WrappedCharakter charakter;
+	private ObjectFactory factory;
+	private Ereignis changes;
+	private SkillFinder finder;
 
 	public CharacterModifier(WrappedCharakter charakter) {
 		this.charakter = charakter;

@@ -2,8 +2,10 @@ package utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 
 import database.Ability;
 import database.BaseSkills;
@@ -24,6 +26,8 @@ public class SkillFinder {
 	WrappedCharakter charakter;
 	
 	ObjectFactory factory;
+	
+	private static final Logger LOGGER = Logger.getLogger(SkillFinder.class);
 
 	public SkillFinder(WrappedCharakter charakter) {
 		this.charakter = charakter;
@@ -36,18 +40,18 @@ public class SkillFinder {
 		if (skill != null) {
 			return skill;
 		}
-		skill = findBaseSkill(name);
-		if (skill != null) {
-			return skill;
+		Optional<Skill> optional = findBaseSkill(name);
+		if (optional.isPresent()) {
+			return optional.get();
 		}
-		skill = findSpecialSkill(name);
-		if (skill != null) {
-			return skill;
+		optional = findSpecialSkill(name);
+		if (optional.isPresent()) {
+			return optional.get();
 		}
 
-		skill = findCombatSkill(name);
-		if (skill != null) {
-			return skill;
+		optional = findCombatSkill(name);
+		if (optional.isPresent()) {
+			return optional.get();
 		}
 		throw new IllegalArgumentException(
 				name + " is no existent skill for the current character " + charakter.getName());
@@ -62,13 +66,13 @@ public class SkillFinder {
 		return null;
 	}
 
-	private Skill findBaseSkill(String name) {
+	private Optional<Skill> findBaseSkill(String name) {
 		try {
 			BaseSkills skillData = BaseSkills.getSkill(name);
 			List<Basistalent> baseSkillsXml = charakter.getTalente().getTalent();
 			for (Basistalent baseSkillXml : baseSkillsXml) {
 				if (StringUtils.equals(baseSkillXml.getName(), name)) {
-					return new SkillBase(baseSkillXml);
+					return Optional.of(new SkillBase(baseSkillXml));
 				}
 			}
 			Basistalent baseSkillXml = factory.createBasistalent();
@@ -76,23 +80,24 @@ public class SkillFinder {
 			baseSkillXml.setName(name);
 			baseSkillXml.setMerkmal(skillData.getMerkmal());
 			charakter.getTalente().getTalent().add(baseSkillXml);
-			return new SkillBase(baseSkillXml);
+			return Optional.of(new SkillBase(baseSkillXml));
 
 		} catch (IllegalArgumentException e) {
-			return null;
+			LOGGER.info("There is no skill " + name, e);
+			return Optional.empty();
 		}
 	}
 
-	private Skill findSpecialSkill(String name) {
+	private Optional<Skill> findSpecialSkill(String name) {
 		Skill skill = null;
 		for (SpecialSkillGroup group : SpecialSkillGroup.values()) {
 			skill = findSpecialSkill(name, group.getName());
 			if (skill != null) {
-				return skill;
+				return Optional.of(skill);
 			}
 		}
 
-		return skill;
+		return Optional.empty();
 	}
 
 	private Skill findSpecialSkill(String name, String context) {
@@ -118,13 +123,13 @@ public class SkillFinder {
 		return null;
 	}
 
-	private Skill findCombatSkill(String name) {
+	private Optional<Skill> findCombatSkill(String name) {
 		for (Kampftechnik combatSkill : charakter.getKampftechniken().getKampftechnik()) {
 			if (StringUtils.equals(name, combatSkill.getName())) {
-				return new SkillCombat(combatSkill);
+				return Optional.of(new SkillCombat(combatSkill));
 			}
 		}
-		return null;
+		return Optional.empty();
 	}
 
 	public Attribut getAbilty(Attributskürzel acronym) {
@@ -159,27 +164,6 @@ public class SkillFinder {
 			}
 		}
 		return list;
-	}
-	
-	@Deprecated
-	/**
-	 * not useful, skills are already sorted in a Charakter
-	 * @param group
-	 * @return
-	 */
-	public List<Fertigkeit> getAllSpecialSkills(SpecialSkillGroup group) {
-		List<Fertigkeit> list = new ArrayList<>();
-		switch (group) {
-		case SPELL:
-		case RITUAL:
-		case LITURGY:
-		case ZEREMONY:
-			
-			return list;
-		default:
-			throw new UnsupportedOperationException(
-					group.getName() + " is not supported by SkillFinder.getAllSpecialSkills yet");
-		}
 	}
 
 	public String getSkillSpecialisations(String name) {
