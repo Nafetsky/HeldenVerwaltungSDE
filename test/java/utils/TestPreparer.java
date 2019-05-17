@@ -33,7 +33,7 @@ public class TestPreparer {
 	}
 	
 	private File openFile(String name){
-		File file =null;
+		File file;
 		file = new File(name);
 		if(file!=null && file.exists()){
 			return file;

@@ -1,18 +1,17 @@
 package utils;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Before;
-import org.junit.Test;
 
 import database.BaseSkills;
 import generated.Attributskürzel;
@@ -23,8 +22,10 @@ import generated.MerkmalMagie;
 import generated.ObjectFactory;
 import generated.Sonderfertigkeit;
 import generated.Steigerungskategorie;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class CharacterModifyerTest {
+class CharacterModifyerTest {
 
 	private static final String SMALL_ANATHEMA = "Kleiner Bannstrahl";
 	private static final String GARDIANUM = "Gardianum";
@@ -34,8 +35,8 @@ public class CharacterModifyerTest {
 	String barundarOrig;
 	MarshallingHelper marshallHelper;
 
-	@Before
-	public void init() throws Exception {
+	@BeforeEach
+	void init() throws Exception {
 		factory = new ObjectFactory();
 		TestPreparer preparer = new TestPreparer();
 		marshallHelper = preparer.getMarshallingHelper();
@@ -44,61 +45,59 @@ public class CharacterModifyerTest {
 	}
 
 	@Test
-	public void testMarshalling() {
+	void testMarshalling() {
 		String barundarAsXml = marshallHelper.marshall(barundar);
-		assertEquals(barundarOrig, barundarAsXml.replaceAll("><", ">\r\n<"));
+		assertThat(barundarOrig, is(barundarAsXml.replaceAll("><", ">\r\n<")));
 	}
 
 	@Test
-	public void testIncreaseAbility() {
+	void testIncreaseAbility() {
 		CharacterModifier modifier = new CharacterModifier(WrappedCharakter.getWrappedCharakter(barundar));
 		modifier.increaseSkillByOne("Gewandheit");
 		modifier.increaseSkillByOne("Gewandheit");
 		modifier.saveChanges("test");
 		String barundarAsXml = marshallHelper.marshall(barundar);
-		assertTrue(StringUtils.contains(barundarAsXml,
-				"Kürzel=\"FF\"/><Gewandheit Attributswert=\"16\" Kürzel=\"GE\"/><Konstitution"));
+		assertThat(barundarAsXml, containsString("Kürzel=\"FF\"/><Gewandheit Attributswert=\"16\" Kürzel=\"GE\"/><Konstitution"));
 		String newEvent = makeCurrentEventHead()
 				+ "</Datum><Grund>test</Grund><Eigenschaftssteigerung><Eigenschaft>GE</Eigenschaft><Steigerung>2</Steigerung><neuerWert>16</neuerWert></Eigenschaftssteigerung></Ereignis>";
-		assertTrue(StringUtils.contains(barundarAsXml, newEvent));
+		assertThat(barundarAsXml, containsString(newEvent));
 	}
 
 	@Test
-	public void testAddBaseSkill() throws Exception {
+	void testAddBaseSkill() throws Exception {
 		CharacterModifier modifier = new CharacterModifier(WrappedCharakter.getWrappedCharakter(barundar));
 		modifier.increaseSkillByOne("Betören");
 		modifier.saveChanges("test");
 		String barundarAsXml = marshallHelper.marshall(barundar);
-		assertTrue(StringUtils.contains(barundarAsXml,
+		assertThat(barundarAsXml, containsString(
 				"<Talent><Name>Betören</Name><Fertigkeitswert>1</Fertigkeitswert><Merkmal>Gesellschaft</Merkmal></Talent>"));
 		String newEvent = makeCurrentEventHead()
 				+ "</Datum><Grund>test</Grund><Fertigkeitsänderung><Name>Betören</Name><Änderung>1</Änderung><neuerWert>1</neuerWert></Fertigkeitsänderung></Ereignis>";
-		assertTrue(StringUtils.contains(barundarAsXml, newEvent));
+		assertThat(barundarAsXml, containsString(newEvent));
 	}
 
 	@Test
-	public void testIncreaseBaseSkill() throws Exception {
+	void testIncreaseBaseSkill() throws Exception {
 		CharacterModifier modifier = new CharacterModifier(WrappedCharakter.getWrappedCharakter(barundar));
 		modifier.increaseSkillByOne("Klettern");
 		modifier.increaseSkillByOne("Klettern");
 		modifier.saveChanges("test");
 		String barundarAsXml = marshallHelper.marshall(barundar);
-		assertTrue(StringUtils.contains(barundarAsXml,
-				"<Talent><Name>Klettern</Name><Fertigkeitswert>9</Fertigkeitswert><Merkmal>Körper</Merkmal></Talent>"));
+		assertThat(barundarAsXml, containsString("<Talent><Name>Klettern</Name><Fertigkeitswert>9</Fertigkeitswert><Merkmal>Körper</Merkmal></Talent>"));
 		String newEvent = makeCurrentEventHead()
 				+ "</Datum><Grund>test</Grund><Fertigkeitsänderung><Name>Klettern</Name><Änderung>2</Änderung><neuerWert>9</neuerWert></Fertigkeitsänderung></Ereignis>";
-		assertTrue(StringUtils.contains(barundarAsXml, newEvent));
+		assertThat(barundarAsXml, containsString(newEvent));
 	}
 
 	@Test
-	public void testAddLiturgy() {
+	void testAddLiturgy() {
 		CharacterModifier modifier = new CharacterModifier(WrappedCharakter.getWrappedCharakter(barundar));
 		Fertigkeit fertigkeit = makeSmallAnathema();
 		modifier.addSkill(fertigkeit);
 		modifier.increaseSkillByOne(SMALL_ANATHEMA);
 		modifier.saveChanges("test");
 		String barundarAsXml = marshallHelper.marshall(barundar);
-		assertTrue(StringUtils.contains(barundarAsXml,
+		assertThat(barundarAsXml, containsString(
 				"<Liturgien><Liturgie><Name>Kleiner Bannstrahl</Name><Attribut1>MU</Attribut1><Attribut2>IN</Attribut2>"
 						+ "<Attribut3>CH</Attribut3><Fertigkeitswert>1</Fertigkeitswert><Steigerungskosten>B</Steigerungskosten><Kategorie>Liturgie</Kategorie><Merkmal>TRADITION_Praios</Merkmal><Merkmal>ASPEKT_Antimagie</Merkmal></Liturgie></Liturgien>"));
 		String newEvent = makeCurrentEventHead()
@@ -106,12 +105,12 @@ public class CharacterModifyerTest {
 				+ "<NeueFertigkeit><Name>Kleiner Bannstrahl</Name><Attribut1>MU</Attribut1><Attribut2>IN</Attribut2><Attribut3>CH</Attribut3>"
 				+ "<Fertigkeitswert>1</Fertigkeitswert><Steigerungskosten>B</Steigerungskosten><Kategorie>Liturgie</Kategorie><Merkmal>TRADITION_Praios</Merkmal>"
 				+ "<Merkmal>ASPEKT_Antimagie</Merkmal></NeueFertigkeit></Fertigkeitsänderung></Ereignis>";
-		assertTrue(StringUtils.contains(barundarAsXml, newEvent));
-		assertEquals(2, modifier.getCostForSkillIncreasment(SMALL_ANATHEMA));
+		assertThat(barundarAsXml, containsString(newEvent));
+		assertThat(modifier.getCostForSkillIncreasment(SMALL_ANATHEMA), is(2));
 	}
 
 	@Test
-	public void testAddSpell() {
+	void testAddSpell() {
 		CharacterModifier modifier = new CharacterModifier(WrappedCharakter.getWrappedCharakter(barundar));
 		Fertigkeit fertigkeit = makeGardianum();
 		modifier.addSkill(fertigkeit);
@@ -120,7 +119,7 @@ public class CharacterModifyerTest {
 		}
 		modifier.saveChanges("test");
 		String barundarAsXml = marshallHelper.marshall(barundar);
-		assertTrue(StringUtils.contains(barundarAsXml, "<Zauber><Zauber><Name>" + GARDIANUM
+		assertThat(barundarAsXml, containsString("<Zauber><Zauber><Name>" + GARDIANUM
 				+ "</Name><Attribut1>MU</Attribut1><Attribut2>KL</Attribut2>"
 				+ "<Attribut3>CH</Attribut3><Fertigkeitswert>2</Fertigkeitswert><Steigerungskosten>B</Steigerungskosten><Kategorie>Zauber</Kategorie><Merkmal>REP�SENTATION_MAGIER</Merkmal><Merkmal>Antimagie</Merkmal></Zauber></Zauber>"));
 		String newEvent = makeCurrentEventHead() + "</Datum><Grund>test</Grund><Fertigkeitsänderung><Name>" + GARDIANUM
@@ -128,55 +127,55 @@ public class CharacterModifyerTest {
 				+ "</Name><Attribut1>MU</Attribut1><Attribut2>KL</Attribut2><Attribut3>CH</Attribut3>"
 				+ "<Fertigkeitswert>2</Fertigkeitswert><Steigerungskosten>B</Steigerungskosten><Kategorie>Zauber</Kategorie><Merkmal>REP�SENTATION_MAGIER</Merkmal>"
 				+ "<Merkmal>Antimagie</Merkmal></NeueFertigkeit></Fertigkeitsänderung></Ereignis>";
-		assertTrue(StringUtils.contains(barundarAsXml, newEvent));
-		assertEquals(2, modifier.getCostForSkillIncreasment(GARDIANUM));
+		assertThat(barundarAsXml, containsString(newEvent));
+		assertThat(modifier.getCostForSkillIncreasment(GARDIANUM), is(2));
 	}
 
 	@Test
-	public void testIncreaseCombatSkill() throws Exception {
+	void testIncreaseCombatSkill() throws Exception {
 		CharacterModifier modifier = new CharacterModifier(WrappedCharakter.getWrappedCharakter(barundar));
 		modifier.increaseSkillByOne("Schilde");
 		modifier.increaseSkillByOne("Schilde");
 		modifier.increaseSkillByOne("Hiebwaffen");
 		modifier.saveChanges("test");
 		String barundarAsXml = marshallHelper.marshall(barundar);
-		assertTrue(StringUtils.contains(barundarAsXml,
+		assertThat(barundarAsXml,containsString(
 				"<Kampftechnik><Name>Schilde</Name><Kampftechnikwert>18</Kampftechnikwert><Leiteigenschaft>KK</Leiteigenschaft><Steigerungskosten>C</Steigerungskosten></Kampftechnik>"));
 		String newEvent = makeCurrentEventHead() + "</Datum><Grund>test</Grund>"
 				+ "<Kampftechnikänderung><Name>Schilde</Name><Änderung>2</Änderung><neuerWert>18</neuerWert></Kampftechnikänderung>"
 				+ "<Kampftechnikänderung><Name>Hiebwaffen</Name><Änderung>1</Änderung><neuerWert>15</neuerWert></Kampftechnikänderung>"
 				+ "</Ereignis>";
-		assertTrue(StringUtils.contains(barundarAsXml, newEvent));
+		assertThat(barundarAsXml, containsString(newEvent));
 	}
 
 	@Test
-	public void testAddAdvantage() {
+	void testAddAdvantage() {
 		CharacterModifier modifier = new CharacterModifier(WrappedCharakter.getWrappedCharakter(barundar));
 		modifier.addAdvantage("Geweihter", 25);
 		modifier.saveChanges("test");
 		String barundarAsXml = marshallHelper.marshall(barundar);
-		assertTrue(StringUtils.contains(barundarAsXml,
+		assertThat(barundarAsXml, containsString(
 				"<Vorteil><Name>Geweihter</Name><Kosten>25</Kosten></Vorteil></Vorteile>"));
 		String newEvent = makeCurrentEventHead() + "</Datum><Grund>test</Grund>"
 				+ "<Vorteil><Name>Geweihter</Name><Kosten>25</Kosten></Vorteil></Ereignis>";
-		assertTrue(StringUtils.contains(barundarAsXml, newEvent));
+		assertThat(barundarAsXml, containsString(newEvent));
 	}
 
 	@Test
-	public void testRemoveAdvantage() {
+	void testRemoveAdvantage() {
 		CharacterModifier modifier = new CharacterModifier(WrappedCharakter.getWrappedCharakter(barundar));
 		modifier.removeAdvantage("Dunkelsicht II");
 		modifier.saveChanges("test");
 		String barundarAsXml = marshallHelper.marshall(barundar);
-		assertFalse(StringUtils.contains(barundarAsXml,
-				"<Vorteil><Name>Dunkelsicht II</Name><Kosten>20</Kosten></Vorteil>"));
+		assertThat(barundarAsXml,not(containsString(
+				"<Vorteil><Name>Dunkelsicht II</Name><Kosten>20</Kosten></Vorteil>")));
 		String newEvent = makeCurrentEventHead() + "</Datum><Grund>test</Grund>"
 				+ "<Vorteil><Name>Dunkelsicht II</Name><Kosten>-20</Kosten></Vorteil></Ereignis>";
 		assertTrue(StringUtils.contains(barundarAsXml, newEvent));
 	}
 
 	@Test
-	public void testAddDisadvantage() {
+	void testAddDisadvantage() {
 		CharacterModifier modifier = new CharacterModifier(WrappedCharakter.getWrappedCharakter(barundar));
 		modifier.addDisadvantage("Schwacher Karmalkörper", 15);
 		modifier.saveChanges("test");
@@ -189,27 +188,27 @@ public class CharacterModifyerTest {
 	}
 
 	@Test
-	public void testRemoveDisadvantage() {
+	void testRemoveDisadvantage() {
 		CharacterModifier modifier = new CharacterModifier(WrappedCharakter.getWrappedCharakter(barundar));
 		modifier.removeDisadvantage("Aberglaube (Schlechte Eigenschaft)");
 		modifier.saveChanges("test");
 		String barundarAsXml = marshallHelper.marshall(barundar);
-		assertFalse(StringUtils.contains(barundarAsXml,
-				"<Nachteil><Name>Aberglaube (Schlechte Eigenschaft)</Name><Kosten>5</Kosten></Nachteil>"));
+		assertThat(barundarAsXml, not(containsString(
+				"<Nachteil><Name>Aberglaube (Schlechte Eigenschaft)</Name><Kosten>5</Kosten></Nachteil>")));
 		String newEvent = makeCurrentEventHead() + "</Datum>"
 				+ "<Grund>test</Grund>"
 				+ "<Nachteil><Name>Aberglaube (Schlechte Eigenschaft)</Name><Kosten>-5</Kosten></Nachteil></Ereignis>";
-		assertTrue(StringUtils.contains(barundarAsXml, newEvent));
+		assertThat(barundarAsXml, containsString(newEvent));
 	}
 
 	@Test
-	public void testGetCostForSkillIncreasment() {
+	void testGetCostForSkillIncreasment() {
 		CharacterModifier modifier = new CharacterModifier(WrappedCharakter.getWrappedCharakter(barundar));
-		assertEquals(18, modifier.getCostForSkillIncreasment("Schilde"));
+		assertThat(modifier.getCostForSkillIncreasment("Schilde"), is(18));
 	}
 
 	@Test
-	public void testAddAP() {
+	void testAddAP() {
 		CharacterModifier modifier = new CharacterModifier(WrappedCharakter.getWrappedCharakter(barundar));
 		modifier.changeApBy(100);
 		modifier.saveChanges("test");
@@ -220,7 +219,7 @@ public class CharacterModifyerTest {
 	}
 
 	@Test
-	public void testBuyLife() {
+	void testBuyLife() {
 		CharacterModifier modifier = new CharacterModifier(WrappedCharakter.getWrappedCharakter(barundar));
 		for (int i = 0; i < 6; ++i) {
 			modifier.buyLifePoint();
@@ -233,7 +232,7 @@ public class CharacterModifyerTest {
 	}
 
 	@Test
-	public void testBuyAsP() {
+	void testBuyAsP() {
 		CharacterModifier modifier = new CharacterModifier(WrappedCharakter.getWrappedCharakter(barundar));
 		modifier.buyAstralPoint();
 		modifier.saveChanges("test");
@@ -244,7 +243,7 @@ public class CharacterModifyerTest {
 	}
 
 	@Test
-	public void testBuyKaP() {
+	void testBuyKaP() {
 		CharacterModifier modifier = new CharacterModifier(WrappedCharakter.getWrappedCharakter(barundar));
 		modifier.buyKarmaPoint();
 		modifier.buyKarmaPoint();
@@ -256,7 +255,7 @@ public class CharacterModifyerTest {
 	}
 
 	@Test
-	public void testAddFeat() {
+	void testAddFeat() {
 		CharacterModifier modifier = new CharacterModifier(WrappedCharakter.getWrappedCharakter(barundar));
 		Sonderfertigkeit newFeat = factory.createSonderfertigkeit();
 		newFeat.setName("Wuchtschlag III");
@@ -273,7 +272,7 @@ public class CharacterModifyerTest {
 	}
 	
 	@Test
-	public void testAddSkillSpecialisation() {
+	void testAddSkillSpecialisation() {
 		CharacterModifier modifier = new CharacterModifier(WrappedCharakter.getWrappedCharakter(barundar));
 		modifier.addSkillSpecialisation("Maurer", BaseSkills.STONECRAFT.getName());
 		modifier.saveChanges("test");

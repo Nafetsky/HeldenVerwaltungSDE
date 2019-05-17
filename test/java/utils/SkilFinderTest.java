@@ -1,54 +1,54 @@
 package utils;
 
-import static org.junit.Assert.assertEquals;
 
 import java.util.List;
-
-import org.junit.Before;
-import org.junit.Test;
 
 import database.FeatGroup;
 import generated.Charakter;
 import generated.Sonderfertigkeit;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class SkilFinderTest {
-	
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+
+class SkilFinderTest {
+
 	SkillFinder finder;
 	Charakter barundar;
-	
-	@Before
-	public void init() throws Exception{
+
+	@BeforeEach
+	void init() throws Exception {
 		TestPreparer test = new TestPreparer();
 		barundar = test.getBarundar();
 		finder = new SkillFinder(WrappedCharakter.getWrappedCharakter(barundar));
 	}
 	
 	@Test
-	public void testgetCostCombatSkillIncreaseShields(){
+	void testgetCostCombatSkillIncreaseShields() {
 		Skill skill = finder.findSkill("Schilde");
-		assertEquals(18, skill.getCostForNextLevel());
+		assertThat(skill.getCostForNextLevel(), is(18));
 	}
-	
+
 	@Test
-	public void testgetCostBaseSkillIncreaseLackingCozen(){
+	void testgetCostBaseSkillIncreaseLackingCozen() {
 		Skill skill = finder.findSkill("Betören");
-		assertEquals(2, skill.getCostForNextLevel());
+		assertThat(skill.getCostForNextLevel(), is(2));
 	}
-	
+
 	@Test
-	public void testgetCostBaseSkillIncreaseClimb(){
+	void testgetCostBaseSkillIncreaseClimb() {
 		Skill skill = finder.findSkill("Klettern");
-		assertEquals(2, skill.getCostForNextLevel());
+		assertThat(skill.getCostForNextLevel(), is(2));
 	}
-	
+
 	@Test
-	public void testGetAllFeatsByGroup(){
+	void testGetAllFeatsByGroup() {
 		List<Sonderfertigkeit> feats = finder.getAllFeatsByGroup(FeatGroup.COMMON);
-		assertEquals(4, feats.size());
+		assertThat(feats.size(), is(4));
 		feats = finder.getAllFeatsByGroup(FeatGroup.COMBAT);
-		assertEquals(5, feats.size());
+		assertThat(feats.size(), is(5));
 	}
-	
-	
+
 
 }
