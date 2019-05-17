@@ -1,12 +1,9 @@
 package utils;
 
-import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
 
 import database.CostCategory;
 import generated.Attribut;
@@ -19,59 +16,64 @@ import generated.MerkmalProfan;
 import generated.ObjectFactory;
 import generated.Steigerungskategorie;
 import generated.Talente;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class CostCalculatorTest {
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+
+class CostCalculatorTest {
 	
 	ObjectFactory factory;
 	
-	@Before
-	public void init(){
+	@BeforeEach
+	void init(){
 		factory = new ObjectFactory();
 	}
 
 	@Test
-	public void testCostCalculatorComabtforB() {
-		assertEquals(2, CostCalculator.calcCostCombat(7, CostCategory.B));
-		assertEquals(12, CostCalculator.calcCostCombat(12, CostCategory.B));
-		assertEquals(22, CostCalculator.calcCostCombat(14, CostCategory.B));
-		assertEquals(40, CostCalculator.calcCostCombat(16, CostCategory.B));
+	void testCostCalculatorComabtforB() {
+		assertThat(CostCalculator.calcCostCombat(7, CostCategory.B), is(2));
+		assertThat(CostCalculator.calcCostCombat(12, CostCategory.B), is(12));
+		assertThat( CostCalculator.calcCostCombat(14, CostCategory.B), is(22));
+		assertThat(CostCalculator.calcCostCombat(16, CostCategory.B), is(40));
 	}
 
 	@Test
-	public void testCostCalculatorComabtforC() {
-		assertEquals(3, CostCalculator.calcCostCombat(7, CostCategory.C));
-		assertEquals(18, CostCalculator.calcCostCombat(12, CostCategory.C));
-		assertEquals(33, CostCalculator.calcCostCombat(14, CostCategory.C));
-		assertEquals(60, CostCalculator.calcCostCombat(16, CostCategory.C));
+	void testCostCalculatorComabtforC() {
+		assertThat(CostCalculator.calcCostCombat(7, CostCategory.C), is(3));
+		assertThat(CostCalculator.calcCostCombat(12, CostCategory.C), is(18));
+		assertThat(CostCalculator.calcCostCombat(14, CostCategory.C), is(33));
+		assertThat(CostCalculator.calcCostCombat(16, CostCategory.C), is(60));
 	}
 
 	@Test
-	public void testSkillCostCalculator() {
-		assertEquals(0, CostCalculator.calcCostSkill(0, CostCategory.D, true));
-		assertEquals(4, CostCalculator.calcCostSkill(0, CostCategory.D, false));
-		assertEquals(2, CostCalculator.calcCostSkill(1, CostCategory.A, false));
-		assertEquals(11, CostCalculator.calcCostSkill(10, CostCategory.A, false));
-		assertEquals(15, CostCalculator.calcCostSkill(13, CostCategory.A, false));
-		assertEquals(22, CostCalculator.calcCostSkill(15, CostCategory.A, false));
+	void testSkillCostCalculator() {
+		assertThat(CostCalculator.calcCostSkill(0, CostCategory.D, true), is(0));
+		assertThat(CostCalculator.calcCostSkill(0, CostCategory.D, false), is(4));
+		assertThat(CostCalculator.calcCostSkill(1, CostCategory.A, false), is(2));
+		assertThat(CostCalculator.calcCostSkill(10, CostCategory.A, false), is(11));
+		assertThat(CostCalculator.calcCostSkill(13, CostCategory.A, false), is(15));
+		assertThat(CostCalculator.calcCostSkill(15, CostCategory.A, false), is(22));
 
-		assertEquals(156, CostCalculator.calcCostSkill(18, CostCategory.D, true));
+		assertThat(CostCalculator.calcCostSkill(18, CostCategory.D, true), is(156));
 	}
 
 	@Test
-	public void testAttributeCosts() {
-		assertEquals(0, CostCalculator.calcCostBaseAbility(8));
-		assertEquals(60, CostCalculator.calcCostBaseAbility(12));
-		assertEquals(90, CostCalculator.calcCostBaseAbility(14));
-		assertEquals(120, CostCalculator.calcCostBaseAbility(15));
-		assertEquals(165, CostCalculator.calcCostBaseAbility(16));
-		assertEquals(225, CostCalculator.calcCostBaseAbility(17));
+	void testAttributeCosts() {
+		assertThat(CostCalculator.calcCostBaseAbility(8), is(0));
+		assertThat(CostCalculator.calcCostBaseAbility(12), is(60));
+		assertThat(CostCalculator.calcCostBaseAbility(14), is(90));
+		assertThat(CostCalculator.calcCostBaseAbility(15), is(120));
+		assertThat(CostCalculator.calcCostBaseAbility(16), is(165));
+		assertThat(CostCalculator.calcCostBaseAbility(17), is(225));
 	}
 	
 	
 	@Test
-	public void testCompleteBaseAbilityCosts(){
+	void testCompleteBaseAbilityCosts(){
 		Eigenschaftswerte values = generateBarundarsBaseAbilitys();
-		assertEquals(795, CostCalculator.calcAllBaseAbilityCosts(values));
+		assertThat(CostCalculator.calcAllBaseAbilityCosts(values), is(795));
 	}
 
 	private Eigenschaftswerte generateBarundarsBaseAbilitys() {
@@ -120,10 +122,10 @@ public class CostCalculatorTest {
 	}
 	
 	@Test
-	public void testBaseSkillCostCalculation(){
+	void testBaseSkillCostCalculation(){
 		Talente talente = makeExampleSkillsFor88AP();
 		int cost = CostCalculator.calcAllBaseSkillCosts(talente);
-		assertEquals(88, cost);
+		assertThat(cost, is(88));
 	}
 
 	private Talente makeExampleSkillsFor88AP() {
@@ -150,25 +152,25 @@ public class CostCalculatorTest {
 	
 	
 	@Test
-	public void testSpecialCostCalculation(){
+	void testSpecialCostCalculation(){
 		List<Fertigkeit> skills = new ArrayList<>();
-		assertEquals(0, CostCalculator.calcAllSpecificSkillCosts(skills));
+		assertThat(CostCalculator.calcAllSpecificSkillCosts(skills), is(0));
 		Fertigkeit skill = new Fertigkeit();
 		skill.setFertigkeitswert(1);
 		skill.setSteigerungskosten(Steigerungskategorie.A);
 		skills.add(skill);
-		assertEquals(2, CostCalculator.calcAllSpecificSkillCosts(skills));
+		assertThat(CostCalculator.calcAllSpecificSkillCosts(skills), is(2));
 	}
 	
 	
 	@Test
-	public void testCompleteTest() throws Exception{
+	void testCompleteTest() throws Exception{
 		Charakter barundar;
 		TestPreparer preparer = new TestPreparer();
 		barundar = preparer.getBarundar();
 		
 		int cost = CostCalculator.calcUsedAP(WrappedCharakter.getWrappedCharakter(barundar));
-		assertEquals(1725 , cost);
+		assertThat(cost, is(1725));
 	}
 
 }
