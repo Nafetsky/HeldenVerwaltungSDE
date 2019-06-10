@@ -20,8 +20,8 @@ public class SkillCombat implements Skill {
 		if (combatSkill.isBasistechnik() != null && !combatSkill.isBasistechnik()) {
 			isBaseSkill = false;
 		}
-		int newCost = CostCalculator.calcCostCombat(skillLevel + 1, category);
-		int currentCost = CostCalculator.calcCostCombat(skillLevel, category);
+		int newCost = CostCalculatorOld.calcCostCombat(skillLevel + 1, category);
+		int currentCost = CostCalculatorOld.calcCostCombat(skillLevel, category);
 
 		return newCost - currentCost;
 	}

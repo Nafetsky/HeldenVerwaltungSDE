@@ -10,6 +10,7 @@ import java.util.List;
 
 import javax.xml.bind.JAXBException;
 
+import api.Skill;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -25,7 +26,6 @@ import utils.CharacterModifier;
 import utils.CharakterGenerator;
 import utils.MarshallingHelper;
 import utils.MetaDataHandler;
-import utils.Skill;
 import utils.SkillFinder;
 import utils.WrappedCharakter;
 
@@ -172,14 +172,16 @@ public class MasterControleProgramm {
 
 	public Skill handleNewSkill(AddSkillDialogResult result) {
 		if (result.isComplete()) {
-			return modifier.addSkill(result);
+//			return modifier.addSkill(result);
+			return null;
 		}
 		return null;
 	}
 
 	public Skill handleNewCombatSkill(AddNewCombatSkillDialogResult result) {
 		if (result.isComplete()) {
-			return modifier.addSkill(result);
+//			return modifier.addSkill(result);
+			return null;
 		}
 		return null;
 	}

@@ -8,7 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import database.Ability;
-import database.BaseSkills;
+import api.BaseSkills;
 import database.FeatGroup;
 import database.SpecialSkillGroup;
 import generated.Attribut;
@@ -78,7 +78,7 @@ public class SkillFinder {
 			Basistalent baseSkillXml = factory.createBasistalent();
 			baseSkillXml.setFertigkeitswert(0);
 			baseSkillXml.setName(name);
-			baseSkillXml.setMerkmal(skillData.getMerkmal());
+//			baseSkillXml.setMerkmal(skillData.getMerkmal());
 			charakter.getTalente().getTalent().add(baseSkillXml);
 			return Optional.of(new SkillBase(baseSkillXml));
 

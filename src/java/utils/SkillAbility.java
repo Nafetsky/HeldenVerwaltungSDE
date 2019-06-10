@@ -15,8 +15,8 @@ public class SkillAbility implements Skill {
 
 	@Override
 	public int getCostForNextLevel() {
-		return CostCalculator.calcCostBaseAbility(ability.getAttributswert() + 1)
-				- CostCalculator.calcCostBaseAbility(ability.getAttributswert());
+		return CostCalculatorOld.calcCostBaseAbility(ability.getAttributswert() + 1)
+				- CostCalculatorOld.calcCostBaseAbility(ability.getAttributswert());
 	}
 
 	@Override

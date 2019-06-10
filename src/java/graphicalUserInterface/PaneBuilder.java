@@ -34,7 +34,7 @@ import controle.AddSkillDialogResult;
 import controle.AddVantageDialogResult;
 import controle.MasterControleProgramm;
 import database.Ability;
-import database.BaseSkills;
+import api.BaseSkills;
 import database.FeatGroup;
 import database.SpecialSkillGroup;
 import generated.Attribut;
@@ -47,7 +47,7 @@ import generated.Schrift;
 import generated.Sonderfertigkeit;
 import generated.Sprache;
 import generated.Vorteil;
-import utils.CostCalculator;
+import utils.CostCalculatorOld;
 import utils.Skill;
 import utils.SkillCombat;
 import utils.SkillFinder;
@@ -168,7 +168,7 @@ public class PaneBuilder {
 			JLabel lableUsedAP = new JLabel("Eingesetzte AP");
 			JTextField fieldUsedAp = new JTextField();
 			fieldUsedAp.setEditable(false);
-			fieldUsedAp.setText(Integer.toString(CostCalculator.calcUsedAP(charakter)));
+			fieldUsedAp.setText(Integer.toString(CostCalculatorOld.calcUsedAP(charakter)));
 
 			baseInfosPanel.add(lableAllAP);
 			baseInfosPanel.add(fieldAllAp);

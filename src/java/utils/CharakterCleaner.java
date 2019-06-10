@@ -2,7 +2,7 @@ package utils;
 
 import java.util.List;
 
-import database.BaseSkills;
+import api.BaseSkills;
 import generated.Basistalent;
 
 class CharakterCleaner {

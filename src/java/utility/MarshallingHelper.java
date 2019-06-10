@@ -1,4 +1,4 @@
-package utils;
+package utility;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -117,15 +117,15 @@ public class MarshallingHelper {
 		return metaData;
 	}
 
-	public String marshall(WrappedCharakter activeCharakter) {
-		if(activeCharakter.isCharakter()){
-			return marshall(activeCharakter.charakter);
-		}
-		if(activeCharakter.isCulture() || activeCharakter.isProfession()){
-			return marshall(activeCharakter.template);
-		}
-		return null;
-	}
+//	public String marshall(WrappedCharakter activeCharakter) {
+//		if(activeCharakter.isCharakter()){
+//			return marshall(activeCharakter.charakter);
+//		}
+//		if(activeCharakter.isCulture() || activeCharakter.isProfession()){
+//			return marshall(activeCharakter.template);
+//		}
+//		return null;
+//	}
 
 
 }

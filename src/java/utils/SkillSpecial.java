@@ -20,8 +20,8 @@ public class SkillSpecial implements Skill {
 	public int getCostForNextLevel() {
 		CostCategory category = CostCategory.getCostCategory(skill.getSteigerungskosten());
 		int currentSkillLevel = skill.getFertigkeitswert();
-		int newCost = CostCalculator.calcCostSkill(currentSkillLevel + 1, category, false);
-		int currentCost = CostCalculator.calcCostSkill(currentSkillLevel, category, false);
+		int newCost = CostCalculatorOld.calcCostSkill(currentSkillLevel + 1, category, false);
+		int currentCost = CostCalculatorOld.calcCostSkill(currentSkillLevel, category, false);
 		return newCost - currentCost;
 	}
 

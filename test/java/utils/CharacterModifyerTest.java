@@ -13,7 +13,7 @@ import javax.xml.bind.JAXBContext;
 
 import org.apache.commons.lang3.StringUtils;
 
-import database.BaseSkills;
+import api.BaseSkills;
 import generated.Attributskürzel;
 import generated.Charakter;
 import generated.Fertigkeit;

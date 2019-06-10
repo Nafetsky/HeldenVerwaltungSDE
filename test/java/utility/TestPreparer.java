@@ -1,10 +1,15 @@
-package utils;
+package utility;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import XsdWrapper.CharacterXml;
 import generated.Charakter;
+
+import api.Character;
+
+import javax.xml.bind.JAXBException;
 
 public class TestPreparer {
 	
@@ -17,11 +22,18 @@ public class TestPreparer {
 		return MarshallingHelper.getInstance();
 	}
 
-	public Charakter getBarundar() throws Exception {
-		File file = openFile(TestPreparer.TEST_RESOURCES_BARUNDAR_XML);
-		return MarshallingHelper.getInstance().unmarshallCharakter(file);
+	public Character getBarundar() throws Exception {
+		Charakter charakter = getRawBarundar();
+
+		return new CharacterXml(charakter);
 	}
-	
+
+	public Charakter getRawBarundar() throws JAXBException {
+		File file = openFile(TestPreparer.TEST_RESOURCES_BARUNDAR_XML);
+		return MarshallingHelper.getInstance()
+								.unmarshallCharakter(file);
+	}
+
 	public Charakter getVitus() throws Exception {
 		File file = openFile(TestPreparer.TEST_RESOURCES_VITUS_XML);
 		return MarshallingHelper.getInstance().unmarshallCharakter(file);

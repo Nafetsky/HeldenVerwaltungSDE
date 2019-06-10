@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import database.BaseSkills;
+import api.BaseSkills;
 import database.CostCategory;
 import generated.Basistalent;
 import generated.Eigenschaftswerte;
@@ -23,9 +23,10 @@ import generated.Talentspezialisierung;
 import generated.Vorteil;
 import generated.Vorteile;
 
-public class CostCalculator {
+@Deprecated
+public class CostCalculatorOld {
 
-	private CostCalculator() {
+	private CostCalculatorOld() {
 		// no op
 	}
 
@@ -41,7 +42,7 @@ public class CostCalculator {
 		usedAp += calcAdvantagesCosts(charakterW.getVorteile());
 		usedAp += calcDisadvantagesCosts(charakterW.getNachteile());
 		usedAp += calcKommunicatiesCosts(charakterW.getKommunikatives());
-		usedAp += calcAllBaseSkillCosts(charakterW.getTalente());
+//		usedAp += calcAllBaseSkillCosts(charakterW.getTalente());
 		usedAp += calcCombatSkillsCosts(charakterW.getKampftechniken());
 		usedAp += calcAllSpecificSkillCosts(charakterW.getZauber().getZauber());
 		usedAp += calcAllSpecificSkillCosts(charakterW.getRituale().getRitual());
@@ -103,14 +104,14 @@ public class CostCalculator {
 		return sum;
 	}
 
-	static int calcAllBaseSkillCosts(Talente talente) {
-		int sumCosts = 0;
-		for (Basistalent talent : talente.getTalent()) {
-			BaseSkills skill = BaseSkills.getSkill(talent.getName());
-			sumCosts += calcCostSkill(talent.getFertigkeitswert(), skill.getCategory(), true);
-		}
-		return sumCosts;
-	}
+//	static int calcAllBaseSkillCosts(Talente talente) {
+//		int sumCosts = 0;
+//		for (Basistalent talent : talente.getTalent()) {
+//			BaseSkills skill = BaseSkills.getSkill(talent.getName());
+//			sumCosts += calcCostSkill(talent.getFertigkeitswert(), skill.getCategory(), true);
+//		}
+//		return sumCosts;
+//	}
 
 	static int calcAllSpecificSkillCosts(List<Fertigkeit> specialSkills) {
 		int sumCosts = 0;
