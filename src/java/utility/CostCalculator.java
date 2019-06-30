@@ -2,14 +2,14 @@ package utility;
 
 import api.Advantage;
 import api.BaseAttribute;
-import api.Character;
+import api.base.Character;
 import api.CombatTechnique;
 import api.Disadvantage;
 import api.IAttributes;
 import api.ISpecialAbility;
-import api.ImprovementComplexity;
-import api.Skill;
-import api.SkillGroup;
+import api.skills.ImprovementComplexity;
+import api.skills.Skill;
+import api.skills.SkillGroup;
 import lombok.AllArgsConstructor;
 
 import java.util.Arrays;

@@ -1,12 +1,12 @@
 package utility;
 
 
-import api.Character;
-import api.Descriptor;
-import api.ImprovementComplexity;
-import api.MagicDescriptors;
-import api.Skill;
-import api.SkillGroup;
+import api.base.Character;
+import api.skills.Descriptor;
+import api.skills.ImprovementComplexity;
+import api.skills.MagicDescriptors;
+import api.skills.Skill;
+import api.skills.SkillGroup;
 import data.Attributes;
 import generated.Basistalent;
 import generated.MerkmalProfan;

@@ -20,7 +20,7 @@ import javax.xml.bind.annotation.XmlType;
  * <p>
  * <pre>
  * &lt;simpleType name="MerkmalProfan">
- *   &lt;restriction base="{http://www.example.org/Charakter/}Merkmal">
+ *   &lt;restriction api.base="{http://www.example.org/Charakter/}Merkmal">
  *     &lt;enumeration value="Körper"/>
  *     &lt;enumeration value="Gesellschaft"/>
  *     &lt;enumeration value="Gesellschaft"/>

@@ -1,5 +1,8 @@
-package api;
+package api.skills;
 
+import api.AbilityGroup;
+import api.DescribesSkill;
+import api.ISpecialAbility;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

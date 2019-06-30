@@ -119,7 +119,7 @@ public class MarshallingHelper {
 
 //	public String marshall(WrappedCharakter activeCharakter) {
 //		if(activeCharakter.isCharakter()){
-//			return marshall(activeCharakter.charakter);
+//			return marshall(activeCharakter.character);
 //		}
 //		if(activeCharakter.isCulture() || activeCharakter.isProfession()){
 //			return marshall(activeCharakter.template);

@@ -22,7 +22,7 @@ import javax.xml.bind.annotation.XmlType;
  * <pre>
  * &lt;complexType name="Eigenschaftswerte">
  *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *     &lt;restriction api.base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="Mut" type="{http://www.example.org/Charakter/}Attribut"/>
  *         &lt;element name="Klugheit" type="{http://www.example.org/Charakter/}Attribut"/>

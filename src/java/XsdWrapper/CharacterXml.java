@@ -2,32 +2,39 @@ package XsdWrapper;
 
 import api.AbilityGroup;
 import api.Advantage;
-import api.Character;
 import api.CombatTechnique;
 import api.Disadvantage;
 import api.Event;
 import api.IAttributes;
 import api.IMetaData;
 import api.ISpecialAbility;
-import api.Skill;
-import api.SkillGroup;
 import api.SpecialAbility;
+import api.base.Character;
+import api.history.SkillChange;
+import api.skills.Skill;
+import api.skills.SkillGroup;
+import api.skills.SkillLevler;
 import data.Attributes;
 import data.Metadata;
 import generated.Charakter;
 import generated.Eigenschaftswerte;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class CharacterXml implements Character {
 
 	private final Charakter wrapped;
-	private final Translator translator;
+	private final Translator translator = new Translator();
+	private Event currentChanges = Event.builder()
+										.build();
 
 
 	@Override
@@ -185,9 +192,75 @@ public class CharacterXml implements Character {
 	public List<Event> getHistory() {
 		EventParser parser = new EventParser();
 		return wrapped.getSteigerungshistorie()
+					  .getEreignis()
+					  .stream()
+					  .map(parser::parse)
+					  .collect(Collectors.toList());
+	}
+
+	@Override
+	public void increase(Event event) {
+
+		applySkillChanges(event);
+
+	}
+
+	@Override
+	public SkillLevler getSkillLevler(String name) {
+		Skill foundSkill = getSkills().stream()
+									  .filter(skill -> StringUtils.equals(skill.getName(), name))
+									  .findFirst()
+									  .orElseThrow(() -> new UnsupportedOperationException("The Character " + wrapped.getName() + " has no skill " + name));
+		return () -> {
+			int level = foundSkill.getLevel();
+			foundSkill.setLevel(level + 1);
+
+			SkillChange skillChange = findOrBuildSkillChange(name);
+			skillChange.setIncrease(skillChange.getIncrease()+1);
+			skillChange.setNewValue(foundSkill.getLevel());
+		};
+
+	}
+
+	private SkillChange findOrBuildSkillChange(String name) {
+		Optional<SkillChange> first = currentChanges.getSkillChanges()
+													.stream()
+													.filter(s -> StringUtils.equals(s.getName(), name))
+													.findFirst();
+		if(first.isPresent()){
+			return first.get();
+		}
+
+		SkillChange newChange = new SkillChange(name);
+		currentChanges.getSkillChanges()
+					  .add(newChange);
+		return newChange;
+	}
+
+	private void applySkillChanges(Event event) {
+		List<SkillChange> skillChanges = event.getSkillChanges();
+		for (SkillChange skillChange : skillChanges) {
+			SkillLevler skillLevler = getSkillLevler(skillChange.getName());
+			for (int i = 0; i < skillChange.getIncrease(); i++) {
+				skillLevler.level();
+			}
+
+		}
+	}
+
+
+	@Override
+	public void save(String message) {
+		EventParser parser = new EventParser();
+
+		Event eventToSave = currentChanges.toBuilder()
+									.description(message)
+									.date(LocalDateTime.now())
+									.build();
+		wrapped.getSteigerungshistorie()
 			   .getEreignis()
-			   .stream()
-			   .map(parser::parse)
-			   .collect(Collectors.toList());
+			   .add(parser.parse(eventToSave));
+		currentChanges = Event.builder().build();
+
 	}
 }

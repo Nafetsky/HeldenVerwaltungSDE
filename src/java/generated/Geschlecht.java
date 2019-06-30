@@ -20,7 +20,7 @@ import javax.xml.bind.annotation.XmlType;
  * <p>
  * <pre>
  * &lt;simpleType name="Geschlecht">
- *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
+ *   &lt;restriction api.base="{http://www.w3.org/2001/XMLSchema}string">
  *     &lt;enumeration value="männlich"/>
  *     &lt;enumeration value="weiblich"/>
  *   &lt;/restriction>

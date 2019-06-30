@@ -23,7 +23,7 @@ import javax.xml.bind.annotation.XmlType;
  * <pre>
  * &lt;complexType name="Eigenschaftssteigerung">
  *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *     &lt;restriction api.base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="Eigenschaft" type="{http://www.example.org/Charakter/}Attributskürzel"/>
  *         &lt;element name="Steigerung" type="{http://www.w3.org/2001/XMLSchema}int"/>

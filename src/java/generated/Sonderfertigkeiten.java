@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.XmlType;
  * <pre>
  * &lt;complexType name="Sonderfertigkeiten">
  *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *     &lt;restriction api.base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="Sonderfertigkeit" type="{http://www.example.org/Charakter/}Sonderfertigkeit" maxOccurs="unbounded" minOccurs="0"/>
  *         &lt;element name="Talentspezialisierung" type="{http://www.example.org/Charakter/}Talentspezialisierung" maxOccurs="unbounded" minOccurs="0"/>

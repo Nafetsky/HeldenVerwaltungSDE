@@ -7,7 +7,7 @@ import java.nio.file.Paths;
 import XsdWrapper.CharacterXml;
 import generated.Charakter;
 
-import api.Character;
+import api.base.Character;
 
 import javax.xml.bind.JAXBException;
 

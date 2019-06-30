@@ -19,7 +19,7 @@ import javax.xml.bind.annotation.XmlType;
  * <p>
  * <pre>
  * &lt;simpleType name="Steigerungskategorie">
- *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
+ *   &lt;restriction api.base="{http://www.w3.org/2001/XMLSchema}string">
  *     &lt;enumeration value="A"/>
  *     &lt;enumeration value="B"/>
  *     &lt;enumeration value="C"/>

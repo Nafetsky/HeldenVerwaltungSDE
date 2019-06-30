@@ -1,4 +1,4 @@
-package api;
+package api.skills;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

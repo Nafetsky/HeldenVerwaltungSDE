@@ -1,5 +1,6 @@
 package api;
 
+import api.skills.Descriptor;
 import lombok.Builder;
 import lombok.Data;
 

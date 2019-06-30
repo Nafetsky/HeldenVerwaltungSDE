@@ -1,5 +1,6 @@
-package api;
+package api.skills;
 
+import api.BaseAttribute;
 import lombok.Getter;
 import lombok.Setter;
 

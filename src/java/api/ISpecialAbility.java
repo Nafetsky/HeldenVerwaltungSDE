@@ -1,5 +1,7 @@
 package api;
 
+import api.skills.Descriptor;
+
 import java.util.List;
 
 public interface ISpecialAbility {

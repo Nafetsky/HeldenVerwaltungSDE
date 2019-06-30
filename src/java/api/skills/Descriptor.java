@@ -1,4 +1,4 @@
-package api;
+package api.skills;
 
 public interface Descriptor {
 

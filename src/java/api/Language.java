@@ -1,6 +1,7 @@
 package api;
 
 
+import api.skills.Descriptor;
 import lombok.Data;
 
 import java.util.Collections;

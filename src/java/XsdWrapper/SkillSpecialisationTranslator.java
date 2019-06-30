@@ -1,8 +1,8 @@
 package XsdWrapper;
 
-import api.BaseSkills;
+import api.skills.BaseSkills;
 import api.ISpecialAbility;
-import api.SkillSpecialisation;
+import api.skills.SkillSpecialisation;
 import generated.Charakter;
 import generated.Fertigkeit;
 import generated.Talentspezialisierung;

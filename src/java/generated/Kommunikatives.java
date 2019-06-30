@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.XmlType;
  * <pre>
  * &lt;complexType name="Kommunikatives">
  *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *     &lt;restriction api.base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="Sprachen" type="{http://www.example.org/Charakter/}Sprache" maxOccurs="unbounded" minOccurs="0"/>
  *         &lt;element name="Schriften" type="{http://www.example.org/Charakter/}Schrift" maxOccurs="unbounded" minOccurs="0"/>

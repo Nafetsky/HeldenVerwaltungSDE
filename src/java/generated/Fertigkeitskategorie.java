@@ -20,7 +20,7 @@ import javax.xml.bind.annotation.XmlType;
  * <p>
  * <pre>
  * &lt;simpleType name="Fertigkeitskategorie">
- *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
+ *   &lt;restriction api.base="{http://www.w3.org/2001/XMLSchema}string">
  *     &lt;enumeration value="Profan"/>
  *     &lt;enumeration value="Zauber"/>
  *     &lt;enumeration value="Ritual"/>

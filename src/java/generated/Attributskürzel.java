@@ -19,7 +19,7 @@ import javax.xml.bind.annotation.XmlType;
  * <p>
  * <pre>
  * &lt;simpleType name="Attributskürzel">
- *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
+ *   &lt;restriction api.base="{http://www.w3.org/2001/XMLSchema}string">
  *     &lt;enumeration value="MU"/>
  *     &lt;enumeration value="KL"/>
  *     &lt;enumeration value="IN"/>

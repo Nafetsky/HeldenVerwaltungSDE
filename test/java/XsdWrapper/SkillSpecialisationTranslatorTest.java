@@ -1,6 +1,6 @@
 package XsdWrapper;
 
-import api.BaseSkills;
+import api.skills.BaseSkills;
 import api.ISpecialAbility;
 import generated.Basistalent;
 import generated.Charakter;

@@ -1,4 +1,4 @@
-package api;
+package api.skills;
 
 import generated.MerkmalProfan;
 import org.apache.commons.lang3.StringUtils;

@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.XmlType;
  * <pre>
  * &lt;complexType name="MetaData">
  *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *     &lt;restriction api.base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="Charakters" type="{http://www.example.org/Charakter/}MetaDataLine" maxOccurs="unbounded" minOccurs="0"/>
  *       &lt;/sequence>

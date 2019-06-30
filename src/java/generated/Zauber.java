@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.XmlType;
  * <pre>
  * &lt;complexType name="Zauber">
  *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *     &lt;restriction api.base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="Zauber" type="{http://www.example.org/Charakter/}Fertigkeit" maxOccurs="unbounded" minOccurs="0"/>
  *       &lt;/sequence>

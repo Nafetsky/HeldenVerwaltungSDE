@@ -20,7 +20,7 @@ import javax.xml.bind.annotation.XmlType;
  * <p>
  * <pre>
  * &lt;simpleType name="MerkmalMagie">
- *   &lt;restriction base="{http://www.example.org/Charakter/}Merkmal">
+ *   &lt;restriction api.base="{http://www.example.org/Charakter/}Merkmal">
  *     &lt;enumeration value="Antimagie"/>
  *     &lt;enumeration value="Dämonisch"/>
  *     &lt;enumeration value="Einfluss"/>

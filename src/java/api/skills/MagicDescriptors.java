@@ -1,9 +1,9 @@
-package api;
+package api.skills;
 
 public enum MagicDescriptors implements Descriptor {
 
-	AntiMagic,
-	Clairvoynace,
+	ANTI_MAGIC,
+	CLAIRVOYANCE,
 	Demonic,
 	Elemental,
 	Healing,
