@@ -10,6 +10,7 @@ import generated.Fertigkeitsmodifikation;
 import generated.Kommunikatives;
 import generated.ObjectFactory;
 import generated.Sonderfertigkeit;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.time.LocalDateTime;
@@ -75,12 +76,10 @@ public class EventParser {
 		Ereignis ereignis = factory.createEreignis();
 		ereignis.setGrund(eventToSave.getDescription());
 		ereignis.setDatum(translator.translate(eventToSave.getDate()));
-		List<Fertigkeitsmodifikation> skillChanges = eventToSave.getSkillChanges()
-																.stream()
-																.map(translator::translate)
-																.collect(Collectors.toList());
+
+		List<Fertigkeitsmodifikation> skillChangesWithNewSkills = buildSkillChangesIncludingNewSkills(eventToSave);
 		ereignis.getFertigkeitsänderung()
-				.addAll(skillChanges);
+				.addAll(skillChangesWithNewSkills);
 
 		Collection<Sonderfertigkeit> sonderfertigkeiten = eventToSave.getAbilities()
 																	 .stream()
@@ -90,6 +89,26 @@ public class EventParser {
 				.addAll(sonderfertigkeiten);
 
 		return ereignis;
+
+	}
+
+	private List<Fertigkeitsmodifikation> buildSkillChangesIncludingNewSkills(Event eventToSave) {
+		List<Fertigkeitsmodifikation> skillChanges = eventToSave.getSkillChanges()
+																.stream()
+																.map(translator::translate)
+																.collect(Collectors.toList());
+
+
+		for (Fertigkeitsmodifikation change : skillChanges) {
+			eventToSave.getLearnedSkills()
+					   .stream()
+					   .filter(newSkill -> StringUtils.equals(newSkill.getName(), change.getName()))
+					   .map(translator::translate)
+					   .forEach(change::setNeueFertigkeit);
+		}
+
+		return skillChanges;
+
 
 	}
 }

@@ -25,14 +25,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import utility.TestPreparer;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.isIn;
+import static org.hamcrest.collection.IsArray.array;
 
 
 class CharacterXmlTest {
@@ -232,10 +236,10 @@ class CharacterXmlTest {
 
 	@Test
 	void testLearnNewSkill() {
-		Descriptor[] descriptors = new Descriptor[]{TraditionDescriptors.GuildMage, MagicDescriptors.ANTI_MAGIC};
+		Descriptor[] descriptors = new Descriptor[]{TraditionDescriptors.GUILD_MAGE, MagicDescriptors.ANTI_MAGIC};
 		BaseAttribute[] attributes = new BaseAttribute[]{BaseAttribute.Courage, BaseAttribute.Sagacity, BaseAttribute.Charisma};
 		String spellname = "Gardianum";
-		Skill gardianum = new SkillImpl(spellname, SkillGroup.Spell, attributes,descriptors, ImprovementComplexity.B);
+		Skill gardianum = new SkillImpl(spellname, SkillGroup.Spell, attributes, descriptors, ImprovementComplexity.B);
 		SkillChange learendGardianum = new SkillChange(spellname);
 		learendGardianum.setNewValue(0);
 		learendGardianum.setIncrease(1);
@@ -244,12 +248,23 @@ class CharacterXmlTest {
 						   .skillChanges(Collections.singletonList(learendGardianum))
 						   .build();
 
+
 		barundar.increase(build);
 		barundar.save("Learn Magic");
 
+
 		List<Event> history = barundar.getHistory();
+		List<Skill> knownSpells = barundar.getSkills(SkillGroup.Spell);
+		assertThat(knownSpells, hasSize(1));
+		Skill spell = knownSpells.get(0);
+		assertThat(spell.getName(), is(spellname));
+		assertThat(spell.getLevel(), is(1));
+		assertThat(Arrays.asList(spell.getAttributes().get()), contains(BaseAttribute.Courage, BaseAttribute.Sagacity, BaseAttribute.Charisma));
+		assertThat(spell.getComplexity(), is(ImprovementComplexity.B));
+
 		assertThat(history, hasSize(2));
 		Event event = history.get(history.size() - 1);
+		assertThat(event.getLearnedSkills(), hasSize(1));
 
 
 	}

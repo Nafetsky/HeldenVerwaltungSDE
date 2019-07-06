@@ -6,7 +6,6 @@ import api.ISpecialAbility;
 import api.history.AttributeChange;
 import api.BaseAttribute;
 import api.skills.BaseDescriptors;
-import api.skills.BaseSkills;
 import api.CombatTechnique;
 import api.skills.Descriptor;
 import api.Disadvantage;
@@ -42,6 +41,7 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -78,10 +78,6 @@ public class Translator {
 		return Sex.Unspecified;
 	}
 
-	public Skill translate(Basistalent talent) {
-		return new DatabackedSkill(talent);
-	}
-
 	public Descriptor[] translate(MerkmalProfan merkmal) {
 		switch (merkmal) {
 			case KÖRPER:
@@ -107,7 +103,7 @@ public class Translator {
 		return combatTechnique;
 	}
 
-	private ImprovementComplexity translate(Steigerungskategorie steigerungskosten) {
+	public ImprovementComplexity translate(Steigerungskategorie steigerungskosten) {
 		switch (steigerungskosten) {
 			case A:
 				return ImprovementComplexity.A;
@@ -121,7 +117,7 @@ public class Translator {
 		return null;
 	}
 
-	private BaseAttribute translate(Attributskürzel acronym) {
+	public BaseAttribute translate(Attributskürzel acronym) {
 		switch (acronym) {
 			case MU:
 				return BaseAttribute.Courage;
@@ -139,6 +135,28 @@ public class Translator {
 				return BaseAttribute.Constitution;
 			case KK:
 				return BaseAttribute.Strength;
+		}
+		return null;
+	}
+
+	public Attributskürzel translate(BaseAttribute attribute) {
+		switch (attribute) {
+			case Courage:
+				return Attributskürzel.MU;
+			case Sagacity:
+				return Attributskürzel.KL;
+			case Intuition:
+				return Attributskürzel.IN;
+			case Charisma:
+				return Attributskürzel.CH;
+			case Dexterity:
+				return Attributskürzel.FF;
+			case Agility:
+				return Attributskürzel.GE;
+			case Constitution:
+				return Attributskürzel.KO;
+			case Strength:
+				return Attributskürzel.KK;
 		}
 		return null;
 	}
@@ -244,22 +262,15 @@ public class Translator {
 		return Optional.of(translate(neueFertigkeit));
 	}
 
-	private Skill translate(Fertigkeit fertigkeit) {
-		String name = fertigkeit.getName();
-		SkillGroup skillGroup = translate(fertigkeit.getKategorie());
-		BaseAttribute firstAttribute = translate(fertigkeit.getAttribut1());
-		BaseAttribute secondAttribute = translate(fertigkeit.getAttribut2());
-		BaseAttribute thirdAttribute = translate(fertigkeit.getAttribut3());
-		BaseAttribute[] attributes = {firstAttribute, secondAttribute, thirdAttribute};
-		List<String> merkmals = fertigkeit.getMerkmal();
-		Descriptor[] descriptors = descriptorTranslator.translateToDescriptors(merkmals);
-
-		ImprovementComplexity complexity = translate(fertigkeit.getSteigerungskosten());
-		return new SkillImpl(name, skillGroup, attributes, descriptors, complexity);
-
+	public Skill translate(Basistalent talent) {
+		return new DatabackedBaseSkill(talent);
 	}
 
-	private SkillGroup translate(Fertigkeitskategorie kategorie) {
+	public Skill translate(Fertigkeit fertigkeit) {
+		return new DatabackedSkill(fertigkeit);
+	}
+
+	public SkillGroup translate(Fertigkeitskategorie kategorie) {
 		switch(kategorie){
 			case ZAUBER:
 				return SkillGroup.Spell;
@@ -332,5 +343,47 @@ public class Translator {
 		sonderfertigkeit.setKosten(specialAbilityToParse.getCost());
 		sonderfertigkeit.setKategorie(SpecialAbilityKeys.MUNDANE.getName());
 		return sonderfertigkeit;
+	}
+
+	public Fertigkeit translate(Skill learnedSkill) {
+		Fertigkeit fertigkeit = factory.createFertigkeit();
+		fertigkeit.setName(learnedSkill.getName());
+		BaseAttribute[] baseAttributes = learnedSkill.getAttributes()
+													 .orElseThrow(IllegalStateException::new);
+		fertigkeit.setAttribut1(translate(baseAttributes[0]));
+		fertigkeit.setAttribut2(translate(baseAttributes[1]));
+		fertigkeit.setAttribut3(translate(baseAttributes[2]));
+		fertigkeit.setKategorie(translate(learnedSkill.getGroup()));
+		fertigkeit.setSteigerungskosten(translate(learnedSkill.getComplexity()));
+		DescriptorTranslator descriptorTranslator = new DescriptorTranslator();
+		List<String> collect = Arrays.stream(learnedSkill.getDescriptors())
+									 .map(descriptorTranslator::translate)
+									 .collect(Collectors.toList());
+		fertigkeit.getMerkmal().addAll(collect);
+
+		return fertigkeit;
+	}
+
+	private Fertigkeitskategorie translate(SkillGroup group) {
+		switch (group){
+			case Spell:
+				return Fertigkeitskategorie.ZAUBER;
+		}
+		throw new UnsupportedOperationException("Translation not yet implemented");
+	}
+
+	private Steigerungskategorie translate(ImprovementComplexity complexity) {
+		switch (complexity){
+			case A:
+				return Steigerungskategorie.A;
+			case B:
+				return Steigerungskategorie.B;
+			case C:
+				return Steigerungskategorie.C;
+			case D:
+				return Steigerungskategorie.D;
+			case Attribute:
+		}
+		throw new IllegalStateException("Something went haywire while parsing,...");
 	}
 }

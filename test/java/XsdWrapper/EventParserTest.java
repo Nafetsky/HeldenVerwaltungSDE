@@ -171,7 +171,7 @@ class EventParserTest {
 		assertThat(baseAttributes[1], is(BaseAttribute.Sagacity));
 		assertThat(baseAttributes[2], is(BaseAttribute.Intuition));
 
-		assertThat(Arrays.asList(ignifaxius.getDescriptors()), containsInAnyOrder(MagicDescriptors.Elemental, TraditionDescriptors.GuildMage));
+		assertThat(Arrays.asList(ignifaxius.getDescriptors()), containsInAnyOrder(MagicDescriptors.Elemental, TraditionDescriptors.GUILD_MAGE));
 	}
 
 

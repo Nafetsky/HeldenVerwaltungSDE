@@ -1,30 +1,38 @@
 package XsdWrapper;
 
 import api.BaseAttribute;
-import api.skills.BaseSkills;
 import api.skills.Descriptor;
 import api.skills.ImprovementComplexity;
 import api.skills.Skill;
 import api.skills.SkillGroup;
 import api.skills.SkillImpl;
-import generated.Basistalent;
-import generated.MerkmalProfan;
+import generated.Fertigkeit;
 
+import java.util.List;
 import java.util.Optional;
 
 public class DatabackedSkill implements Skill {
 
-	private Basistalent backedSkill;
 	private Skill skill;
+	private Fertigkeit fertigkeit;
 
-	public DatabackedSkill(Basistalent talent) {
-		backedSkill = talent;
+
+
+	public DatabackedSkill(Fertigkeit fertigkeit) {
+		this.fertigkeit = fertigkeit;
 		Translator translator = new Translator();
 
-		BaseSkills baseSkill = BaseSkills.getSkill(talent.getName());
-		MerkmalProfan merkmal = talent.getMerkmal();
-		skill = new SkillImpl(talent.getName(), SkillGroup.Base, translator.translate(merkmal), baseSkill.getCategory());
-		skill.setLevel(talent.getFertigkeitswert());
+		String name = fertigkeit.getName();
+		SkillGroup skillGroup = translator.translate(fertigkeit.getKategorie());
+		BaseAttribute firstAttribute = translator.translate(fertigkeit.getAttribut1());
+		BaseAttribute secondAttribute = translator.translate(fertigkeit.getAttribut2());
+		BaseAttribute thirdAttribute = translator.translate(fertigkeit.getAttribut3());
+		BaseAttribute[] attributes = {firstAttribute, secondAttribute, thirdAttribute};
+		List<String> merkmals = fertigkeit.getMerkmal();
+		Descriptor[] descriptors = new DescriptorTranslator().translateToDescriptors(merkmals);
+
+		ImprovementComplexity complexity = translator.translate(fertigkeit.getSteigerungskosten());
+		skill =  new SkillImpl(name, skillGroup, attributes, descriptors, complexity);
 	}
 
 	@Override
@@ -34,12 +42,12 @@ public class DatabackedSkill implements Skill {
 
 	@Override
 	public void setLevel(int level) {
-		backedSkill.setFertigkeitswert(level);
+		fertigkeit.setFertigkeitswert(level);
 	}
 
 	@Override
 	public String getName() {
-		return backedSkill.getName();
+		return skill.getName();
 	}
 
 	@Override
@@ -59,6 +67,6 @@ public class DatabackedSkill implements Skill {
 
 	@Override
 	public int getLevel() {
-		return backedSkill.getFertigkeitswert();
+		return fertigkeit.getFertigkeitswert();
 	}
 }

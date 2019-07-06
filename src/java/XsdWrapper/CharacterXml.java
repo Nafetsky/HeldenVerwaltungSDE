@@ -130,11 +130,18 @@ public class CharacterXml implements Character {
 
 	@Override
 	public List<Skill> getSkills() {
-		return wrapped.getTalente()
-					  .getTalent()
-					  .stream()
-					  .map(translator::translate)
-					  .collect(Collectors.toList());
+		List<Skill> skills = wrapped.getTalente()
+									.getTalent()
+									.stream()
+									.map(translator::translate)
+									.collect(Collectors.toList());
+		skills.addAll(wrapped.getZauber()
+							 .getZauber()
+							 .stream()
+							 .map(translator::translate)
+							 .collect(Collectors.toList()));
+
+		return skills;
 	}
 
 	@Override
@@ -210,7 +217,23 @@ public class CharacterXml implements Character {
 	}
 
 	private void learnNewSkills(Event event) {
+		for (Skill learnedSkill : event.getLearnedSkills()) {
+			List<Fertigkeit> skillsToAddTo = findSkillsToAddTo(learnedSkill);
+			Fertigkeit newSkill = translator.translate(learnedSkill);
+			skillsToAddTo.add(newSkill);
+			currentChanges.getLearnedSkills()
+						  .add(learnedSkill);
 
+		}
+
+	}
+
+	private List<Fertigkeit> findSkillsToAddTo(Skill learnedSkill) {
+		switch (learnedSkill.getGroup()) {
+			case Spell:
+				return wrapped.getZauber().getZauber();
+		}
+		throw new IllegalStateException("Something went haywire or is not yet supported. Trying to learn skill " + learnedSkill);
 	}
 
 	@Override
@@ -231,9 +254,8 @@ public class CharacterXml implements Character {
 			foundSkill.setLevel(level + 1);
 
 
-
 			SkillChange skillChange = findOrBuildSkillChange(name);
-			skillChange.setIncrease(skillChange.getIncrease()+1);
+			skillChange.setIncrease(skillChange.getIncrease() + 1);
 			skillChange.setNewValue(foundSkill.getLevel());
 		};
 	}
@@ -252,10 +274,10 @@ public class CharacterXml implements Character {
 		currentChanges.getAbilities()
 					  .addAll(event.getAbilities());
 		List<Sonderfertigkeit> sonderfertigkeiten = event.getAbilities()
-											  .stream()
-											  .filter(sA -> sA.getGroup() != AbilityGroup.SPECIALISATION)
-											  .map(translator::translate)
-											  .collect(Collectors.toList());
+														 .stream()
+														 .filter(sA -> sA.getGroup() != AbilityGroup.SPECIALISATION)
+														 .map(translator::translate)
+														 .collect(Collectors.toList());
 		wrapped.getSonderfertigkeiten()
 			   .getSonderfertigkeit()
 			   .addAll(sonderfertigkeiten);
@@ -267,7 +289,7 @@ public class CharacterXml implements Character {
 													.stream()
 													.filter(s -> StringUtils.equals(s.getName(), name))
 													.findFirst();
-		if(first.isPresent()){
+		if (first.isPresent()) {
 			return first.get();
 		}
 
@@ -294,13 +316,14 @@ public class CharacterXml implements Character {
 		EventParser parser = new EventParser();
 
 		Event eventToSave = currentChanges.toBuilder()
-									.description(message)
-									.date(LocalDateTime.now())
-									.build();
+										  .description(message)
+										  .date(LocalDateTime.now())
+										  .build();
 		wrapped.getSteigerungshistorie()
 			   .getEreignis()
 			   .add(parser.parse(eventToSave));
-		currentChanges = Event.builder().build();
+		currentChanges = Event.builder()
+							  .build();
 
 	}
 }
