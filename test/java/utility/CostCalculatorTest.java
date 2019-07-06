@@ -6,6 +6,7 @@ import api.skills.Descriptor;
 import api.skills.ImprovementComplexity;
 import api.skills.MagicDescriptors;
 import api.skills.Skill;
+import api.skills.SkillImpl;
 import api.skills.SkillGroup;
 import data.Attributes;
 import generated.Basistalent;
@@ -125,7 +126,7 @@ class CostCalculatorTest {
 	void testSpecialCostCalculation(){
 		List<Skill> skills = new ArrayList<>();
 		assertThat(CostCalculator.calcAllSkillCosts(skills), is(0));
-		Skill skill = new Skill("", SkillGroup.Spell, new Descriptor[]{MagicDescriptors.Demonic}, ImprovementComplexity.A);
+		Skill skill = new SkillImpl("", SkillGroup.Spell, new Descriptor[]{MagicDescriptors.Demonic}, ImprovementComplexity.A);
 		skill.setLevel(1);
 		skills.add(skill);
 		assertThat(CostCalculator.calcAllSkillCosts(skills), is(2));

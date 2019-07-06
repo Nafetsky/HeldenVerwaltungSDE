@@ -2,7 +2,6 @@ package XsdWrapper;
 
 import api.AbilityGroup;
 import api.Advantage;
-import api.Event;
 import api.ISpecialAbility;
 import api.history.AttributeChange;
 import api.BaseAttribute;
@@ -16,13 +15,13 @@ import api.Language;
 import api.Race;
 import api.Sex;
 import api.skills.Skill;
+import api.skills.SkillImpl;
 import api.history.SkillChange;
 import api.skills.SkillGroup;
 import api.SpecialAbility;
 import generated.Attributskürzel;
 import generated.Basistalent;
 import generated.Eigenschaftssteigerung;
-import generated.Ereignis;
 import generated.Fertigkeit;
 import generated.Fertigkeitskategorie;
 import generated.Fertigkeitsmodifikation;
@@ -80,14 +79,10 @@ public class Translator {
 	}
 
 	public Skill translate(Basistalent talent) {
-		MerkmalProfan merkmal = talent.getMerkmal();
-		BaseSkills skill1 = BaseSkills.getSkill(talent.getName());
-		Skill skill = new Skill(talent.getName(), SkillGroup.Base, translate(merkmal), skill1.getCategory());
-		skill.setLevel(talent.getFertigkeitswert());
-		return skill;
+		return new DatabackedSkill(talent);
 	}
 
-	private Descriptor[] translate(MerkmalProfan merkmal) {
+	public Descriptor[] translate(MerkmalProfan merkmal) {
 		switch (merkmal) {
 			case KÖRPER:
 				return new Descriptor[]{BaseDescriptors.Physical};
@@ -180,13 +175,7 @@ public class Translator {
 	}
 
 	public AbilityGroup translateToAbilityGroup(String kategorie) {
-		switch (kategorie) {
-			case ("Kampf"):
-				return AbilityGroup.COMBAT;
-			case ("Allgemein"):
-				return AbilityGroup.MUNDANE;
-		}
-		return AbilityGroup.valueOf(kategorie);
+		return SpecialAbilityKeys.parse(kategorie);
 	}
 
 	public Advantage translate(Vorteil advantage) {
@@ -266,7 +255,7 @@ public class Translator {
 		Descriptor[] descriptors = descriptorTranslator.translateToDescriptors(merkmals);
 
 		ImprovementComplexity complexity = translate(fertigkeit.getSteigerungskosten());
-		return new Skill(name, skillGroup, attributes, descriptors, complexity);
+		return new SkillImpl(name, skillGroup, attributes, descriptors, complexity);
 
 	}
 
@@ -316,5 +305,32 @@ public class Translator {
 		} catch (DatatypeConfigurationException e) {
 			throw new UnsupportedOperationException("Can't parse " + date.toString());
 		}
+	}
+
+	public Sonderfertigkeit translate(ISpecialAbility specialAbilityToParse) {
+		AbilityGroup group = specialAbilityToParse.getGroup();
+		switch(group){
+			case COMBAT:
+				return buildCombatSpecialAbility(specialAbilityToParse);
+			case MUNDANE:
+				return buildMundaneSpecialAbility(specialAbilityToParse);
+		}
+		return null;
+	}
+
+	private Sonderfertigkeit buildCombatSpecialAbility(ISpecialAbility specialAbilityToParse) {
+		Sonderfertigkeit sonderfertigkeit = factory.createSonderfertigkeit();
+		sonderfertigkeit.setName(specialAbilityToParse.getName());
+		sonderfertigkeit.setKosten(specialAbilityToParse.getCost());
+		sonderfertigkeit.setKategorie(SpecialAbilityKeys.COMBAT.getName());
+		return sonderfertigkeit;
+	}
+
+	private Sonderfertigkeit buildMundaneSpecialAbility(ISpecialAbility specialAbilityToParse) {
+		Sonderfertigkeit sonderfertigkeit = factory.createSonderfertigkeit();
+		sonderfertigkeit.setName(specialAbilityToParse.getName());
+		sonderfertigkeit.setKosten(specialAbilityToParse.getCost());
+		sonderfertigkeit.setKategorie(SpecialAbilityKeys.MUNDANE.getName());
+		return sonderfertigkeit;
 	}
 }

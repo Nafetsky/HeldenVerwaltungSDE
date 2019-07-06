@@ -18,6 +18,8 @@ import data.Attributes;
 import data.Metadata;
 import generated.Charakter;
 import generated.Eigenschaftswerte;
+import generated.Fertigkeit;
+import generated.Sonderfertigkeit;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
@@ -201,7 +203,13 @@ public class CharacterXml implements Character {
 	@Override
 	public void increase(Event event) {
 
+		learnNewSkills(event);
 		applySkillChanges(event);
+		learnNewSpecialAbilities(event);
+
+	}
+
+	private void learnNewSkills(Event event) {
 
 	}
 
@@ -211,14 +219,46 @@ public class CharacterXml implements Character {
 									  .filter(skill -> StringUtils.equals(skill.getName(), name))
 									  .findFirst()
 									  .orElseThrow(() -> new UnsupportedOperationException("The Character " + wrapped.getName() + " has no skill " + name));
+		return levelSkill(name, foundSkill);
+
+	}
+
+	private SkillLevler levelSkill(String name, Skill foundSkill) {
+		findFertigkeit(foundSkill);
+
 		return () -> {
 			int level = foundSkill.getLevel();
 			foundSkill.setLevel(level + 1);
+
+
 
 			SkillChange skillChange = findOrBuildSkillChange(name);
 			skillChange.setIncrease(skillChange.getIncrease()+1);
 			skillChange.setNewValue(foundSkill.getLevel());
 		};
+	}
+
+	private void findFertigkeit(Skill foundSkill) {
+//		List<Fertigkeit> fertigkeiten;
+//		switch(foundSkill.getGroup()){
+//			case Base:
+//				fertigkeiten = wrapped.getTalente().getTalent();
+//
+//		}
+
+	}
+
+	private void learnNewSpecialAbilities(Event event) {
+		currentChanges.getAbilities()
+					  .addAll(event.getAbilities());
+		List<Sonderfertigkeit> sonderfertigkeiten = event.getAbilities()
+											  .stream()
+											  .filter(sA -> sA.getGroup() != AbilityGroup.SPECIALISATION)
+											  .map(translator::translate)
+											  .collect(Collectors.toList());
+		wrapped.getSonderfertigkeiten()
+			   .getSonderfertigkeit()
+			   .addAll(sonderfertigkeiten);
 
 	}
 

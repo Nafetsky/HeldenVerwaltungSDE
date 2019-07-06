@@ -9,9 +9,11 @@ import generated.Ereignis;
 import generated.Fertigkeitsmodifikation;
 import generated.Kommunikatives;
 import generated.ObjectFactory;
+import generated.Sonderfertigkeit;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,7 +46,7 @@ public class EventParser {
 	private List<ISpecialAbility> collectAllLearnedSpecialAbilities(Ereignis ereignis) {
 		List<ISpecialAbility> specialAbilities = translator.translateToSpecialAbility(ereignis.getSonderfertigkeitshinzugewinn());
 		Kommunikatives kommunikatives = ereignis.getKommunikatives();
-		if(null == kommunikatives){
+		if (null == kommunikatives) {
 			return specialAbilities;
 		}
 		List<Language> languages = kommunikatives.getSprachen()
@@ -62,8 +64,8 @@ public class EventParser {
 
 	private LocalDateTime parseDate(Ereignis ereignis) {
 		XMLGregorianCalendar datum = ereignis.getDatum();
-		int hour = datum.getHour()<0?0:datum.getHour();
-		int minute = datum.getMinute()<0?0:datum.getMinute();
+		int hour = datum.getHour() < 0 ? 0 : datum.getHour();
+		int minute = datum.getMinute() < 0 ? 0 : datum.getMinute();
 		return LocalDateTime.of(datum.getYear(), datum.getMonth(), datum.getDay(), hour, minute);
 	}
 
@@ -77,9 +79,15 @@ public class EventParser {
 																.stream()
 																.map(translator::translate)
 																.collect(Collectors.toList());
+		ereignis.getFertigkeitsänderung()
+				.addAll(skillChanges);
 
-
-		ereignis.getFertigkeitsänderung().addAll(skillChanges);
+		Collection<Sonderfertigkeit> sonderfertigkeiten = eventToSave.getAbilities()
+																	 .stream()
+																	 .map(translator::translate)
+																	 .collect(Collectors.toList());
+		ereignis.getSonderfertigkeitshinzugewinn()
+				.addAll(sonderfertigkeiten);
 
 		return ereignis;
 
