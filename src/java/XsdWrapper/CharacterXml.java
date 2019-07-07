@@ -140,6 +140,11 @@ public class CharacterXml implements Character {
 							 .stream()
 							 .map(translator::translate)
 							 .collect(Collectors.toList()));
+		skills.addAll(wrapped.getRituale()
+							 .getRitual()
+							 .stream()
+							 .map(translator::translate)
+							 .collect(Collectors.toList()));
 
 		return skills;
 	}
@@ -232,6 +237,8 @@ public class CharacterXml implements Character {
 		switch (learnedSkill.getGroup()) {
 			case Spell:
 				return wrapped.getZauber().getZauber();
+			case Ritual:
+				return wrapped.getRituale().getRitual();
 		}
 		throw new IllegalStateException("Something went haywire or is not yet supported. Trying to learn skill " + learnedSkill);
 	}

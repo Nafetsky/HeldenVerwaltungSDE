@@ -235,7 +235,7 @@ class CharacterXmlTest {
 	}
 
 	@Test
-	void testLearnNewSkill() {
+	void testLearnNewSpell() {
 		Descriptor[] descriptors = new Descriptor[]{TraditionDescriptors.GUILD_MAGE, MagicDescriptors.ANTI_MAGIC};
 		BaseAttribute[] attributes = new BaseAttribute[]{BaseAttribute.Courage, BaseAttribute.Sagacity, BaseAttribute.Charisma};
 		String spellname = "Gardianum";
@@ -261,12 +261,45 @@ class CharacterXmlTest {
 		assertThat(spell.getLevel(), is(1));
 		assertThat(Arrays.asList(spell.getAttributes().get()), contains(BaseAttribute.Courage, BaseAttribute.Sagacity, BaseAttribute.Charisma));
 		assertThat(spell.getComplexity(), is(ImprovementComplexity.B));
+		assertThat(Arrays.asList(spell.getDescriptors()), contains(TraditionDescriptors.GUILD_MAGE, MagicDescriptors.ANTI_MAGIC));
 
 		assertThat(history, hasSize(2));
 		Event event = history.get(history.size() - 1);
 		assertThat(event.getLearnedSkills(), hasSize(1));
+	}
+
+	@Test
+	void testLearnNewRitual() {
+		Descriptor[] descriptors = new Descriptor[]{TraditionDescriptors.GUILD_MAGE, MagicDescriptors.ANTI_MAGIC};
+		BaseAttribute[] attributes = new BaseAttribute[]{BaseAttribute.Courage, BaseAttribute.Sagacity, BaseAttribute.Charisma};
+		String ritualName = "Bannkreis";
+		Skill gardianum = new SkillImpl(ritualName, SkillGroup.Ritual, attributes, descriptors, ImprovementComplexity.B);
+		SkillChange learendGardianum = new SkillChange(ritualName);
+		learendGardianum.setNewValue(0);
+		learendGardianum.setIncrease(1);
+		Event build = Event.builder()
+						   .learnedSkills(Collections.singletonList(gardianum))
+						   .skillChanges(Collections.singletonList(learendGardianum))
+						   .build();
 
 
+		barundar.increase(build);
+		barundar.save("Learn Magic");
+
+
+		List<Event> history = barundar.getHistory();
+		List<Skill> knownSpells = barundar.getSkills(SkillGroup.Ritual);
+		assertThat(knownSpells, hasSize(1));
+		Skill spell = knownSpells.get(0);
+		assertThat(spell.getName(), is(ritualName));
+		assertThat(spell.getLevel(), is(1));
+		assertThat(Arrays.asList(spell.getAttributes().get()), contains(BaseAttribute.Courage, BaseAttribute.Sagacity, BaseAttribute.Charisma));
+		assertThat(spell.getComplexity(), is(ImprovementComplexity.B));
+		assertThat(Arrays.asList(spell.getDescriptors()), contains(TraditionDescriptors.GUILD_MAGE, MagicDescriptors.ANTI_MAGIC));
+
+		assertThat(history, hasSize(2));
+		Event event = history.get(history.size() - 1);
+		assertThat(event.getLearnedSkills(), hasSize(1));
 	}
 
 

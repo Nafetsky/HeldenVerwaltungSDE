@@ -368,6 +368,8 @@ public class Translator {
 		switch (group){
 			case Spell:
 				return Fertigkeitskategorie.ZAUBER;
+			case Ritual:
+				return Fertigkeitskategorie.RITUAL;
 		}
 		throw new UnsupportedOperationException("Translation not yet implemented");
 	}
