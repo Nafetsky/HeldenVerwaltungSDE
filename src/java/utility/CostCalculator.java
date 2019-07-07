@@ -2,8 +2,9 @@ package utility;
 
 import api.Advantage;
 import api.BaseAttribute;
-import api.base.Character;
 import api.CombatTechnique;
+import api.base.Character;
+import api.CombatTechniqueImpl;
 import api.Disadvantage;
 import api.IAttributes;
 import api.ISpecialAbility;
@@ -81,7 +82,7 @@ public class CostCalculator {
 	private static int calcCombatTechniquesCosts(List<CombatTechnique> combatTechniques) {
 		int sum = 0;
 		for (CombatTechnique combatTechnique : combatTechniques) {
-			sum += calcCostCombat(combatTechnique.getLevel(), combatTechnique.getImprovementComplexity());
+			sum += calcCostCombat(combatTechnique.getLevel(), combatTechnique.getComplexity());
 		}
 		return sum;
 	}

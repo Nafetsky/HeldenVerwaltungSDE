@@ -3,6 +3,7 @@ package api.base;
 import api.AbilityGroup;
 import api.Advantage;
 import api.CombatTechnique;
+import api.CombatTechniqueImpl;
 import api.Disadvantage;
 import api.Event;
 import api.IAttributes;

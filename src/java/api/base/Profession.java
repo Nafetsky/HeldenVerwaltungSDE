@@ -1,7 +1,7 @@
 package api.base;
 
 import api.Advantage;
-import api.CombatTechnique;
+import api.CombatTechniqueImpl;
 import api.Disadvantage;
 import api.IAttributes;
 import api.ISpecialAbility;
@@ -19,7 +19,7 @@ public interface Profession {
 
 	List<Skill> getSkills();
 
-	List<CombatTechnique> getCombatTechniques();
+	List<CombatTechniqueImpl> getCombatTechniques();
 
 	List<ISpecialAbility> getSpecialAbilities();
 }

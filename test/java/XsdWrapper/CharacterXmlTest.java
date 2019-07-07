@@ -4,6 +4,7 @@ import api.AbilityGroup;
 import api.Advantage;
 import api.BaseAttribute;
 import api.CombatTechnique;
+import api.CombatTechniqueImpl;
 import api.Disadvantage;
 import api.Event;
 import api.IAttributes;
@@ -36,7 +37,6 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.isIn;
 
 
 class CharacterXmlTest {
@@ -170,7 +170,9 @@ class CharacterXmlTest {
 		assertThat(changeFromHistory.getName(), is(BaseSkills.CAROUSE.getName()));
 		assertThat(changeFromHistory.getIncrease(), is(2));
 		assertThat(changeFromHistory.getNewValue(), is(11));
-		assertThat(barundar.getSkills().get(8).getLevel(), is(11));
+		assertThat(barundar.getSkills()
+						   .get(8)
+						   .getLevel(), is(11));
 	}
 
 	@Test
@@ -193,16 +195,16 @@ class CharacterXmlTest {
 		Event event = history.get(history.size() - 1);
 		assertThat(event.getAbilities(), hasSize(1));
 		ISpecialAbility historySpecialAbility = event.getAbilities()
-											   .get(0);
+													 .get(0);
 		assertThat(historySpecialAbility.getName(), is(specialAbilityName));
 		assertThat(historySpecialAbility.getCost(), is(25));
 		assertThat(historySpecialAbility.getGroup(), is(AbilityGroup.COMBAT));
 
 		ISpecialAbility ownSpecialAbility1 = barundar.getSpecialAbilities()
-												   .stream()
-												   .filter(sA -> StringUtils.equals(sA.getName(), specialAbilityName))
-												   .findFirst()
-												   .orElseThrow(() -> new IllegalStateException("Test failed. specialability missing"));
+													 .stream()
+													 .filter(sA -> StringUtils.equals(sA.getName(), specialAbilityName))
+													 .findFirst()
+													 .orElseThrow(() -> new IllegalStateException("Test failed. specialability missing"));
 		assertThat(ownSpecialAbility1.getName(), is(specialAbilityName));
 		assertThat(ownSpecialAbility1.getCost(), is(25));
 		assertThat(ownSpecialAbility1.getGroup(), is(AbilityGroup.COMBAT));
@@ -259,7 +261,8 @@ class CharacterXmlTest {
 		Skill spell = knownSpells.get(0);
 		assertThat(spell.getName(), is(spellname));
 		assertThat(spell.getLevel(), is(1));
-		assertThat(Arrays.asList(spell.getAttributes().get()), contains(BaseAttribute.Courage, BaseAttribute.Sagacity, BaseAttribute.Charisma));
+		assertThat(Arrays.asList(spell.getAttributes()
+									  .get()), contains(BaseAttribute.Courage, BaseAttribute.Sagacity, BaseAttribute.Charisma));
 		assertThat(spell.getComplexity(), is(ImprovementComplexity.B));
 		assertThat(Arrays.asList(spell.getDescriptors()), contains(TraditionDescriptors.GUILD_MAGE, MagicDescriptors.ANTI_MAGIC));
 
@@ -293,7 +296,8 @@ class CharacterXmlTest {
 		Skill ritual = knownRituals.get(0);
 		assertThat(ritual.getName(), is(ritualName));
 		assertThat(ritual.getLevel(), is(1));
-		assertThat(Arrays.asList(ritual.getAttributes().get()), contains(BaseAttribute.Courage, BaseAttribute.Sagacity, BaseAttribute.Charisma));
+		assertThat(Arrays.asList(ritual.getAttributes()
+									   .get()), contains(BaseAttribute.Courage, BaseAttribute.Sagacity, BaseAttribute.Charisma));
 		assertThat(ritual.getComplexity(), is(ImprovementComplexity.B));
 		assertThat(Arrays.asList(ritual.getDescriptors()), contains(TraditionDescriptors.GUILD_MAGE, MagicDescriptors.ANTI_MAGIC));
 
@@ -327,7 +331,8 @@ class CharacterXmlTest {
 		Skill spell = knownLiturgies.get(0);
 		assertThat(spell.getName(), is(liturgyName));
 		assertThat(spell.getLevel(), is(0));
-		assertThat(Arrays.asList(spell.getAttributes().get()), contains(BaseAttribute.Courage, BaseAttribute.Intuition, BaseAttribute.Charisma));
+		assertThat(Arrays.asList(spell.getAttributes()
+									  .get()), contains(BaseAttribute.Courage, BaseAttribute.Intuition, BaseAttribute.Charisma));
 		assertThat(spell.getComplexity(), is(ImprovementComplexity.B));
 		assertThat(Arrays.asList(spell.getDescriptors()), contains(TraditionDescriptors.PRAIOS, KarmicDescriptor.PRAIOS_ANTI_MAGIC));
 
@@ -364,7 +369,8 @@ class CharacterXmlTest {
 		Skill spell = knownLiturgies.get(0);
 		assertThat(spell.getName(), is(liturgyName));
 		assertThat(spell.getLevel(), is(2));
-		assertThat(Arrays.asList(spell.getAttributes().get()), contains(BaseAttribute.Courage, BaseAttribute.Intuition, BaseAttribute.Charisma));
+		assertThat(Arrays.asList(spell.getAttributes()
+									  .get()), contains(BaseAttribute.Courage, BaseAttribute.Intuition, BaseAttribute.Charisma));
 		assertThat(spell.getComplexity(), is(ImprovementComplexity.C));
 		assertThat(Arrays.asList(spell.getDescriptors()), contains(TraditionDescriptors.PRAIOS, KarmicDescriptor.PRAIOS_ORDER));
 
@@ -374,6 +380,54 @@ class CharacterXmlTest {
 		Skill skill = event.getLearnedSkills()
 						   .get(0);
 		assertThat(skill.getName(), is(liturgyName));
+	}
+
+	@Test
+	void testLearnCombatTechnique() {
+
+		String skillName = "Kettenwaffen";
+		CombatTechniqueImpl technique = new CombatTechniqueImpl(skillName, BaseAttribute.Strength, ImprovementComplexity.D);
+		Event build = Event.builder()
+						   .learnedCombatTechniques(Collections.singletonList(technique))
+						   .build();
+
+		barundar.increase(build);
+		barundar.save("Learn flailing");
+
+		List<Event> history = barundar.getHistory();
+		assertThat(history, hasSize(2));
+		Event event = history.get(history.size() - 1);
+		List<CombatTechnique> learnedCombatTechniques = event.getLearnedCombatTechniques();
+		assertThat(learnedCombatTechniques, hasSize(1));
+		CombatTechnique combatTechnique = learnedCombatTechniques.get(0);
+		assertThat(combatTechnique.getName(), is(skillName));
+	}
+
+	@Test
+	void testIncreaseCombatTechnique() {
+		String brawlingName = "Raufen";
+		SkillLevler brawlIncreaser = barundar.getSkillLevler(brawlingName);
+
+		brawlIncreaser.level();
+		brawlIncreaser.level();
+		barundar.save("Train boxing");
+
+		CombatTechnique brawling = barundar.getCombatTechniques()
+										   .stream()
+										   .filter(skill -> StringUtils.equals(skill.getName(), brawlingName))
+										   .findFirst()
+										   .get();
+		assertThat(brawling.getLevel(), is(14));
+		List<Event> history = barundar.getHistory();
+		assertThat(history, hasSize(2));
+		Event event = history.get(1);
+		assertThat(event.getLearnedCombatTechniques(), hasSize(0));
+		assertThat(event.getSkillChanges(), hasSize(1));
+		SkillChange skillChange = event.getSkillChanges()
+									   .get(0);
+		assertThat(skillChange.getName(), is(brawlingName));
+		assertThat(skillChange.getIncrease(), is(2));
+		assertThat(skillChange.getNewValue(), is(14));
 	}
 
 

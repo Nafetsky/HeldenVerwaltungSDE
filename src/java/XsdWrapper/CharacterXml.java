@@ -3,6 +3,7 @@ package XsdWrapper;
 import api.AbilityGroup;
 import api.Advantage;
 import api.CombatTechnique;
+import api.CombatTechniqueImpl;
 import api.Disadvantage;
 import api.Event;
 import api.IAttributes;
@@ -11,6 +12,7 @@ import api.ISpecialAbility;
 import api.SpecialAbility;
 import api.base.Character;
 import api.history.SkillChange;
+import api.skills.Increasable;
 import api.skills.Skill;
 import api.skills.SkillGroup;
 import api.skills.SkillLevler;
@@ -226,6 +228,7 @@ public class CharacterXml implements Character {
 	public void increase(Event event) {
 
 		learnNewSkills(event);
+		learnNewCombatTechniques(event);
 		applySkillChanges(event);
 		learnNewSpecialAbilities(event);
 
@@ -233,8 +236,8 @@ public class CharacterXml implements Character {
 
 	private void learnNewSkills(Event event) {
 		for (Skill learnedSkill : event.getLearnedSkills()) {
-			List<Fertigkeit> skillsToAddTo = findSkillsToAddTo(learnedSkill);
 			Fertigkeit newSkill = translator.translate(learnedSkill);
+			List<Fertigkeit> skillsToAddTo = findSkillsToAddTo(learnedSkill);
 			skillsToAddTo.add(newSkill);
 			currentChanges.getLearnedSkills()
 						  .add(learnedSkill);
@@ -244,33 +247,52 @@ public class CharacterXml implements Character {
 
 	}
 
+	private void learnNewCombatTechniques(Event event) {
+		for (CombatTechnique combatTechnique : event.getLearnedCombatTechniques()) {
+			wrapped.getKampftechniken()
+				   .getKampftechnik()
+				   .add(translator.translate(combatTechnique));
+			currentChanges.getLearnedCombatTechniques()
+						  .add(combatTechnique);
+		}
+	}
+
 	private List<Fertigkeit> findSkillsToAddTo(Skill learnedSkill) {
 		switch (learnedSkill.getGroup()) {
 			case SPELL:
-				return wrapped.getZauber().getZauber();
+				return wrapped.getZauber()
+							  .getZauber();
 			case RITUAL:
-				return wrapped.getRituale().getRitual();
+				return wrapped.getRituale()
+							  .getRitual();
 			case LITURGICAL_CHANT:
-				return wrapped.getLiturgien().getLiturgie();
+				return wrapped.getLiturgien()
+							  .getLiturgie();
 			case CEREMONY:
-				return wrapped.getZeremonien().getZeremonie();
+				return wrapped.getZeremonien()
+							  .getZeremonie();
 		}
 		throw new IllegalStateException("Something went haywire or is not yet supported. Trying to learn skill " + learnedSkill);
 	}
 
 	@Override
 	public SkillLevler getSkillLevler(String name) {
-		Skill foundSkill = getSkills().stream()
-									  .filter(skill -> StringUtils.equals(skill.getName(), name))
-									  .findFirst()
-									  .orElseThrow(() -> new UnsupportedOperationException("The Character " + wrapped.getName() + " has no skill " + name));
-		return levelSkill(name, foundSkill);
+		Optional<Skill> foundSkill = getSkills().stream()
+												.filter(skill -> StringUtils.equals(skill.getName(), name))
+												.findFirst();
+		if (foundSkill.isPresent()) {
+			return levelSkill(name, foundSkill.get());
+		}
+
+		CombatTechnique combatTechnique = getCombatTechniques().stream()
+															   .filter(skill -> StringUtils.equals(skill.getName(), name))
+															   .findFirst()
+															   .orElseThrow(() -> new UnsupportedOperationException("The Character " + wrapped.getName() + " has no skill " + name));
+		return levelSkill(name, combatTechnique);
 
 	}
 
-	private SkillLevler levelSkill(String name, Skill foundSkill) {
-		findFertigkeit(foundSkill);
-
+	private SkillLevler levelSkill(String name, Increasable foundSkill) {
 		return () -> {
 			int level = foundSkill.getLevel();
 			foundSkill.setLevel(level + 1);
@@ -282,15 +304,6 @@ public class CharacterXml implements Character {
 		};
 	}
 
-	private void findFertigkeit(Skill foundSkill) {
-//		List<Fertigkeit> fertigkeiten;
-//		switch(foundSkill.getGroup()){
-//			case Base:
-//				fertigkeiten = wrapped.getTalente().getTalent();
-//
-//		}
-
-	}
 
 	private void learnNewSpecialAbilities(Event event) {
 		currentChanges.getAbilities()

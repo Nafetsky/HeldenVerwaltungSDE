@@ -29,6 +29,8 @@ public class Event {
 	@Builder.Default
 	private List<Skill> learnedSkills = new ArrayList<>();
 	@Builder.Default
+	private List<CombatTechnique> learnedCombatTechniques = new ArrayList<>();
+	@Builder.Default
 	private List<SkillChange> skillChanges = new ArrayList<>();
 	@Builder.Default
 	private List<ISpecialAbility> abilities = new ArrayList<>();

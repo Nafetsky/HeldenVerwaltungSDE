@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 public class EventParser {
 
-	Translator translator = new Translator();
+	private Translator translator = new Translator();
 
 	public Event parse(Ereignis ereignis) {
 		return Event.builder()
@@ -31,6 +31,7 @@ public class EventParser {
 					.disadvantages(translator.translateDisadvantages(ereignis.getNachteil()))
 					.attributeChanges(translator.translateAttributeChanges(ereignis.getEigenschaftssteigerung()))
 					.learnedSkills(translator.translateToNewSkills(ereignis.getFertigkeitsänderung()))
+					.learnedCombatTechniques(translator.translateToNewCombatTechniques(ereignis.getFertigkeitsänderung()))
 					.skillChanges(collectAllSkillChanges(ereignis))
 					.abilities(collectAllLearnedSpecialAbilities(ereignis))
 					.build();
@@ -98,6 +99,13 @@ public class EventParser {
 																.map(translator::translate)
 																.collect(Collectors.toList());
 
+		List<Fertigkeitsmodifikation> collect = eventToSave.getLearnedCombatTechniques()
+														   .stream()
+														   .map(translator::translate)
+														   .map(translator::buildModificationFromCombatTechnique)
+														   .collect(Collectors.toList());
+		skillChanges.addAll(collect);
+
 
 		for (Fertigkeitsmodifikation change : skillChanges) {
 			eventToSave.getLearnedSkills()
@@ -111,4 +119,5 @@ public class EventParser {
 
 
 	}
+
 }

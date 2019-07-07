@@ -2,11 +2,11 @@ package XsdWrapper;
 
 import api.AbilityGroup;
 import api.Advantage;
+import api.CombatTechnique;
 import api.ISpecialAbility;
 import api.history.AttributeChange;
 import api.BaseAttribute;
 import api.skills.BaseDescriptors;
-import api.CombatTechnique;
 import api.skills.Descriptor;
 import api.Disadvantage;
 import api.skills.ImprovementComplexity;
@@ -94,12 +94,7 @@ public class Translator {
 	}
 
 	public CombatTechnique translate(Kampftechnik kampftechnik) {
-		String name = kampftechnik.getName();
-		BaseAttribute baseAttribute = translate(kampftechnik.getLeiteigenschaft());
-		ImprovementComplexity complexity = translate(kampftechnik.getSteigerungskosten());
-		CombatTechnique combatTechnique = new CombatTechnique(name, baseAttribute, complexity);
-		combatTechnique.setLevel(kampftechnik.getKampftechnikwert());
-		return combatTechnique;
+		return new DatabackedCombatTechnique(kampftechnik);
 	}
 
 	public ImprovementComplexity translate(Steigerungskategorie steigerungskosten) {
@@ -178,8 +173,8 @@ public class Translator {
 
 	public List<ISpecialAbility> translateToSpecialAbility(List<Sonderfertigkeit> sonderfertigkeiten) {
 		return sonderfertigkeiten.stream()
-				.map(this::translate)
-				.collect(Collectors.toList());
+								 .map(this::translate)
+								 .collect(Collectors.toList());
 	}
 
 	public ISpecialAbility translate(Sonderfertigkeit sonderfertigkeit) {
@@ -244,18 +239,18 @@ public class Translator {
 							  .build();
 	}
 
-	public List<Skill> translateToNewSkills(List<Fertigkeitsmodifikation> fertigkeitsänderung){
+	public List<Skill> translateToNewSkills(List<Fertigkeitsmodifikation> fertigkeitsänderung) {
 		return fertigkeitsänderung.stream()
-				.map(this::translateToNewSkill)
-				.filter(Optional::isPresent)
-				.map(Optional::get)
-				.collect(Collectors.toList());
+								  .map(this::translateToNewSkill)
+								  .filter(Optional::isPresent)
+								  .map(Optional::get)
+								  .collect(Collectors.toList());
 
 	}
 
 	private Optional<Skill> translateToNewSkill(Fertigkeitsmodifikation fertigkeitsmodifikation) {
 		Fertigkeit neueFertigkeit = fertigkeitsmodifikation.getNeueFertigkeit();
-		if(null == neueFertigkeit){
+		if (null == neueFertigkeit) {
 			return Optional.empty();
 		}
 		return Optional.of(translate(neueFertigkeit));
@@ -270,7 +265,7 @@ public class Translator {
 	}
 
 	public SkillGroup translate(Fertigkeitskategorie kategorie) {
-		switch(kategorie){
+		switch (kategorie) {
 			case ZAUBER:
 				return SkillGroup.SPELL;
 			case RITUAL:
@@ -282,7 +277,7 @@ public class Translator {
 			case PROFAN:
 				return SkillGroup.BASE;
 		}
-		throw new IllegalArgumentException("The category " + kategorie.value() + " does not exist") ;
+		throw new IllegalArgumentException("The category " + kategorie.value() + " does not exist");
 	}
 
 	public List<SkillChange> translateSkillChanges(List<Fertigkeitsmodifikation> fertigkeitsänderung) {
@@ -311,7 +306,8 @@ public class Translator {
 
 	public XMLGregorianCalendar translate(LocalDateTime date) {
 		try {
-			return DatatypeFactory.newInstance().newXMLGregorianCalendar(date.toString());
+			return DatatypeFactory.newInstance()
+								  .newXMLGregorianCalendar(date.toString());
 		} catch (DatatypeConfigurationException e) {
 			throw new UnsupportedOperationException("Can't parse " + date.toString());
 		}
@@ -319,7 +315,7 @@ public class Translator {
 
 	public Sonderfertigkeit translate(ISpecialAbility specialAbilityToParse) {
 		AbilityGroup group = specialAbilityToParse.getGroup();
-		switch(group){
+		switch (group) {
 			case COMBAT:
 				return buildCombatSpecialAbility(specialAbilityToParse);
 			case MUNDANE:
@@ -358,13 +354,14 @@ public class Translator {
 		List<String> collect = Arrays.stream(learnedSkill.getDescriptors())
 									 .map(descriptorTranslator::translate)
 									 .collect(Collectors.toList());
-		fertigkeit.getMerkmal().addAll(collect);
+		fertigkeit.getMerkmal()
+				  .addAll(collect);
 
 		return fertigkeit;
 	}
 
 	private Fertigkeitskategorie translate(SkillGroup group) {
-		switch (group){
+		switch (group) {
 			case SPELL:
 				return Fertigkeitskategorie.ZAUBER;
 			case RITUAL:
@@ -378,7 +375,7 @@ public class Translator {
 	}
 
 	private Steigerungskategorie translate(ImprovementComplexity complexity) {
-		switch (complexity){
+		switch (complexity) {
 			case A:
 				return Steigerungskategorie.A;
 			case B:
@@ -390,5 +387,28 @@ public class Translator {
 			case Attribute:
 		}
 		throw new IllegalStateException("Something went haywire while parsing,...");
+	}
+
+	public Kampftechnik translate(CombatTechnique combatTechnique) {
+		Kampftechnik kampftechnik = factory.createKampftechnik();
+		kampftechnik.setName(combatTechnique.getName());
+		kampftechnik.setSteigerungskosten(translate(combatTechnique.getComplexity()));
+		kampftechnik.setLeiteigenschaft(translate(combatTechnique.getAttribute()));
+		return kampftechnik;
+	}
+
+	public Fertigkeitsmodifikation buildModificationFromCombatTechnique(Kampftechnik kampftechnik) {
+		Fertigkeitsmodifikation change = factory.createFertigkeitsmodifikation();
+		change.setName(kampftechnik.getName());
+		change.setNeueKampftechnik(kampftechnik);
+		return change;
+	}
+
+	public List<CombatTechnique> translateToNewCombatTechniques(List<Fertigkeitsmodifikation> fertigkeitsänderung) {
+		return fertigkeitsänderung.stream()
+								  .filter(change -> change.getNeueKampftechnik() != null)
+								  .map(Fertigkeitsmodifikation::getNeueKampftechnik)
+								  .map(this::translate)
+								  .collect(Collectors.toList());
 	}
 }

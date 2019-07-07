@@ -1,14 +1,7 @@
 package api;
 
-import api.skills.ImprovementComplexity;
-import lombok.Data;
+import api.skills.Increasable;
 
-@Data
-public class CombatTechnique {
-
-	private final String name;
-	private final BaseAttribute attribute;
-	private final ImprovementComplexity improvementComplexity;
-
-	private int level = 6;
+public interface CombatTechnique extends Increasable {
+	BaseAttribute getAttribute();
 }
