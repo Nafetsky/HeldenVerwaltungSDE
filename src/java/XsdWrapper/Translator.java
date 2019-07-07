@@ -14,7 +14,6 @@ import api.Language;
 import api.Race;
 import api.Sex;
 import api.skills.Skill;
-import api.skills.SkillImpl;
 import api.history.SkillChange;
 import api.skills.SkillGroup;
 import api.SpecialAbility;
@@ -273,15 +272,15 @@ public class Translator {
 	public SkillGroup translate(Fertigkeitskategorie kategorie) {
 		switch(kategorie){
 			case ZAUBER:
-				return SkillGroup.Spell;
+				return SkillGroup.SPELL;
 			case RITUAL:
-				return SkillGroup.Ritual;
+				return SkillGroup.RITUAL;
 			case LITURGIE:
-				return SkillGroup.LiturgicalChant;
+				return SkillGroup.LITURGICAL_CHANT;
 			case ZEREMONIE:
-				return SkillGroup.Ceremony;
+				return SkillGroup.CEREMONY;
 			case PROFAN:
-				return SkillGroup.Base;
+				return SkillGroup.BASE;
 		}
 		throw new IllegalArgumentException("The category " + kategorie.value() + " does not exist") ;
 	}
@@ -366,10 +365,12 @@ public class Translator {
 
 	private Fertigkeitskategorie translate(SkillGroup group) {
 		switch (group){
-			case Spell:
+			case SPELL:
 				return Fertigkeitskategorie.ZAUBER;
-			case Ritual:
+			case RITUAL:
 				return Fertigkeitskategorie.RITUAL;
+			case LITURGICAL_CHANT:
+				return Fertigkeitskategorie.LITURGIE;
 		}
 		throw new UnsupportedOperationException("Translation not yet implemented");
 	}

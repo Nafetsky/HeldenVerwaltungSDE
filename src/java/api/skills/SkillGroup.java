@@ -2,10 +2,10 @@ package api.skills;
 
 public enum SkillGroup {
 
-	Base,
-	Spell,
-	Ritual,
-	LiturgicalChant,
-	Ceremony
+	BASE,
+	SPELL,
+	RITUAL,
+	LITURGICAL_CHANT,
+	CEREMONY
 
 }

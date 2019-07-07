@@ -162,7 +162,7 @@ class EventParserTest {
 		assertThat(learnedSkills, hasSize(1));
 		Skill ignifaxius = learnedSkills.get(0);
 		assertThat(ignifaxius.getName(), is(spellName));
-		assertThat(ignifaxius.getGroup(), is(SkillGroup.Spell));
+		assertThat(ignifaxius.getGroup(), is(SkillGroup.SPELL));
 		assertThat(ignifaxius.getComplexity(), is(ImprovementComplexity.C));
 		assertThat(ignifaxius.getAttributes().isPresent(), is(true));
 		BaseAttribute[] baseAttributes = ignifaxius.getAttributes()
@@ -171,7 +171,7 @@ class EventParserTest {
 		assertThat(baseAttributes[1], is(BaseAttribute.Sagacity));
 		assertThat(baseAttributes[2], is(BaseAttribute.Intuition));
 
-		assertThat(Arrays.asList(ignifaxius.getDescriptors()), containsInAnyOrder(MagicDescriptors.Elemental, TraditionDescriptors.GUILD_MAGE));
+		assertThat(Arrays.asList(ignifaxius.getDescriptors()), containsInAnyOrder(MagicDescriptors.ELEMENTAL, TraditionDescriptors.GUILD_MAGE));
 	}
 
 

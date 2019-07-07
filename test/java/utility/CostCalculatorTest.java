@@ -126,7 +126,7 @@ class CostCalculatorTest {
 	void testSpecialCostCalculation(){
 		List<Skill> skills = new ArrayList<>();
 		assertThat(CostCalculator.calcAllSkillCosts(skills), is(0));
-		Skill skill = new SkillImpl("", SkillGroup.Spell, new Descriptor[]{MagicDescriptors.Demonic}, ImprovementComplexity.A);
+		Skill skill = new SkillImpl("", SkillGroup.SPELL, new Descriptor[]{MagicDescriptors.DEMONIC}, ImprovementComplexity.A);
 		skill.setLevel(1);
 		skills.add(skill);
 		assertThat(CostCalculator.calcAllSkillCosts(skills), is(2));

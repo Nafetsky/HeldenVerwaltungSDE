@@ -145,6 +145,11 @@ public class CharacterXml implements Character {
 							 .stream()
 							 .map(translator::translate)
 							 .collect(Collectors.toList()));
+		skills.addAll(wrapped.getLiturgien()
+							 .getLiturgie()
+							 .stream()
+							 .map(translator::translate)
+							 .collect(Collectors.toList()));
 
 		return skills;
 	}
@@ -228,6 +233,7 @@ public class CharacterXml implements Character {
 			skillsToAddTo.add(newSkill);
 			currentChanges.getLearnedSkills()
 						  .add(learnedSkill);
+			findOrBuildSkillChange(learnedSkill.getName());
 
 		}
 
@@ -235,10 +241,12 @@ public class CharacterXml implements Character {
 
 	private List<Fertigkeit> findSkillsToAddTo(Skill learnedSkill) {
 		switch (learnedSkill.getGroup()) {
-			case Spell:
+			case SPELL:
 				return wrapped.getZauber().getZauber();
-			case Ritual:
+			case RITUAL:
 				return wrapped.getRituale().getRitual();
+			case LITURGICAL_CHANT:
+				return wrapped.getLiturgien().getLiturgie();
 		}
 		throw new IllegalStateException("Something went haywire or is not yet supported. Trying to learn skill " + learnedSkill);
 	}

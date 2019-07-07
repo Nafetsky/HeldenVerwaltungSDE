@@ -1,6 +1,7 @@
 package XsdWrapper;
 
 import api.skills.Descriptor;
+import api.skills.KarmicDescriptor;
 import api.skills.MagicDescriptors;
 import api.skills.TraditionDescriptors;
 import generated.MerkmalMagie;
@@ -16,6 +17,7 @@ public class DescriptorTranslator {
 	public static final String GUILD_MAGE_XSD_NAME = "MAGIER";
 	public static final String ELF_XSD_NAME = "ELF";
 	public static final String WITCH_XSD_NAME = "HEXE";
+	public static final String PRAIOS_XSD_NAME = "Praios";
 
 	public Descriptor[] translateToDescriptors(List<String> merkmals) {
 		List<Descriptor> collect = merkmals.stream()
@@ -35,6 +37,11 @@ public class DescriptorTranslator {
 			return tradition.get();
 		}
 
+		Optional<Descriptor> karmicDescriptor = translateKarmicDescriptor(description);
+		if(karmicDescriptor.isPresent()){
+			return karmicDescriptor.get();
+		}
+
 
 		throw new IllegalArgumentException("Unknown description: " + description);
 	}
@@ -52,6 +59,8 @@ public class DescriptorTranslator {
 				return Optional.of(TraditionDescriptors.ELF);
 			case WITCH_XSD_NAME:
 				return Optional.of(TraditionDescriptors.WITCH);
+			case PRAIOS_XSD_NAME:
+				return Optional.of(TraditionDescriptors.PRAIOS);
 		}
 
 		throw new UnsupportedOperationException("Tradition " + description + " not yet supported");
@@ -66,9 +75,9 @@ public class DescriptorTranslator {
 				case HELLSICHT:
 					return Optional.of(MagicDescriptors.CLAIRVOYANCE);
 				case DÄMONISCH:
-					return Optional.of(MagicDescriptors.Demonic);
+					return Optional.of(MagicDescriptors.DEMONIC);
 				case ELEMENTAR:
-					return Optional.of(MagicDescriptors.Elemental);
+					return Optional.of(MagicDescriptors.ELEMENTAL);
 				case HEILUNG:
 					return Optional.of(MagicDescriptors.Healing);
 				case ILLUSION:
@@ -91,6 +100,10 @@ public class DescriptorTranslator {
 		return Optional.empty();
 	}
 
+	private Optional<Descriptor> translateKarmicDescriptor(String description) {
+		return KarmicKeys.parse(description);
+	}
+
 	public String translate(Descriptor descriptor){
 		if(descriptor instanceof TraditionDescriptors){
 			return translateFromTradition((TraditionDescriptors) descriptor);
@@ -98,8 +111,11 @@ public class DescriptorTranslator {
 		if(descriptor instanceof MagicDescriptors){
 			return translateFromDescriptor((MagicDescriptors) descriptor);
 		}
+		if(descriptor instanceof KarmicDescriptor){
+			return translateFromDescriptor((KarmicDescriptor) descriptor);
+		}
 
-		return "";
+		throw new UnsupportedOperationException("Not yet supported");
 	}
 
 	private String translateFromTradition(TraditionDescriptors descriptor) {
@@ -110,8 +126,10 @@ public class DescriptorTranslator {
 				return PREFIX + ELF_XSD_NAME;
 			case WITCH:
 				return PREFIX + WITCH_XSD_NAME;
+			case PRAIOS:
+				return PREFIX + PRAIOS_XSD_NAME;
 		}
-		return StringUtils.EMPTY;
+		throw new UnsupportedOperationException("Missing implementation for tradition" + descriptor);
 	}
 
 	private String translateFromDescriptor(MagicDescriptors descriptor) {
@@ -120,9 +138,9 @@ public class DescriptorTranslator {
 				return MerkmalMagie.ANTIMAGIE.value();
 			case CLAIRVOYANCE:
 				return MerkmalMagie.HELLSICHT.value();
-			case Demonic:
+			case DEMONIC:
 				return MerkmalMagie.DÄMONISCH.value();
-			case Elemental:
+			case ELEMENTAL:
 				return MerkmalMagie.ELEMENTAR.value();
 			case Healing:
 				return MerkmalMagie.HEILUNG.value();
@@ -139,6 +157,10 @@ public class DescriptorTranslator {
 			case Transformation:
 				return MerkmalMagie.VERWANDLUNG.value();
 		}
-		return StringUtils.EMPTY;
+		throw new UnsupportedOperationException("Missing implementation for magic descriptor " + descriptor);
+	}
+
+	private String translateFromDescriptor(KarmicDescriptor descriptor) {
+		return KarmicKeys.parse(descriptor);
 	}
 }

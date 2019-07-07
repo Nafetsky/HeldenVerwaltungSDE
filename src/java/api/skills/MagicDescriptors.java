@@ -4,8 +4,8 @@ public enum MagicDescriptors implements Descriptor {
 
 	ANTI_MAGIC,
 	CLAIRVOYANCE,
-	Demonic,
-	Elemental,
+	DEMONIC,
+	ELEMENTAL,
 	Healing,
 	Illusion,
 	Influence,

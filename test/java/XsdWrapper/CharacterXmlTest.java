@@ -14,6 +14,7 @@ import api.history.SkillChange;
 import api.skills.BaseSkills;
 import api.skills.Descriptor;
 import api.skills.ImprovementComplexity;
+import api.skills.KarmicDescriptor;
 import api.skills.MagicDescriptors;
 import api.skills.Skill;
 import api.skills.SkillImpl;
@@ -36,7 +37,6 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.isIn;
-import static org.hamcrest.collection.IsArray.array;
 
 
 class CharacterXmlTest {
@@ -62,7 +62,7 @@ class CharacterXmlTest {
 
 	@Test
 	void loadSkills() {
-		List<Skill> skills = barundar.getSkills(SkillGroup.Base);
+		List<Skill> skills = barundar.getSkills(SkillGroup.BASE);
 
 		Optional<Skill> flySkill = skills.stream()
 										 .filter(skill -> StringUtils.equals(skill.getName(), "Fliegen"))
@@ -239,7 +239,7 @@ class CharacterXmlTest {
 		Descriptor[] descriptors = new Descriptor[]{TraditionDescriptors.GUILD_MAGE, MagicDescriptors.ANTI_MAGIC};
 		BaseAttribute[] attributes = new BaseAttribute[]{BaseAttribute.Courage, BaseAttribute.Sagacity, BaseAttribute.Charisma};
 		String spellname = "Gardianum";
-		Skill gardianum = new SkillImpl(spellname, SkillGroup.Spell, attributes, descriptors, ImprovementComplexity.B);
+		Skill gardianum = new SkillImpl(spellname, SkillGroup.SPELL, attributes, descriptors, ImprovementComplexity.B);
 		SkillChange learendGardianum = new SkillChange(spellname);
 		learendGardianum.setNewValue(0);
 		learendGardianum.setIncrease(1);
@@ -254,7 +254,7 @@ class CharacterXmlTest {
 
 
 		List<Event> history = barundar.getHistory();
-		List<Skill> knownSpells = barundar.getSkills(SkillGroup.Spell);
+		List<Skill> knownSpells = barundar.getSkills(SkillGroup.SPELL);
 		assertThat(knownSpells, hasSize(1));
 		Skill spell = knownSpells.get(0);
 		assertThat(spell.getName(), is(spellname));
@@ -273,7 +273,7 @@ class CharacterXmlTest {
 		Descriptor[] descriptors = new Descriptor[]{TraditionDescriptors.GUILD_MAGE, MagicDescriptors.ANTI_MAGIC};
 		BaseAttribute[] attributes = new BaseAttribute[]{BaseAttribute.Courage, BaseAttribute.Sagacity, BaseAttribute.Charisma};
 		String ritualName = "Bannkreis";
-		Skill gardianum = new SkillImpl(ritualName, SkillGroup.Ritual, attributes, descriptors, ImprovementComplexity.B);
+		Skill gardianum = new SkillImpl(ritualName, SkillGroup.RITUAL, attributes, descriptors, ImprovementComplexity.B);
 		SkillChange learendGardianum = new SkillChange(ritualName);
 		learendGardianum.setNewValue(0);
 		learendGardianum.setIncrease(1);
@@ -288,18 +288,55 @@ class CharacterXmlTest {
 
 
 		List<Event> history = barundar.getHistory();
-		List<Skill> knownSpells = barundar.getSkills(SkillGroup.Ritual);
-		assertThat(knownSpells, hasSize(1));
-		Skill spell = knownSpells.get(0);
-		assertThat(spell.getName(), is(ritualName));
-		assertThat(spell.getLevel(), is(1));
-		assertThat(Arrays.asList(spell.getAttributes().get()), contains(BaseAttribute.Courage, BaseAttribute.Sagacity, BaseAttribute.Charisma));
-		assertThat(spell.getComplexity(), is(ImprovementComplexity.B));
-		assertThat(Arrays.asList(spell.getDescriptors()), contains(TraditionDescriptors.GUILD_MAGE, MagicDescriptors.ANTI_MAGIC));
+		List<Skill> knownRituals = barundar.getSkills(SkillGroup.RITUAL);
+		assertThat(knownRituals, hasSize(1));
+		Skill ritual = knownRituals.get(0);
+		assertThat(ritual.getName(), is(ritualName));
+		assertThat(ritual.getLevel(), is(1));
+		assertThat(Arrays.asList(ritual.getAttributes().get()), contains(BaseAttribute.Courage, BaseAttribute.Sagacity, BaseAttribute.Charisma));
+		assertThat(ritual.getComplexity(), is(ImprovementComplexity.B));
+		assertThat(Arrays.asList(ritual.getDescriptors()), contains(TraditionDescriptors.GUILD_MAGE, MagicDescriptors.ANTI_MAGIC));
 
 		assertThat(history, hasSize(2));
 		Event event = history.get(history.size() - 1);
 		assertThat(event.getLearnedSkills(), hasSize(1));
+	}
+
+	@Test
+	void testLearnNewLiturgy() {
+		Descriptor[] descriptors = new Descriptor[]{TraditionDescriptors.PRAIOS, KarmicDescriptor.PRAIOS_ANTI_MAGIC};
+		BaseAttribute[] attributes = new BaseAttribute[]{BaseAttribute.Courage, BaseAttribute.Intuition, BaseAttribute.Charisma};
+		String liturgyName = "kleiner Bannstrahl";
+		Skill liturgy = new SkillImpl(liturgyName, SkillGroup.LITURGICAL_CHANT, attributes, descriptors, ImprovementComplexity.B);
+		SkillChange learnedLiturgy = new SkillChange(liturgyName);
+		learnedLiturgy.setNewValue(0);
+		learnedLiturgy.setIncrease(0);
+		Event build = Event.builder()
+						   .learnedSkills(Collections.singletonList(liturgy))
+						   .skillChanges(Collections.singletonList(learnedLiturgy))
+						   .build();
+
+
+		barundar.increase(build);
+		barundar.save("Learn Chanting");
+
+
+		List<Event> history = barundar.getHistory();
+		List<Skill> knownLiturgies = barundar.getSkills(SkillGroup.LITURGICAL_CHANT);
+		assertThat(knownLiturgies, hasSize(1));
+		Skill spell = knownLiturgies.get(0);
+		assertThat(spell.getName(), is(liturgyName));
+		assertThat(spell.getLevel(), is(0));
+		assertThat(Arrays.asList(spell.getAttributes().get()), contains(BaseAttribute.Courage, BaseAttribute.Intuition, BaseAttribute.Charisma));
+		assertThat(spell.getComplexity(), is(ImprovementComplexity.B));
+		assertThat(Arrays.asList(spell.getDescriptors()), contains(TraditionDescriptors.PRAIOS, KarmicDescriptor.PRAIOS_ANTI_MAGIC));
+
+		assertThat(history, hasSize(2));
+		Event event = history.get(history.size() - 1);
+		assertThat(event.getLearnedSkills(), hasSize(1));
+		Skill skill = event.getLearnedSkills()
+						   .get(0);
+		assertThat(skill.getName(), is(liturgyName));
 	}
 
 

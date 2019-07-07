@@ -23,7 +23,7 @@ public class DatabackedBaseSkill implements Skill {
 
 		BaseSkills baseSkill = BaseSkills.getSkill(talent.getName());
 		MerkmalProfan merkmal = talent.getMerkmal();
-		skill = new SkillImpl(talent.getName(), SkillGroup.Base, translator.translate(merkmal), baseSkill.getCategory());
+		skill = new SkillImpl(talent.getName(), SkillGroup.BASE, translator.translate(merkmal), baseSkill.getCategory());
 		skill.setLevel(talent.getFertigkeitswert());
 	}
 

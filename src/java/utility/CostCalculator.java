@@ -65,7 +65,7 @@ public class CostCalculator {
 	static int calcAllSkillCosts(List<Skill> skills) {
 		int sumCosts = 0;
 		for (Skill skill : skills) {
-			boolean baseSkill = SkillGroup.Base == skill.getGroup();
+			boolean baseSkill = SkillGroup.BASE == skill.getGroup();
 			sumCosts += calcCostSkill(skill.getLevel(), skill.getComplexity(), baseSkill);
 		}
 		return sumCosts;
