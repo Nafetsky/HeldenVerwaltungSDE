@@ -371,6 +371,8 @@ public class Translator {
 				return Fertigkeitskategorie.RITUAL;
 			case LITURGICAL_CHANT:
 				return Fertigkeitskategorie.LITURGIE;
+			case CEREMONY:
+				return Fertigkeitskategorie.ZEREMONIE;
 		}
 		throw new UnsupportedOperationException("Translation not yet implemented");
 	}

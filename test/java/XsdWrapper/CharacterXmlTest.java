@@ -339,5 +339,42 @@ class CharacterXmlTest {
 		assertThat(skill.getName(), is(liturgyName));
 	}
 
+	@Test
+	void testLearnNewCeremony() {
+		Descriptor[] descriptors = new Descriptor[]{TraditionDescriptors.PRAIOS, KarmicDescriptor.PRAIOS_ORDER};
+		BaseAttribute[] attributes = new BaseAttribute[]{BaseAttribute.Courage, BaseAttribute.Intuition, BaseAttribute.Charisma};
+		String liturgyName = "Greifenruf";
+		Skill liturgy = new SkillImpl(liturgyName, SkillGroup.CEREMONY, attributes, descriptors, ImprovementComplexity.C);
+		SkillChange learnedLiturgy = new SkillChange(liturgyName);
+		learnedLiturgy.setNewValue(0);
+		learnedLiturgy.setIncrease(2);
+		Event build = Event.builder()
+						   .learnedSkills(Collections.singletonList(liturgy))
+						   .skillChanges(Collections.singletonList(learnedLiturgy))
+						   .build();
+
+
+		barundar.increase(build);
+		barundar.save("Learn Chanting");
+
+
+		List<Event> history = barundar.getHistory();
+		List<Skill> knownLiturgies = barundar.getSkills(SkillGroup.CEREMONY);
+		assertThat(knownLiturgies, hasSize(1));
+		Skill spell = knownLiturgies.get(0);
+		assertThat(spell.getName(), is(liturgyName));
+		assertThat(spell.getLevel(), is(2));
+		assertThat(Arrays.asList(spell.getAttributes().get()), contains(BaseAttribute.Courage, BaseAttribute.Intuition, BaseAttribute.Charisma));
+		assertThat(spell.getComplexity(), is(ImprovementComplexity.C));
+		assertThat(Arrays.asList(spell.getDescriptors()), contains(TraditionDescriptors.PRAIOS, KarmicDescriptor.PRAIOS_ORDER));
+
+		assertThat(history, hasSize(2));
+		Event event = history.get(history.size() - 1);
+		assertThat(event.getLearnedSkills(), hasSize(1));
+		Skill skill = event.getLearnedSkills()
+						   .get(0);
+		assertThat(skill.getName(), is(liturgyName));
+	}
+
 
 }
