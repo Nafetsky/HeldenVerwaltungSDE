@@ -3,7 +3,6 @@ package XsdWrapper;
 import api.AbilityGroup;
 import api.Advantage;
 import api.CombatTechnique;
-import api.CombatTechniqueImpl;
 import api.Disadvantage;
 import api.Event;
 import api.IAttributes;
@@ -226,7 +225,6 @@ public class CharacterXml implements Character {
 
 	@Override
 	public void increase(Event event) {
-
 		learnNewSkills(event);
 		learnNewCombatTechniques(event);
 		applySkillChanges(event);
@@ -242,9 +240,7 @@ public class CharacterXml implements Character {
 			currentChanges.getLearnedSkills()
 						  .add(learnedSkill);
 			findOrBuildSkillChange(learnedSkill.getName());
-
 		}
-
 	}
 
 	private void learnNewCombatTechniques(Event event) {
@@ -359,6 +355,5 @@ public class CharacterXml implements Character {
 			   .add(parser.parse(eventToSave));
 		currentChanges = Event.builder()
 							  .build();
-
 	}
 }

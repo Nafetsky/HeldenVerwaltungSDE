@@ -430,5 +430,17 @@ class CharacterXmlTest {
 		assertThat(skillChange.getNewValue(), is(14));
 	}
 
+	@Test
+	void testAlreadyKnownPowerAttack() {
+		List<ISpecialAbility> specialAbilities = barundar.getSpecialAbilities(AbilityGroup.COMBAT);
+
+		Optional<ISpecialAbility> powerAttack = specialAbilities.stream()
+																.filter(sA -> StringUtils.contains(sA.getName(), "Wuchtschlag"))
+																.findFirst();
+
+		assertThat(powerAttack.isPresent(), is(true));
+		ISpecialAbility iSpecialAbility = powerAttack.get();
+		assertThat(iSpecialAbility.getCost(), is(15));
+	}
 
 }
