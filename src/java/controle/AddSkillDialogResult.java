@@ -1,28 +1,28 @@
 package controle;
 
+import api.BaseAttribute;
 import api.skills.ImprovementComplexity;
 import api.skills.SkillGroup;
+import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
-import database.SpecialSkillGroup;
-import generated.Attributskürzel;
-
+@Data
 public class AddSkillDialogResult implements AddDialogResult {
-	public final String name;
-	public final Attributskürzel[] abilities;
-	public final ImprovementComplexity costCategory;
-	public final String[] attributes;
+	private final String name;
+	private final BaseAttribute[] abilities;
+	private final ImprovementComplexity costCategory;
+	private final String[] descriptors;
 	private SkillGroup group;
 
-	public AddSkillDialogResult(String name, ImprovementComplexity costCategory, Attributskürzel[] abilities,
-			String[] descriptorNames) {
+	public AddSkillDialogResult(String name, ImprovementComplexity costCategory, BaseAttribute[] abilities,
+								String[] descriptorNames) {
 		this.name = name;
 		this.costCategory = costCategory;
 		if (abilities == null || abilities.length != 3) {
 			throw new IndexOutOfBoundsException(abilities + " does not have three values");
 		}
 		this.abilities = abilities;
-		this.attributes = descriptorNames;
+		this.descriptors = descriptorNames;
 	}
 
 	public SkillGroup getGroup() {
@@ -30,7 +30,7 @@ public class AddSkillDialogResult implements AddDialogResult {
 	}
 
 	public void setGroup(SkillGroup group) {
-		if(group != null){
+		if (group != null) {
 			throw new UnsupportedOperationException("Can't set group, if it is already set");
 		}
 		this.group = group;

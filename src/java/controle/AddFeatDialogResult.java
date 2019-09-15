@@ -2,19 +2,19 @@ package controle;
 
 import org.apache.commons.lang3.StringUtils;
 
-public class AddFeatDialogResult implements AddDialogResult{
-	
+public class AddFeatDialogResult implements AddDialogResult {
+
 	String name;
 	int cost;
-	
-	public AddFeatDialogResult(String name, int cost){
+
+	public AddFeatDialogResult(String name, int cost) {
 		this.name = name;
 		this.cost = cost;
 	}
 
 	@Override
-	public boolean isComplete(){
-		return StringUtils.isNotEmpty(name)&&cost>-1;
+	public boolean isComplete() {
+		return StringUtils.isNotEmpty(name) && cost > -1;
 	}
 
 }

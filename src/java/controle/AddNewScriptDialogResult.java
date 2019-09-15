@@ -1,22 +1,12 @@
 package controle;
 
-import generated.Steigerungskategorie;
+import api.skills.ImprovementComplexity;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
+@Data
+@AllArgsConstructor
 public class AddNewScriptDialogResult {
 	private final String name;
-	private final Steigerungskategorie costCategorie;
-	
-	public AddNewScriptDialogResult(String name, Steigerungskategorie cost){
-		this.name = name;
-		costCategorie = cost;
-	}
-	
-	public Steigerungskategorie getCostCategorie() {
-		return costCategorie;
-	}
-	
-	public String getName() {
-		return name;
-	}
-
+	private final ImprovementComplexity costCategorie;
 }
