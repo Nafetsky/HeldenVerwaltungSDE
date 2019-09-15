@@ -1,10 +1,8 @@
 package api.base;
 
 import api.AbilityGroup;
-import api.Advantage;
 import api.BaseAttribute;
 import api.CombatTechnique;
-import api.Disadvantage;
 import api.Event;
 import api.IAttributes;
 import api.ILanguage;

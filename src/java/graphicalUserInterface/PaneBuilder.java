@@ -284,9 +284,8 @@ public class PaneBuilder {
 
 		JButton addButton = new JButton("Hinzufügen");
 		addButton.addActionListener((ActionEvent e) -> {
-			AddVantageDialogResult result = InputPopups.getAddVanatgeDialogResult(baseInfosPanel);
+			AddVantageDialogResult result = InputPopups.getAddVanatgeDialogResult(baseInfosPanel, isAdvantage);
 			if (result.isComplete()) {
-				result.setAdvantage(isAdvantage);
 				if (controleInstance.handleNewAdvantage(result)) {
 					tableModel.addRow(new String[]{result.getName(), Integer.toString(result.getCost())});
 				}

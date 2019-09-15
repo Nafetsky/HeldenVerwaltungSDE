@@ -1,8 +1,15 @@
 package graphicalUserInterface;
 
-import java.awt.Component;
-import java.awt.GridLayout;
-import java.util.List;
+import api.BaseAttribute;
+import api.skills.ImprovementComplexity;
+import controle.AddNewCharakterDialogResult;
+import controle.AddNewCombatSkillDialogResult;
+import controle.AddNewScriptDialogResult;
+import controle.AddSkillDialogResult;
+import controle.AddVantageDialogResult;
+import database.Species;
+import generated.Attributskürzel;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -10,26 +17,17 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-
-import org.apache.commons.lang3.StringUtils;
-
-import controle.AddNewCharakterDialogResult;
-import controle.AddNewCombatSkillDialogResult;
-import controle.AddNewScriptDialogResult;
-import controle.AddSkillDialogResult;
-import controle.AddVantageDialogResult;
-import database.CostCategory;
-import database.Species;
-import generated.Attributskürzel;
-import generated.Steigerungskategorie;
+import java.awt.Component;
+import java.awt.GridLayout;
+import java.util.List;
 
 public class InputPopups {
 
 	private static final String COSTCATEGORIE_LABEL = "Steigerungskategorie:";
 	private static final String NAME_LABEL = "Name:";
 	public static final int OK_CANCEL_OPTION = 2;
-	
-	private InputPopups(){
+
+	private InputPopups() {
 		//no op; helper class
 	}
 
@@ -39,7 +37,7 @@ public class InputPopups {
 	}
 
 	public static AddSkillDialogResult getAddSkillResultDialog(Component parent, Object[] attributesToChoose,
-			String representationTradition) {
+															   String representationTradition) {
 		JPanel insertSkillPanel = new JPanel(new GridLayout(0, 2));
 
 		JTextField fieldName = new JTextField();
@@ -56,9 +54,9 @@ public class InputPopups {
 			ability3.addItem(acronym);
 		}
 
-		JComboBox<CostCategory> costCategory = new JComboBox<>();
+		JComboBox<ImprovementComplexity> costCategory = new JComboBox<>();
 		for (int i = 0; i < 4; ++i) {
-			costCategory.addItem(CostCategory.values()[i]);
+			costCategory.addItem(ImprovementComplexity.values()[i]);
 		}
 		insertSkillPanel.add(new JLabel(COSTCATEGORIE_LABEL));
 		insertSkillPanel.add(costCategory);
@@ -72,7 +70,7 @@ public class InputPopups {
 		if (attributesToChoose == null) {
 			attribute = new JTextField();
 		} else {
-			attribute = new JComboBox<Object>(attributesToChoose);
+			attribute = new JComboBox<>(attributesToChoose);
 		}
 		insertSkillPanel.add(new JLabel("Merkmal:"));
 		insertSkillPanel.add(attribute);
@@ -87,20 +85,22 @@ public class InputPopups {
 		int result = JOptionPane.showConfirmDialog(parent, insertSkillPanel, "Test", JOptionPane.OK_CANCEL_OPTION,
 				JOptionPane.PLAIN_MESSAGE);
 		if (result == 0 && StringUtils.isNotEmpty(fieldName.getText())) {
-			Attributskürzel[] abilitys = new Attributskürzel[3];
-			abilitys[0] = (Attributskürzel) ability1.getSelectedItem();
-			abilitys[1] = (Attributskürzel) ability2.getSelectedItem();
-			abilitys[2] = (Attributskürzel) ability3.getSelectedItem();
+			BaseAttribute[] abilities = new BaseAttribute[3];
+			abilities[0] = (BaseAttribute) ability1.getSelectedItem();
+			abilities[1] = (BaseAttribute) ability2.getSelectedItem();
+			abilities[2] = (BaseAttribute) ability3.getSelectedItem();
 			String[] attributesToReturn = new String[2];
-			attributesToReturn[0] = representationTradition.toUpperCase() + "_" + fieldRepresentation.getText().toUpperCase();
+			attributesToReturn[0] = representationTradition.toUpperCase() + "_" + fieldRepresentation.getText()
+																									 .toUpperCase();
 			attributesToReturn[1] = attributesToChoose == null ? ((JTextField) attribute).getText()
-					: ((JComboBox<?>) attribute).getSelectedItem().toString();
-			return new AddSkillDialogResult(fieldName.getText(), (CostCategory) costCategory.getSelectedItem(),
-					abilitys, attributesToReturn);
+					: ((JComboBox<?>) attribute).getSelectedItem()
+												.toString();
+			return new AddSkillDialogResult(fieldName.getText(), (ImprovementComplexity) costCategory.getSelectedItem(),
+					abilities, attributesToReturn);
 		}
 		return null;
 	}
-	
+
 	public static AddNewCombatSkillDialogResult getAddCombatSkillResultDialog(Component parent) {
 		JPanel insertSkillPanel = new JPanel(new GridLayout(0, 2));
 
@@ -108,16 +108,16 @@ public class InputPopups {
 		insertSkillPanel.add(new JLabel(NAME_LABEL));
 		insertSkillPanel.add(fieldName);
 
-		JComboBox<Attributskürzel> ability1 = new JComboBox<>();
+		JComboBox<BaseAttribute> ability1 = new JComboBox<>();
 
 
-		for (Attributskürzel acronym : Attributskürzel.values()) {
+		for (BaseAttribute acronym : BaseAttribute.values()) {
 			ability1.addItem(acronym);
 		}
 
-		JComboBox<CostCategory> costCategory = new JComboBox<>();
+		JComboBox<ImprovementComplexity> costCategory = new JComboBox<>();
 		for (int i = 0; i < 4; ++i) {
-			costCategory.addItem(CostCategory.values()[i]);
+			costCategory.addItem(ImprovementComplexity.values()[i]);
 		}
 		insertSkillPanel.add(new JLabel(COSTCATEGORIE_LABEL));
 		insertSkillPanel.add(costCategory);
@@ -128,53 +128,53 @@ public class InputPopups {
 		int result = JOptionPane.showConfirmDialog(parent, insertSkillPanel, "Neue Kampftechnik", JOptionPane.OK_CANCEL_OPTION,
 				JOptionPane.PLAIN_MESSAGE);
 		if (result == 0 && StringUtils.isNotEmpty(fieldName.getText())) {
-			Attributskürzel ability = (Attributskürzel) ability1.getSelectedItem();
+			BaseAttribute ability = (BaseAttribute) ability1.getSelectedItem();
 			return new AddNewCombatSkillDialogResult(fieldName.getText(), ability,
-					(CostCategory) costCategory.getSelectedItem());
+					(ImprovementComplexity) costCategory.getSelectedItem());
 		}
 		return null;
 	}
-	
-	public static AddNewScriptDialogResult getAddNewScriptDialogResult(Component parent){
+
+	public static AddNewScriptDialogResult getAddNewScriptDialogResult(Component parent) {
 		JPanel insertScriptPanel = new JPanel(new GridLayout(0, 2));
-		
+
 		JTextField fieldName = new JTextField();
 		insertScriptPanel.add(new JLabel(NAME_LABEL));
 		insertScriptPanel.add(fieldName);
-		
-		JComboBox<Steigerungskategorie> costCategoryChooser = new JComboBox<>();
+
+		JComboBox<ImprovementComplexity> costCategoryChooser = new JComboBox<>();
 		for (int i = 0; i < 4; ++i) {
-			costCategoryChooser.addItem(Steigerungskategorie.values()[i]);
+			costCategoryChooser.addItem(ImprovementComplexity.values()[i]);
 		}
 		insertScriptPanel.add(new JLabel(COSTCATEGORIE_LABEL));
 		insertScriptPanel.add(costCategoryChooser);
-		
+
 		int result = JOptionPane.showConfirmDialog(parent, insertScriptPanel, "Neue Schrift", JOptionPane.OK_CANCEL_OPTION,
 				JOptionPane.PLAIN_MESSAGE);
 		if (result == 0 && StringUtils.isNotEmpty(fieldName.getText())) {
-			Steigerungskategorie costCategory = (Steigerungskategorie) costCategoryChooser.getSelectedItem();
+			ImprovementComplexity costCategory = (ImprovementComplexity) costCategoryChooser.getSelectedItem();
 			return new AddNewScriptDialogResult(fieldName.getText(), costCategory);
 		}
 		return null;
 	}
 
 	public static AddNewCharakterDialogResult getAddNewCharakterDialogResult(JComponent parent, List<String> cultures, List<String> professions) {
-		
+
 		JPanel newCharakterPanel = new JPanel(new GridLayout(0, 2));
 
 		JTextField fieldName = new JTextField();
 		newCharakterPanel.add(new JLabel(NAME_LABEL));
 		newCharakterPanel.add(fieldName);
-		
+
 		JComboBox<String> comboBoxSpecies = new JComboBox<>();
-		
+
 		for (Species acronym : Species.values()) {
 			comboBoxSpecies.addItem(acronym.getName());
 		}
-		
+
 		newCharakterPanel.add(new JLabel("Spezies:"));
 		newCharakterPanel.add(comboBoxSpecies);
-		
+
 		JComboBox<String> comboBoxCulture = new JComboBox<>();
 		for (String culture : cultures) {
 			comboBoxCulture.addItem(culture);
@@ -182,8 +182,8 @@ public class InputPopups {
 		comboBoxCulture.addItem("");
 		newCharakterPanel.add(new JLabel("Kultur:"));
 		newCharakterPanel.add(comboBoxCulture);
-		
-		
+
+
 		JComboBox<String> comboBoxProfession = new JComboBox<>();
 		for (String profession : professions) {
 			comboBoxProfession.addItem(profession);
@@ -191,23 +191,23 @@ public class InputPopups {
 		comboBoxProfession.addItem("");
 		newCharakterPanel.add(new JLabel("Profession:"));
 		newCharakterPanel.add(comboBoxProfession);
-		
+
 		int result = JOptionPane.showConfirmDialog(parent, newCharakterPanel, "Neuer Charakter", JOptionPane.OK_CANCEL_OPTION,
 				JOptionPane.PLAIN_MESSAGE);
-		
-		if(result==0 && StringUtils.isNotEmpty(fieldName.getText())){
+
+		if (result == 0 && StringUtils.isNotEmpty(fieldName.getText())) {
 			AddNewCharakterDialogResult addNewCharakter = new AddNewCharakterDialogResult();
 			addNewCharakter.setName(fieldName.getText());
-			addNewCharakter.setSpecies((String)(comboBoxSpecies.getSelectedItem()));
-			addNewCharakter.setCulture((String)comboBoxCulture.getSelectedItem());
-			addNewCharakter.setProfession((String)comboBoxProfession.getSelectedItem());
-			
-			return addNewCharakter;			
+			addNewCharakter.setSpecies((String) (comboBoxSpecies.getSelectedItem()));
+			addNewCharakter.setCulture((String) comboBoxCulture.getSelectedItem());
+			addNewCharakter.setProfession((String) comboBoxProfession.getSelectedItem());
+
+			return addNewCharakter;
 		}
-		
+
 		return null;
-		
-		
+
+
 	}
 
 	public static String getSaveDialogResult() {
@@ -222,31 +222,36 @@ public class InputPopups {
 		return JOptionPane.showInputDialog("Name der neuen Profession?");
 	}
 
-	public static AddVantageDialogResult getAddVanatgeDialogResult(JComponent parent) {
+	public static AddVantageDialogResult getAddVanatgeDialogResult(JComponent parent, boolean isAdvantage) {
 		JPanel insertSkillPanel = new JPanel(new GridLayout(0, 2));
 
 		JTextField fieldName = new JTextField();
 		insertSkillPanel.add(new JLabel(NAME_LABEL));
 		insertSkillPanel.add(fieldName);
-		
+
 		JTextField fieldCots = new JTextField();
 		insertSkillPanel.add(new JLabel("Kosten:"));
 		insertSkillPanel.add(fieldCots);
-		
+
 		int result = JOptionPane.showConfirmDialog(parent, insertSkillPanel, "Neue Eigenheit", JOptionPane.OK_CANCEL_OPTION,
 				JOptionPane.PLAIN_MESSAGE);
 		if (result == 0 && StringUtils.isNotEmpty(fieldName.getText())) {
-			int cost = 0;
-			try{
+			int cost;
+			try {
 				cost = Integer.parseInt(fieldCots.getText());
-			} catch(NumberFormatException e){
+			} catch (NumberFormatException e) {
 				cost = -1;
 			}
-			
-			return new AddVantageDialogResult(fieldName.getText(), cost);
+
+			return AddVantageDialogResult.builder()
+										 .name(fieldName.getText())
+										 .cost(cost)
+										 .advantage(isAdvantage)
+										 .build();
 		}
-		return new AddVantageDialogResult("", -1);
-		
+		return AddVantageDialogResult.builder()
+									 .build();
+
 	}
 
 }

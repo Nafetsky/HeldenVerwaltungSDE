@@ -22,7 +22,6 @@ import org.apache.commons.lang3.StringUtils;
 import utils.CharacterModifier;
 import utils.CharakterGenerator;
 import utils.MetaDataHandler;
-import utils.SkillFinder;
 import utils.WrappedCharakter;
 
 import javax.xml.bind.JAXBException;
@@ -50,7 +49,7 @@ public class MasterControleProgramm {
 	private static final String PROFESSION_DIRECTORY = "professionen";
 
 	private Character activeCharacter;
-//	private SkillFinder finder;
+	//	private SkillFinder finder;
 	private CharacterModifier modifier;
 	private MarshallingHelper helper;
 	private PaneBuilder paneBuilder;
@@ -90,7 +89,8 @@ public class MasterControleProgramm {
 			String fileToName = "";
 			// TODO clean this mess up
 //			if (activeCharacter.isCharakter()) {
-				fileToName = MetaDataHandler.getFileToName(metaData, activeCharacter.getMetaData().getName());
+			fileToName = MetaDataHandler.getFileToName(metaData, activeCharacter.getMetaData()
+																				.getName());
 //			}
 //			if (activeCharacter.isCulture()) {
 //				fileToName = MetaDataHandler.getFileToName(metaDataCultures, activeCharacter.getName());
@@ -100,14 +100,15 @@ public class MasterControleProgramm {
 //			}
 			if (StringUtils.isEmpty(fileToName)) {
 //				if (activeCharacter.isCharakter()) {
-					fileToName = MetaDataHandler.addEntryToMetaData(metaData, activeCharacter.getMetaData().getName());
-					fileWriter = new FileOutputStream(new File(MAIN_DIRECTORY + fileSeperator + METADATA_XML));
-					unsavedCharakters.remove(activeCharacter);
-					fileWriter.write(helper.marshall(metaData)
-										   .getBytes(StandardCharsets.UTF_8));
-					fileWriter.flush();
-					fileWriter.close();
-					loadMetaData();
+				fileToName = MetaDataHandler.addEntryToMetaData(metaData, activeCharacter.getMetaData()
+																						 .getName());
+				fileWriter = new FileOutputStream(new File(MAIN_DIRECTORY + fileSeperator + METADATA_XML));
+				unsavedCharakters.remove(activeCharacter);
+				fileWriter.write(helper.marshall(metaData)
+									   .getBytes(StandardCharsets.UTF_8));
+				fileWriter.flush();
+				fileWriter.close();
+				loadMetaData();
 //				} else if (activeCharacter.isCulture()) {
 //					fileToName = MetaDataHandler.addEntryToMetaData(metaDataCultures, activeCharacter.getName());
 //					fileWriter = new FileOutputStream(new File(
@@ -132,7 +133,8 @@ public class MasterControleProgramm {
 			}
 
 			fileWriter = new FileOutputStream(new File(makeFilePathAndName(fileToName, WrappedCharakter.CHARAKTER)));
-			fileWriter.write(activeCharacter.getContent().getBytes(StandardCharsets.UTF_8));
+			fileWriter.write(activeCharacter.getContent()
+											.getBytes(StandardCharsets.UTF_8));
 			fileWriter.flush();
 			fileWriter.close();
 		} catch (IOException e) {
@@ -184,7 +186,7 @@ public class MasterControleProgramm {
 		if (result.isComplete()) {
 			DescriptorTranslator translator = new DescriptorTranslator();
 			Descriptor[] descriptors = translator.translateToDescriptors(Arrays.asList(result.attributes));
-			SkillImpl o = new SkillImpl(result.name,result.getGroup(), descriptors, result.costCategory);
+			SkillImpl o = new SkillImpl(result.name, result.getGroup(), descriptors, result.costCategory);
 			Event build = Event.builder()
 							   .learnedSkills(Collections.singletonList(o))
 							   .build();
@@ -339,7 +341,8 @@ public class MasterControleProgramm {
 		if (!getAllCharakterNames().contains(newActiveCharakter)) {
 			return;
 		}
-		if (activeCharacter == null || !StringUtils.equals(activeCharacter.getMetaData().getName(), newActiveCharakter)) {
+		if (activeCharacter == null || !StringUtils.equals(activeCharacter.getMetaData()
+																		  .getName(), newActiveCharakter)) {
 			loadCharakter(newActiveCharakter);
 			paneBuilder = new PaneBuilder(activeCharacter, this, getAllCharakterNames());
 			frame.setPaneBuilder(paneBuilder);
