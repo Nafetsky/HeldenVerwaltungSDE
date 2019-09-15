@@ -99,6 +99,10 @@ public enum BaseSkills {
 		
 		throw new IllegalArgumentException(name + " is no valid baseSkill");
 	}
+
+	public Skill getSkill(){
+		return new SkillImpl(name, SkillGroup.BASE, new Descriptor[]{descriptor}, category);
+	}
 	
 	public static int getAmountByCategory(MerkmalProfan merkmal){
 		switch(merkmal){

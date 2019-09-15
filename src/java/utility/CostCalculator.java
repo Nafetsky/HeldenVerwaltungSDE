@@ -7,6 +7,7 @@ import api.base.Character;
 import api.IAttributes;
 import api.ISpecialAbility;
 import api.skills.ImprovementComplexity;
+import api.skills.Increasable;
 import api.skills.Skill;
 import api.skills.SkillGroup;
 import lombok.AllArgsConstructor;
@@ -103,7 +104,7 @@ public class CostCalculator {
 		return effectiveLevel * cost.getFactor();
 	}
 
-	public static final int calcCostCombat(int level, ImprovementComplexity cost) {
+	public static int calcCostCombat(int level, ImprovementComplexity cost) {
 		if (level < 6) {
 			throw new ArithmeticException("Can't calculate costs for combat skill below 6");
 		}
@@ -115,6 +116,16 @@ public class CostCalculator {
 			effectiveLevel += calculateIncreasedLevel(level - 11);
 		}
 		return effectiveLevel * cost.getFactor();
+	}
+
+	public static int calcCostForNextLevel(Increasable increasable){
+		int currentLevel = increasable.getLevel();
+		int factor = increasable.getComplexity()
+								.getFactor();
+		if(currentLevel <= 11){
+			return factor;
+		}
+		return (currentLevel - 11) * factor;
 	}
 
 	public static int calcCostForNextLevelAbility(int level){

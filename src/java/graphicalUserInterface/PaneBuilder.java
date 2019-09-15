@@ -3,10 +3,16 @@ package graphicalUserInterface;
 import api.AbilityGroup;
 import api.Advantage;
 import api.BaseAttribute;
+import api.CombatTechnique;
 import api.ILanguage;
+import api.ISpecialAbility;
 import api.Vantage;
 import api.base.Character;
+import api.skills.BaseDescriptors;
+import api.skills.BaseSkills;
+import api.skills.Increasable;
 import api.skills.Skill;
+import api.skills.SkillGroup;
 import controle.AddFeatDialogResult;
 import controle.AddNewCharakterDialogResult;
 import controle.AddNewCombatSkillDialogResult;
@@ -16,10 +22,7 @@ import controle.AddVantageDialogResult;
 import controle.MasterControleProgramm;
 import database.FeatGroup;
 import database.SpecialSkillGroup;
-import generated.Fertigkeit;
-import generated.Kampftechnik;
 import generated.MerkmalMagie;
-import generated.MerkmalProfan;
 import generated.Nachteil;
 import generated.Schrift;
 import generated.Sonderfertigkeit;
@@ -27,24 +30,36 @@ import generated.Vorteil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import utility.CostCalculator;
-import utils.SkillCombat;
-import utils.SkillFinder;
-import utils.SkillSpecial;
 
-import javax.swing.*;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.JTree;
+import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
-import java.awt.*;
+import java.awt.Component;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
 public class PaneBuilder {
 
 	Character charakter;
-	SkillFinder finder;
 	MasterControleProgramm controleInstance;
 	List<String> charakterNames;
 	TreeGenerator treeGenerator;
@@ -359,20 +374,20 @@ public class PaneBuilder {
 
 			JTextField field = new JTextField();
 			int skillLevel = charakter.getAttributes()
-								 .getValue(abilityAbstract);
+									  .getValue(abilityAbstract);
 			field.setText(Integer.toString(skillLevel));
 			field.setEnabled(false);
 			abilityPanel.add(field);
 
-			JLabel costs = new JLabel(Integer.toString(CostCalculator.calcCostForNextLevelAbility(skillLevel + 1)) + " AP");
+			JLabel costs = new JLabel(CostCalculator.calcCostForNextLevelAbility(skillLevel + 1) + " AP");
 
 			JButton button = new JButton("+1");
 			button.addActionListener((ActionEvent e) -> {
 				controleInstance.handleIncreaseAttribute(abilityAbstract);
 				int newValue = charakter.getAttributes()
-									 .getValue(abilityAbstract);
-				field.setText(new String(Integer.toString(newValue)));
-				costs.setText(Integer.toString(CostCalculator.calcCostForNextLevelAbility(skillLevel + 1)) + " AP");
+										.getValue(abilityAbstract);
+				field.setText(Integer.toString(newValue));
+				costs.setText(CostCalculator.calcCostForNextLevelAbility(skillLevel + 1) + " AP");
 			});
 			abilityPanel.add(button);
 			abilityPanel.add(costs);
@@ -384,25 +399,19 @@ public class PaneBuilder {
 	public Component makeBaseSkillPane(JTabbedPane tabbedPane) {
 		JPanel baseSkillPanel = new JPanel();
 		baseSkillPanel.setLayout(new BoxLayout(baseSkillPanel, BoxLayout.Y_AXIS));
-		for (MerkmalProfan merkmal : MerkmalProfan.values()) {
+		for (BaseDescriptors merkmal : BaseDescriptors.values()) {
 			JLabel labelSkillGroup = new JLabel(merkmal.name());
 			labelSkillGroup.setHorizontalAlignment(SwingConstants.CENTER);
 			baseSkillPanel.add(labelSkillGroup);
-			List<Skill> skills = new ArrayList<Skill>();
-			for (BaseSkills abstractSkill : BaseSkills.values()) {
-				if (abstractSkill.getMerkmal()
-								 .equals(merkmal)) {
-					skills.add(finder.findSkill(abstractSkill.getName()));
-				}
-			}
+			List<Skill> skills = Arrays.stream(BaseSkills.values())
+									   .filter(skill -> skill.getMerkmal()
+															 .equals(merkmal))
+									   .map(BaseSkills::getSkill)
+									   .collect(Collectors.toList());
 			Component baseSkillsByCategory = makeSkillTable(skills);
-			// Component baseSkillsByCategory =
-			// makeSkillTable(BaseSkills.getAmountByCategory(merkmal), merkmal);
 			baseSkillPanel.add(baseSkillsByCategory);
 		}
-		if (charakter.isCharakter() || charakter.isProfession()) {
-			baseSkillPanel.add(makeFeatsComponent(FeatGroup.COMMON, tabbedPane));
-		}
+		baseSkillPanel.add(makeFeatsComponent(AbilityGroup.MUNDANE, tabbedPane));
 
 		return new JScrollPane(baseSkillPanel);
 	}
@@ -411,24 +420,21 @@ public class PaneBuilder {
 		JPanel combatSkillPane = new JPanel();
 		combatSkillPane.setLayout(new BoxLayout(combatSkillPane, BoxLayout.Y_AXIS));
 		JPanel skillTabel = new JPanel();
-		skillTabel.setLayout(new GridLayout(charakter.getKampftechniken()
-													 .getKampftechnik()
+		skillTabel.setLayout(new GridLayout(charakter.getCombatTechniques()
 													 .size(), 5));
-		for (Kampftechnik combatSkillXML : charakter.getKampftechniken()
-													.getKampftechnik()) {
-			Skill skill = new SkillCombat(combatSkillXML);
-			JLabel labelName = new JLabel(skill.getName());
+		for (CombatTechnique combatTechnique : charakter.getCombatTechniques()) {
+			JLabel labelName = new JLabel(combatTechnique.getName());
 			skillTabel.add(labelName);
-			JTextField fieldAbilityAcronym = new JTextField(combatSkillXML.getLeiteigenschaft()
-																		  .value());
+			JTextField fieldAbilityAcronym = new JTextField(combatTechnique.getAttribute()
+																		   .name());
 			fieldAbilityAcronym.setEnabled(false);
 			skillTabel.add(fieldAbilityAcronym);
 			JTextField fieldSkillValue = new JTextField();
-			fieldSkillValue.setText(Integer.toString(skill.getCurrentValue()));
+			fieldSkillValue.setText(Integer.toString(combatTechnique.getLevel()));
 			fieldSkillValue.setEnabled(false);
 			skillTabel.add(fieldSkillValue);
-			JLabel labelCost = new JLabel(Integer.toString(skill.getCostForNextLevel()) + " AP");
-			JButton buttonIncreaseSkill = makeIncreaseSkillButton(skill, fieldSkillValue, labelCost);
+			JLabel labelCost = new JLabel(CostCalculator.calcCostForNextLevel(combatTechnique) + " AP");
+			JButton buttonIncreaseSkill = makeIncreaseSkillButton(combatTechnique, fieldSkillValue, labelCost);
 			skillTabel.add(buttonIncreaseSkill);
 			skillTabel.add(labelCost);
 
@@ -441,33 +447,32 @@ public class PaneBuilder {
 					.getAddCombatSkillResultDialog(combatSkillPane);
 			Skill skill = controleInstance.handleNewCombatSkill(toAddCombatSkillResultDialog);
 			if (skill != null) {
-				addNewombatSkillToInterface(tabbedPane, skillTabel, toAddCombatSkillResultDialog, skill);
+				addNewCombatSkillToInterface(tabbedPane, skillTabel, toAddCombatSkillResultDialog, skill);
 			}
 		});
 		combatSkillPane.add(addNewCombatSkillButton);
 
-		combatSkillPane.add(makeFeatsComponent(FeatGroup.COMBAT, tabbedPane));
+		combatSkillPane.add(makeFeatsComponent(AbilityGroup.COMBAT, tabbedPane));
 
 		return new JScrollPane(combatSkillPane);
 	}
 
-	private void addNewombatSkillToInterface(JTabbedPane tabbedPane, JPanel skillTabel,
-											 AddNewCombatSkillDialogResult toAddCombatSkillResultDialog, Skill skill) {
-		skillTabel.setLayout(new GridLayout(charakter.getKampftechniken()
-													 .getKampftechnik()
+	private void addNewCombatSkillToInterface(JTabbedPane tabbedPane, JPanel skillTabel,
+											  AddNewCombatSkillDialogResult toAddCombatSkillResultDialog, Skill skill) {
+		skillTabel.setLayout(new GridLayout(charakter.getCombatTechniques()
 													 .size(), 5));
 
 		JLabel labelName = new JLabel(skill.getName());
 		skillTabel.add(labelName);
 		JTextField fieldAbilityAcronym = new JTextField(toAddCombatSkillResultDialog.getAbility()
-																					.value());
+																					.name());
 		fieldAbilityAcronym.setEnabled(false);
 		skillTabel.add(fieldAbilityAcronym);
 		JTextField fieldSkillValue = new JTextField();
-		fieldSkillValue.setText(Integer.toString(skill.getCurrentValue()));
+		fieldSkillValue.setText(Integer.toString(skill.getLevel()));
 		fieldSkillValue.setEnabled(false);
 		skillTabel.add(fieldSkillValue);
-		JLabel labelCost = new JLabel(Integer.toString(skill.getCostForNextLevel()) + " AP");
+		JLabel labelCost = new JLabel(CostCalculator.calcCostForNextLevel(skill) + " AP");
 		JButton buttonIncreaseSkill = makeIncreaseSkillButton(skill, fieldSkillValue, labelCost);
 		skillTabel.add(buttonIncreaseSkill);
 		skillTabel.add(labelCost);
@@ -478,50 +483,56 @@ public class PaneBuilder {
 	public Component makeMagicPane(JTabbedPane tabbedPane) {
 		JPanel magicSkillPane = new JPanel();
 		magicSkillPane.setLayout(new BoxLayout(magicSkillPane, BoxLayout.Y_AXIS));
-		addCompleteSkillPane(tabbedPane, magicSkillPane, "Neuen Zauber lernen", SpecialSkillGroup.SPELL,
-				charakter.getZauber()
-						 .getZauber());
+		addCompleteSkillPane(tabbedPane,
+				magicSkillPane,
+				"Neuen Zauber lernen",
+				SkillGroup.SPELL,
+				charakter.getSkills(SkillGroup.SPELL));
 
-		magicSkillPane.add(makeFeatsComponent(FeatGroup.MAGIC, tabbedPane));
+		magicSkillPane.add(makeFeatsComponent(AbilityGroup.MAGICAL, tabbedPane));
 
-		addCompleteSkillPane(tabbedPane, magicSkillPane, "Neues Ritual lernen", SpecialSkillGroup.RITUAL,
-				charakter.getRituale()
-						 .getRitual());
+		addCompleteSkillPane(tabbedPane,
+				magicSkillPane,
+				"Neues Ritual lernen",
+				SkillGroup.RITUAL,
+				charakter.getSkills(SkillGroup.RITUAL));
 
-		JScrollPane scrollableMagicSkillPanel = new JScrollPane(magicSkillPane);
-
-		return scrollableMagicSkillPanel;
+		return new JScrollPane(magicSkillPane);
 	}
 
 	public Component makePriestPane(JTabbedPane tabbedPane) {
 		JPanel priestSkillPane = new JPanel();
 		priestSkillPane.setLayout(new BoxLayout(priestSkillPane, BoxLayout.Y_AXIS));
 
-		addCompleteSkillPane(tabbedPane, priestSkillPane, "Neue Liturgie lernen", SpecialSkillGroup.LITURGY,
-				charakter.getLiturgien()
-						 .getLiturgie());
+		addCompleteSkillPane(tabbedPane,
+				priestSkillPane,
+				"Neue Liturgie lernen",
+				SkillGroup.LITURGICAL_CHANT,
+				charakter.getSkills(SkillGroup.LITURGICAL_CHANT));
 
-		priestSkillPane.add(makeFeatsComponent(FeatGroup.ORDAINED, tabbedPane));
+		priestSkillPane.add(makeFeatsComponent(AbilityGroup.KARMA, tabbedPane));
 
-		addCompleteSkillPane(tabbedPane, priestSkillPane, "Neue Zeremonie lernen", SpecialSkillGroup.ZEREMONY,
-				charakter.getZeremonien()
-						 .getZeremonie());
+		addCompleteSkillPane(tabbedPane,
+				priestSkillPane,
+				"Neue Zeremonie lernen",
+				SkillGroup.CEREMONY,
+				charakter.getSkills(SkillGroup.CEREMONY));
 
 		return new JScrollPane(priestSkillPane);
 	}
 
 	private void addCompleteSkillPane(JTabbedPane tabbedPane, JPanel skillPane, String addButtonText,
-									  SpecialSkillGroup skillGroup, List<Fertigkeit> skills) {
-		Component skillTableFromXml = makeSkillTableFromXml(skills, skillGroup);
+									  SkillGroup skillGroup, List<Skill> skills) {
+		Component skillTableFromXml = makeSkillTable(skills);
 		skillPane.add(skillTableFromXml);
 		JButton addNewSkillButton = new JButton(addButtonText);
 		addNewSkillButton.addActionListener((ActionEvent e) -> {
 			AddSkillDialogResult toAddSkillResultDialog;
-			if (skillGroup == SpecialSkillGroup.ZEREMONY || skillGroup == SpecialSkillGroup.LITURGY) {
+			if (skillGroup == SkillGroup.CEREMONY || skillGroup == SkillGroup.LITURGICAL_CHANT) {
 				toAddSkillResultDialog = InputPopups.getAddSkillResultDialog(skillPane, "Tradition");
 			} else {
 				toAddSkillResultDialog = InputPopups.getAddSkillResultDialog(skillPane,
-						getNamesOfMagicAttributeValues(), "Repr�sentation");
+						getNamesOfMagicAttributeValues(), "Repräsentation");
 			}
 
 			toAddSkillResultDialog.setGroup(skillGroup);
@@ -541,28 +552,18 @@ public class PaneBuilder {
 		return names;
 	}
 
-	private Component makeSkillTableFromXml(List<Fertigkeit> skillsAsXml, SpecialSkillGroup skillGroup) {
-		List<Skill> skills = new ArrayList<Skill>();
-		for (Fertigkeit skill : skillsAsXml) {
-			skills.add(new SkillSpecial(skill, skillGroup));
-		}
-		return makeSkillTable(skills);
-	}
-
 	private Component makeSkillTable(List<Skill> skills) {
 		JPanel skillTable = new JPanel();
+
 		if (skills != null && !skills.isEmpty()) {
 
-			SpecialSkillGroup skillGroup = skills.get(0)
-												 .getGroup();
-			SpecialSkillGroup[] supernatural = {SpecialSkillGroup.SPELL, SpecialSkillGroup.RITUAL,
-					SpecialSkillGroup.LITURGY, SpecialSkillGroup.ZEREMONY};
+			SkillGroup skillGroup = skills.get(0)
+										  .getGroup();
+			SkillGroup[] supernatural = {SkillGroup.SPELL, SkillGroup.RITUAL,
+					SkillGroup.LITURGICAL_CHANT, SkillGroup.CEREMONY};
 			boolean supernaturalSkills = (Arrays.asList(supernatural)
 												.contains(skillGroup));
 			int numberOfColums = supernaturalSkills ? 8 : 7;
-			if (charakter.isCulture()) {
-				--numberOfColums;
-			}
 			skillTable.setLayout(new GridLayout(skills.size(), numberOfColums));
 			for (Skill skill : skills) {
 				fillSingleSkillRow(skillTable, supernaturalSkills, skill);
@@ -576,79 +577,87 @@ public class PaneBuilder {
 		skillTable.add(new JLabel(skill.getName()));
 		// physicalSkills.add(abstractSkill.getAttribut1+abstractSkill.getAttribut2abstractSkill.getAttribut3);
 		if (supernaturalSkills) {
-			JLabel labelAttributes = new JLabel(((SkillSpecial) skill).getAtributes());
+			Optional<BaseAttribute[]> attributes = skill.getAttributes();
+			String labelText = attributes.map(Arrays::toString)
+										 .orElse("Attribute nicht gesetzt");
+			JLabel labelAttributes = new JLabel(labelText);
 			skillTable.add(labelAttributes);
 		}
-		JLabel labelCostCategory = new JLabel(skill.getCostCategory()
-												   .toString());
+		JLabel labelCostCategory = new JLabel(skill.getComplexity()
+												   .name());
 		labelCostCategory.setHorizontalAlignment(SwingConstants.CENTER);
 		skillTable.add(labelCostCategory);
 		JTextField fCurrentValue = new JTextField();
-		fCurrentValue.setText(Integer.toString(skill.getCurrentValue()));
+		fCurrentValue.setText(Integer.toString(skill.getLevel()));
 		fCurrentValue.setEnabled(false);
 		skillTable.add(fCurrentValue);
-		JLabel costs = new JLabel(Integer.toString(skill.getCostForNextLevel()) + " AP");
+		JLabel costs = new JLabel(CostCalculator.calcCostForNextLevel(skill) + " AP");
 		JButton increaseSkillButton = makeIncreaseSkillButton(skill, fCurrentValue, costs);
 		skillTable.add(increaseSkillButton);
 
 		skillTable.add(costs);
-		if (charakter.isProfession() || charakter.isCharakter()) {
-			JTextField fSpecialisations = new JTextField();
-			fSpecialisations.setEnabled(false);
-			fSpecialisations.setText(finder.getSkillSpecialisations(skill.getName()));
+		JTextField fSpecialisations = new JTextField();
+		fSpecialisations.setEnabled(false);
+		String specialisations = charakter.getSpecialAbilities(AbilityGroup.SPECIALISATION)
+								  .stream()
+								  .map(ISpecialAbility::getName)
+								  .collect(Collectors.joining(", "));
+		fSpecialisations.setText(specialisations);
 
-			skillTable.add(fSpecialisations);
-			JButton buttonAddSkillSpecalisation = buttonAddSkillSpecialisation(skillTable, fSpecialisations,
-					skill.getName());
-			skillTable.add(buttonAddSkillSpecalisation);
-		}
+		skillTable.add(fSpecialisations);
+		JButton buttonAddSkillSpecalisation = buttonAddSkillSpecialisation(skillTable, fSpecialisations,
+				skill.getName());
+		skillTable.add(buttonAddSkillSpecalisation);
 	}
 
-	private JButton makeIncreaseSkillButton(Skill skill, JTextField field, JLabel costs) {
+	private JButton makeIncreaseSkillButton(Increasable skill, JTextField field, JLabel costs) {
 		JButton increaseSkillButton = new JButton("+1");
 		increaseSkillButton.addActionListener(((ActionEvent e) -> {
 			controleInstance.handlencreaseSkill(skill.getName());
-			field.setText(Integer.toString(skill.getCurrentValue()));
-			costs.setText(Integer.toString(skill.getCostForNextLevel()) + " AP");
+			field.setText(Integer.toString(skill.getLevel()));
+			costs.setText(CostCalculator.calcCostForNextLevel(skill) + " AP");
 		}));
 		return increaseSkillButton;
 	}
 
 	private JButton buttonAddSkillSpecialisation(JPanel skillTable, JTextField fSpecialisations, String skillName) {
-		JButton buttonAddSkillSpecalisation = new JButton("Fertigkeitsspezialisierung hinzuf�gen");
+		JButton buttonAddSkillSpecalisation = new JButton("Fertigkeitsspezialisierung hinzufügen");
 		buttonAddSkillSpecalisation.addActionListener((ActionEvent e) -> {
 			AddFeatDialogResult result = getAddFeatResultDialog(skillTable, false);
 			if (result != null) {
 				controleInstance.handleNewSkillSpecialisation(result, skillName);
-				fSpecialisations.setText(finder.getSkillSpecialisations(skillName));
+				String specialisations = charakter.getSpecialAbilities(AbilityGroup.SPECIALISATION)
+										  .stream()
+										  .map(ISpecialAbility::getName)
+										  .collect(Collectors.joining(", "));
+				fSpecialisations.setText(specialisations);
 			}
 		});
 		return buttonAddSkillSpecalisation;
 	}
 
-	private Component makeFeatsComponent(FeatGroup group, JTabbedPane tabbedPane) {
+	private Component makeFeatsComponent(AbilityGroup group, JTabbedPane tabbedPane) {
 		JPanel featComponent = new JPanel();
 		featComponent.setLayout(new BoxLayout(featComponent, BoxLayout.Y_AXIS));
-		featComponent.add(new JLabel("Sonderfertigkeiten " + group.getName()));
+		featComponent.add(new JLabel("Sonderfertigkeiten " + group.name()));
 		JPanel featTableComponent = new JPanel();
-		List<Sonderfertigkeit> feats = finder.getAllFeatsByGroup(group);
+		List<ISpecialAbility> feats = charakter.getSpecialAbilities(group);
 		featTableComponent.setLayout(new GridLayout(feats.size(), 3));
-		for (Sonderfertigkeit feat : feats) {
+		for (ISpecialAbility feat : feats) {
 			addFeatRow(featTableComponent, feat);
 		}
 
 		featComponent.add(featTableComponent);
 
-		JButton buttonAddFeat = new JButton("Sonderfertigkeit hinzuf�gen");
+		JButton buttonAddFeat = new JButton("Sonderfertigkeit hinzufügen");
 		buttonAddFeat.addActionListener((ActionEvent e) -> {
 			AddFeatDialogResult result = getAddFeatResultDialog(featComponent);
 			if (result != null) {
-				Sonderfertigkeit newFeat = controleInstance.handleNewFeat(result, group);
-				featTableComponent.setLayout(new GridLayout(finder.getAllFeatsByGroup(group)
+				ISpecialAbility newFeat = controleInstance.handleNewFeat(result, group);
+				featTableComponent.setLayout(new GridLayout(charakter.getSpecialAbilities(group)
 																  .size(), 3));
 				addFeatRow(featTableComponent, newFeat);
 				tabbedPane.repaint();
-				;
 			}
 		});
 		featComponent.add(buttonAddFeat);
@@ -656,7 +665,7 @@ public class PaneBuilder {
 		return scrollableFeatPanel;
 	}
 
-	private void addFeatRow(JPanel featTableComponent, Sonderfertigkeit feat) {
+	private void addFeatRow(JPanel featTableComponent, ISpecialAbility feat) {
 		JTextField nameField = new JTextField(feat.getName());
 		nameField.setEnabled(false);
 		featTableComponent.add(nameField);
@@ -665,7 +674,7 @@ public class PaneBuilder {
 		descriptionField.setEnabled(false);
 		featTableComponent.add(descriptionField);
 
-		JTextField costField = new JTextField(Integer.toString(feat.getKosten()) + " AP");
+		JTextField costField = new JTextField(feat.getCost() + " AP");
 		costField.setEnabled(false);
 		featTableComponent.add(costField);
 	}
@@ -693,7 +702,7 @@ public class PaneBuilder {
 			try {
 				int cost = twoFields ? Integer.parseInt(fieldCost.getText()) : 1;
 				if (cost < 1) {
-					throw new NumberFormatException(Integer.toString(cost) + " is no valid cost value for a feat");
+					throw new NumberFormatException(cost + " is no valid cost value for a feat");
 				}
 				return new AddFeatDialogResult(fieldName.getText(), cost);
 			} catch (NumberFormatException e) {
@@ -713,15 +722,15 @@ public class PaneBuilder {
 	}
 
 	public boolean handlesCharakter() {
-		return charakter.isCharakter();
+		return true;
 	}
 
 	public boolean handlesCulture() {
-		return charakter.isCulture();
+		return false;
 	}
 
 	public boolean handlesProfession() {
-		return charakter.isProfession();
+		return false;
 	}
 
 }
