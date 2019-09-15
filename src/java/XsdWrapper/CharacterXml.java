@@ -258,6 +258,14 @@ public class CharacterXml implements Character {
 		if (boughtHitPoints > 0) {
 			wrapped.setLeP(wrapped.getLeP() == null ? boughtHitPoints : wrapped.getLeP() + boughtHitPoints);
 		}
+		int boughtAstralPoints = baseValueChanges.getBoughtAstralPoints();
+		if (boughtAstralPoints > 0) {
+			wrapped.setAsP(wrapped.getLeP() == null ? boughtAstralPoints : wrapped.getLeP() + boughtAstralPoints);
+		}
+		int boughtKarmaPoints = baseValueChanges.getBoughtKarmaPoints();
+		if (boughtKarmaPoints > 0) {
+			wrapped.setKaP(wrapped.getLeP() == null ? boughtKarmaPoints : wrapped.getLeP() + boughtKarmaPoints);
+		}
 		currentChanges.getBaseValueChanges()
 					  .merge(baseValueChanges);
 	}

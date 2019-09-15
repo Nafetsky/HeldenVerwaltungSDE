@@ -221,6 +221,24 @@ class CharacterXmlTest {
 		assertThat(barundar.getHistory().get(1).getBaseValueChanges().getBoughtHitPoints(), is(4));
 	}
 
+	@Test
+	void testIncreaseOtherValues() {
+		BaseValueChanges baseValueChanges = BaseValueChanges.builder()
+															.boughtAstralPoints(1)
+															.boughtKarmaPoints(3)
+															.build();
+		Event event = Event.builder()
+						   .baseValueChanges(baseValueChanges)
+						   .build();
+
+		barundar.increase(event);
+		barundar.save(EVENT_DESCRIPTION);
+
+		assertThat(barundar.getBonusArcaneEnergy(), is(1));
+		assertThat(barundar.getBonusKarmaPoints(), is(3));
+		assertThat(barundar.getHistory().get(1).getBaseValueChanges().getBoughtAstralPoints(), is(1));
+		assertThat(barundar.getHistory().get(1).getBaseValueChanges().getBoughtKarmaPoints(), is(3));
+	}
 
 	@Test
 	void testLevelSkillByEvent() {
