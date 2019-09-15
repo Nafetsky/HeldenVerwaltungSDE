@@ -22,7 +22,5 @@ public class BaseValueChanges {
 		lostAstralPoints += other.lostAstralPoints;
 		boughtKarmaPoints += other.boughtKarmaPoints;
 		lostKarmaPoints += other.lostKarmaPoints;
-
-
 	}
 }

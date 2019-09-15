@@ -254,10 +254,12 @@ public class CharacterXml implements Character {
 
 	private void applyBaseChanges(Event event) {
 		BaseValueChanges baseValueChanges = event.getBaseValueChanges();
-		if(baseValueChanges.getBoughtHitPoints() > 0) {
-			wrapped.setLeP(wrapped.getLeP()==null?0:wrapped.getLeP() + baseValueChanges.getBoughtHitPoints());
+		int boughtHitPoints = baseValueChanges.getBoughtHitPoints();
+		if (boughtHitPoints > 0) {
+			wrapped.setLeP(wrapped.getLeP() == null ? boughtHitPoints : wrapped.getLeP() + boughtHitPoints);
 		}
-		currentChanges.getBaseValueChanges().merge(baseValueChanges);
+		currentChanges.getBaseValueChanges()
+					  .merge(baseValueChanges);
 	}
 
 	private void increaseAbilities(Event event) {
@@ -267,7 +269,7 @@ public class CharacterXml implements Character {
 
 	private void increaseAbility(AttributeChange increase) {
 		SkillLevler skillLevler = getSkillLevler(increase.getAttribute());
-		for(int i = 0; i < increase.getChange(); ++i){
+		for (int i = 0; i < increase.getChange(); ++i) {
 			skillLevler.level();
 		}
 	}
@@ -329,57 +331,65 @@ public class CharacterXml implements Character {
 
 	@Override
 	public SkillLevler getSkillLevler(BaseAttribute name) {
-		return () ->{
+		return () -> {
 			int currentValue = this.getAttributes()
-							.getValue(name);
+								   .getValue(name);
 			Eigenschaftswerte attributes = wrapped.getEigenschaftswerte();
 			Optional<AttributeChange> first = currentChanges.getAttributeChanges()
 															.stream()
 															.filter(change -> change.getAttribute() == name)
 															.findFirst();
 			AttributeChange attributeChange;
-			if(first.isPresent()){
+			if (first.isPresent()) {
 				attributeChange = first.get();
-			} else{
+			} else {
 				AttributeChange newAttributeChange = AttributeChange.builder()
-													   .attribute(name)
-													   .newValue(currentValue)
-													   .change(0)
-													   .build();
-				currentChanges.getAttributeChanges().add(newAttributeChange);
+																	.attribute(name)
+																	.newValue(currentValue)
+																	.change(0)
+																	.build();
+				currentChanges.getAttributeChanges()
+							  .add(newAttributeChange);
 				attributeChange = newAttributeChange;
 			}
-			switch (name){
+			switch (name) {
 				case Courage:
-					attributes.getMut().setAttributswert(currentValue+1);
+					attributes.getMut()
+							  .setAttributswert(currentValue + 1);
 					break;
 				case Sagacity:
-					attributes.getKlugheit().setAttributswert(currentValue+1);
+					attributes.getKlugheit()
+							  .setAttributswert(currentValue + 1);
 					break;
 				case Intuition:
-					attributes.getIntuition().setAttributswert(currentValue+1);
+					attributes.getIntuition()
+							  .setAttributswert(currentValue + 1);
 					break;
 				case Charisma:
-					attributes.getCharisma().setAttributswert(currentValue+1);
+					attributes.getCharisma()
+							  .setAttributswert(currentValue + 1);
 					break;
 				case Agility:
-					attributes.getGewandheit().setAttributswert(currentValue+1);
+					attributes.getGewandheit()
+							  .setAttributswert(currentValue + 1);
 					break;
 				case Dexterity:
-					attributes.getFingerfertigkeit().setAttributswert(currentValue+1);
+					attributes.getFingerfertigkeit()
+							  .setAttributswert(currentValue + 1);
 					break;
 				case Constitution:
-					attributes.getKonstitution().setAttributswert(currentValue+1);
+					attributes.getKonstitution()
+							  .setAttributswert(currentValue + 1);
 					break;
 				case Strength:
-					attributes.getKörperkraft().setAttributswert(currentValue+1);
+					attributes.getKörperkraft()
+							  .setAttributswert(currentValue + 1);
 					break;
 			}
-			attributeChange.setChange(attributeChange.getChange()+1);
+			attributeChange.setChange(attributeChange.getChange() + 1);
 			attributeChange.setNewValue(currentValue + 1);
 		};
 	}
-
 
 
 	private SkillLevler levelSkill(String name, Increasable foundSkill) {

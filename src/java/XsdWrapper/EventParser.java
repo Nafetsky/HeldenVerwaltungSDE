@@ -28,6 +28,7 @@ public class EventParser {
 					.date(parseDate(ereignis))
 					.description(ereignis.getGrund())
 					.adventurePoints(translator.translate(ereignis.getAP()))
+					.baseValueChanges(translator.extractBaseValueChanges(ereignis))
 					.advantages(translator.translateAdvantages(ereignis.getVorteil()))
 					.disadvantages(translator.translateDisadvantages(ereignis.getNachteil()))
 					.attributeChanges(translator.translateAttributeChanges(ereignis.getEigenschaftssteigerung()))
@@ -83,6 +84,7 @@ public class EventParser {
 																 .stream()
 																 .map(translator::translate)
 																 .collect(Collectors.toList());
+		insertBaseChanges(eventToSave, ereignis);
 		ereignis.getEigenschaftssteigerung().addAll(abilityChanges);
 		List<Fertigkeitsmodifikation> skillChangesWithNewSkills = buildSkillChangesIncludingNewSkills(eventToSave);
 		ereignis.getFertigkeitsänderung()
@@ -97,6 +99,12 @@ public class EventParser {
 
 		return ereignis;
 
+	}
+
+	private void insertBaseChanges(Event eventToSave, Ereignis ereignis) {
+		ereignis.setLePGekauft(eventToSave.getBaseValueChanges().getBoughtHitPoints());
+		ereignis.setAsPGekauft(eventToSave.getBaseValueChanges().getBoughtAstralPoints());
+		ereignis.setKaPGekauft(eventToSave.getBaseValueChanges().getBoughtKarmaPoints());
 	}
 
 	private List<Fertigkeitsmodifikation> buildSkillChangesIncludingNewSkills(Event eventToSave) {

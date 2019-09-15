@@ -2,6 +2,7 @@ package XsdWrapper;
 
 import api.AbilityGroup;
 import api.Advantage;
+import api.BaseValueChanges;
 import api.CombatTechnique;
 import api.ISpecialAbility;
 import api.history.AttributeChange;
@@ -20,6 +21,7 @@ import api.SpecialAbility;
 import generated.Attributskürzel;
 import generated.Basistalent;
 import generated.Eigenschaftssteigerung;
+import generated.Ereignis;
 import generated.Fertigkeit;
 import generated.Fertigkeitskategorie;
 import generated.Fertigkeitsmodifikation;
@@ -418,5 +420,13 @@ public class Translator {
 		change.setSteigerung(attributeChange.getChange());
 		change.setNeuerWert(attributeChange.getNewValue());
 		return change;
+	}
+
+	public BaseValueChanges extractBaseValueChanges(Ereignis ereignis) {
+		return BaseValueChanges.builder()
+							   .boughtHitPoints(ereignis.getLePGekauft() == null ? 0 : ereignis.getLePGekauft())
+							   .boughtAstralPoints(ereignis.getAsPGekauft() == null ? 0 : ereignis.getAsPGekauft())
+							   .boughtKarmaPoints(ereignis.getKaPGekauft() == null ? 0 : ereignis.getKaPGekauft())
+							   .build();
 	}
 }

@@ -201,6 +201,24 @@ class CharacterXmlTest {
 		barundar.save(EVENT_DESCRIPTION);
 
 		assertThat(barundar.getBonusLifePoints(), is(2));
+		assertThat(barundar.getHistory().get(1).getBaseValueChanges().getBoughtHitPoints(), is(2));
+	}
+
+	@Test
+	void testGetTougher() {
+		BaseValueChanges baseValueChanges = BaseValueChanges.builder()
+															.boughtHitPoints(2)
+															.build();
+		Event event = Event.builder()
+						   .baseValueChanges(baseValueChanges)
+						   .build();
+
+		barundar.increase(event);
+		barundar.increase(event);
+		barundar.save(EVENT_DESCRIPTION);
+
+		assertThat(barundar.getBonusLifePoints(), is(4));
+		assertThat(barundar.getHistory().get(1).getBaseValueChanges().getBoughtHitPoints(), is(4));
 	}
 
 
