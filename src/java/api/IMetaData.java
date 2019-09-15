@@ -17,5 +17,5 @@ public interface IMetaData {
 	LocalDate getBirthday();
 
 	int getAge();
-
+//	void setAge(int newAge);
 }

@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Data
-public class Language implements ILanguage, ISpecialAbility{
+public class Language implements ILanguage {
 
 	private final String name;
 	private final AbilityGroup group = AbilityGroup.MUNDANE;

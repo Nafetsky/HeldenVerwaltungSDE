@@ -2,13 +2,15 @@ package api.base;
 
 import api.AbilityGroup;
 import api.Advantage;
+import api.BaseAttribute;
 import api.CombatTechnique;
-import api.CombatTechniqueImpl;
 import api.Disadvantage;
 import api.Event;
 import api.IAttributes;
+import api.ILanguage;
 import api.IMetaData;
 import api.ISpecialAbility;
+import api.Vantage;
 import api.skills.Skill;
 import api.skills.SkillGroup;
 import api.skills.SkillLevler;
@@ -25,9 +27,9 @@ public interface Character {
 
 	IAttributes getAttributes();
 
-	List<Advantage> getAdvantages();
+	List<Vantage> getAdvantages();
 
-	List<Disadvantage> getDisadvantages();
+	List<Vantage> getDisadvantages();
 
 	int getBonusLifePoints();
 
@@ -48,13 +50,21 @@ public interface Character {
 
 	List<ISpecialAbility> getSpecialAbilities(AbilityGroup group);
 
+	List<ILanguage> getLanguages();
+
+	List<ISpecialAbility> getScriptures();
+
 	List<Event> getHistory();
 
 	SkillLevler getSkillLevler(String name);
 
+	SkillLevler getSkillLevler(BaseAttribute attribute);
+
 	void increase(Event event);
 
 	void save(String message);
+
+	String getContent();
 
 
 }

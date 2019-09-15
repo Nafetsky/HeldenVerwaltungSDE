@@ -1,34 +1,35 @@
 package controle;
 
+import api.skills.ImprovementComplexity;
+import api.skills.SkillGroup;
 import org.apache.commons.lang3.StringUtils;
 
-import database.CostCategory;
 import database.SpecialSkillGroup;
 import generated.Attributskürzel;
 
 public class AddSkillDialogResult implements AddDialogResult {
 	public final String name;
-	public final Attributskürzel[] abilitys;
-	public final CostCategory costCategory;
+	public final Attributskürzel[] abilities;
+	public final ImprovementComplexity costCategory;
 	public final String[] attributes;
-	private SpecialSkillGroup group;
+	private SkillGroup group;
 
-	public AddSkillDialogResult(String name, CostCategory costCategory, Attributskürzel[] abilitys,
-			String[] attributes) {
+	public AddSkillDialogResult(String name, ImprovementComplexity costCategory, Attributskürzel[] abilities,
+			String[] descriptorNames) {
 		this.name = name;
 		this.costCategory = costCategory;
-		if (abilitys == null || abilitys.length != 3) {
-			throw new IndexOutOfBoundsException(abilitys + " does not have three values");
+		if (abilities == null || abilities.length != 3) {
+			throw new IndexOutOfBoundsException(abilities + " does not have three values");
 		}
-		this.abilitys = abilitys;
-		this.attributes = attributes;
+		this.abilities = abilities;
+		this.attributes = descriptorNames;
 	}
 
-	public SpecialSkillGroup getGroup() {
+	public SkillGroup getGroup() {
 		return group;
 	}
 
-	public void setGroup(SpecialSkillGroup group) {
+	public void setGroup(SkillGroup group) {
 		if(group != null){
 			throw new UnsupportedOperationException("Can't set group, if it is already set");
 		}
@@ -41,7 +42,7 @@ public class AddSkillDialogResult implements AddDialogResult {
 			return false;
 		}
 
-		if (abilitys.length != 3 || abilitys[0] == null || abilitys[1] == null || abilitys[2] == null) {
+		if (abilities.length != 3 || abilities[0] == null || abilities[1] == null || abilities[2] == null) {
 			return false;
 		}
 

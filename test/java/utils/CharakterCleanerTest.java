@@ -5,7 +5,7 @@ import static org.hamcrest.Matchers.is;
 
 import java.util.List;
 
-import api.BaseSkills;
+import api.skills.BaseSkills;
 import generated.Basistalent;
 import generated.Charakter;
 import generated.Talente;

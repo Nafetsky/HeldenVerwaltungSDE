@@ -1,11 +1,9 @@
 package utility;
 
-import api.Advantage;
 import api.BaseAttribute;
 import api.CombatTechnique;
+import api.Vantage;
 import api.base.Character;
-import api.CombatTechniqueImpl;
-import api.Disadvantage;
 import api.IAttributes;
 import api.ISpecialAbility;
 import api.skills.ImprovementComplexity;
@@ -52,14 +50,14 @@ public class CostCalculator {
 	private int calcAdvantagesCosts() {
 		return character.getAdvantages()
 						.stream()
-						.mapToInt(Advantage::getCost)
+						.mapToInt(Vantage::getCost)
 						.sum();
 	}
 
 	private int calcDisadvantagesCosts() {
 		return character.getDisadvantages()
 						.stream()
-						.mapToInt(Disadvantage::getCost)
+						.mapToInt(Vantage::getCost)
 						.sum() * -1;
 	}
 
@@ -119,11 +117,11 @@ public class CostCalculator {
 		return effectiveLevel * cost.getFactor();
 	}
 
-	static int calcCostBaseAbility(int level) {
-		return calcCostBaseAbility(level, ImprovementComplexity.Attribute);
+	public static int calcCostForNextLevelAbility(int level){
+		return level <= 13 ? 15 : (14 - level) * 15;
 	}
 
-	public static int calcCostBaseAbility(int level, ImprovementComplexity complexity) {
+	public static int calcCostBaseAbility(int level) {
 		if (level < 8) {
 			throw new ArithmeticException("Can't calculate costs for attribute below 8");
 		}
@@ -134,7 +132,7 @@ public class CostCalculator {
 			effectiveLevel += 5;
 			effectiveLevel += calculateIncreasedLevel(level - 13);
 		}
-		return effectiveLevel * complexity.getFactor();
+		return effectiveLevel * ImprovementComplexity.Attribute.getFactor();
 	}
 
 }

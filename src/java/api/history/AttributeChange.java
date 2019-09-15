@@ -9,7 +9,7 @@ import lombok.Data;
 public class AttributeChange {
 
 	private final BaseAttribute attribute;
-	private final int change;
-	private final int newValue;
+	private int change;
+	private int newValue;
 
 }

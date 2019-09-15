@@ -2,14 +2,18 @@ package XsdWrapper;
 
 import api.AbilityGroup;
 import api.Advantage;
+import api.BaseAttribute;
+import api.BaseValueChanges;
 import api.CombatTechnique;
 import api.Disadvantage;
 import api.Event;
 import api.IAttributes;
+import api.ILanguage;
 import api.IMetaData;
 import api.ISpecialAbility;
-import api.SpecialAbility;
+import api.Vantage;
 import api.base.Character;
+import api.history.AttributeChange;
 import api.history.SkillChange;
 import api.skills.Increasable;
 import api.skills.Skill;
@@ -22,8 +26,10 @@ import generated.Eigenschaftswerte;
 import generated.Fertigkeit;
 import generated.Sonderfertigkeit;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.xml.bind.JAXBException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -32,6 +38,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
+@Log4j2
 public class CharacterXml implements Character {
 
 	private final Charakter wrapped;
@@ -92,7 +99,7 @@ public class CharacterXml implements Character {
 	}
 
 	@Override
-	public List<Advantage> getAdvantages() {
+	public List<Vantage> getAdvantages() {
 		return wrapped.getVorteile()
 					  .getVorteil()
 					  .stream()
@@ -101,7 +108,7 @@ public class CharacterXml implements Character {
 	}
 
 	@Override
-	public List<Disadvantage> getDisadvantages() {
+	public List<Vantage> getDisadvantages() {
 		return wrapped.getNachteile()
 					  .getNachteil()
 					  .stream()
@@ -184,17 +191,10 @@ public class CharacterXml implements Character {
 														.stream()
 														.map(translator::translate)
 														.collect(Collectors.toCollection(ArrayList::new));
-		List<SpecialAbility> scripts = wrapped.getKommunikatives()
-											  .getSchriften()
-											  .stream()
-											  .map(translator::translate)
-											  .collect(Collectors.toList());
+		List<ISpecialAbility> scripts = getScriptures();
+
 		specialAbilities.addAll(scripts);
-		List<ISpecialAbility> languages = wrapped.getKommunikatives()
-												 .getSprachen()
-												 .stream()
-												 .map(translator::translate)
-												 .collect(Collectors.toList());
+		List<ILanguage> languages = getLanguages();
 		specialAbilities.addAll(languages);
 		SkillSpecialisationTranslator translator = new SkillSpecialisationTranslator(wrapped);
 		List<ISpecialAbility> specialisations = translator.translate(wrapped.getSonderfertigkeiten()
@@ -214,6 +214,24 @@ public class CharacterXml implements Character {
 	}
 
 	@Override
+	public List<ILanguage> getLanguages() {
+		return wrapped.getKommunikatives()
+					  .getSprachen()
+					  .stream()
+					  .map(translator::translate)
+					  .collect(Collectors.toList());
+	}
+
+	@Override
+	public List<ISpecialAbility> getScriptures() {
+		return wrapped.getKommunikatives()
+					  .getSchriften()
+					  .stream()
+					  .map(translator::translate)
+					  .collect(Collectors.toList());
+	}
+
+	@Override
 	public List<Event> getHistory() {
 		EventParser parser = new EventParser();
 		return wrapped.getSteigerungshistorie()
@@ -225,11 +243,33 @@ public class CharacterXml implements Character {
 
 	@Override
 	public void increase(Event event) {
+		increaseAbilities(event);
+		applyBaseChanges(event);
 		learnNewSkills(event);
 		learnNewCombatTechniques(event);
 		applySkillChanges(event);
 		learnNewSpecialAbilities(event);
 
+	}
+
+	private void applyBaseChanges(Event event) {
+		BaseValueChanges baseValueChanges = event.getBaseValueChanges();
+		if(baseValueChanges.getBoughtHitPoints() > 0) {
+			wrapped.setLeP(wrapped.getLeP()==null?0:wrapped.getLeP() + baseValueChanges.getBoughtHitPoints());
+		}
+		currentChanges.getBaseValueChanges().merge(baseValueChanges);
+	}
+
+	private void increaseAbilities(Event event) {
+		event.getAttributeChanges()
+			 .forEach(this::increaseAbility);
+	}
+
+	private void increaseAbility(AttributeChange increase) {
+		SkillLevler skillLevler = getSkillLevler(increase.getAttribute());
+		for(int i = 0; i < increase.getChange(); ++i){
+			skillLevler.level();
+		}
 	}
 
 	private void learnNewSkills(Event event) {
@@ -285,8 +325,62 @@ public class CharacterXml implements Character {
 															   .findFirst()
 															   .orElseThrow(() -> new UnsupportedOperationException("The Character " + wrapped.getName() + " has no skill " + name));
 		return levelSkill(name, combatTechnique);
-
 	}
+
+	@Override
+	public SkillLevler getSkillLevler(BaseAttribute name) {
+		return () ->{
+			int currentValue = this.getAttributes()
+							.getValue(name);
+			Eigenschaftswerte attributes = wrapped.getEigenschaftswerte();
+			Optional<AttributeChange> first = currentChanges.getAttributeChanges()
+															.stream()
+															.filter(change -> change.getAttribute() == name)
+															.findFirst();
+			AttributeChange attributeChange;
+			if(first.isPresent()){
+				attributeChange = first.get();
+			} else{
+				AttributeChange newAttributeChange = AttributeChange.builder()
+													   .attribute(name)
+													   .newValue(currentValue)
+													   .change(0)
+													   .build();
+				currentChanges.getAttributeChanges().add(newAttributeChange);
+				attributeChange = newAttributeChange;
+			}
+			switch (name){
+				case Courage:
+					attributes.getMut().setAttributswert(currentValue+1);
+					break;
+				case Sagacity:
+					attributes.getKlugheit().setAttributswert(currentValue+1);
+					break;
+				case Intuition:
+					attributes.getIntuition().setAttributswert(currentValue+1);
+					break;
+				case Charisma:
+					attributes.getCharisma().setAttributswert(currentValue+1);
+					break;
+				case Agility:
+					attributes.getGewandheit().setAttributswert(currentValue+1);
+					break;
+				case Dexterity:
+					attributes.getFingerfertigkeit().setAttributswert(currentValue+1);
+					break;
+				case Constitution:
+					attributes.getKonstitution().setAttributswert(currentValue+1);
+					break;
+				case Strength:
+					attributes.getKörperkraft().setAttributswert(currentValue+1);
+					break;
+			}
+			attributeChange.setChange(attributeChange.getChange()+1);
+			attributeChange.setNewValue(currentValue + 1);
+		};
+	}
+
+
 
 	private SkillLevler levelSkill(String name, Increasable foundSkill) {
 		return () -> {
@@ -355,5 +449,16 @@ public class CharacterXml implements Character {
 			   .add(parser.parse(eventToSave));
 		currentChanges = Event.builder()
 							  .build();
+	}
+
+	@Override
+	public String getContent() {
+		try {
+			MarshallingHelper helper = new MarshallingHelper();
+			return helper.marshall(wrapped);
+		} catch (JAXBException e) {
+			LOGGER.error("could not marhsal", e);
+			return "";
+		}
 	}
 }

@@ -1,16 +1,17 @@
 package XsdWrapper;
 
 import api.AbilityGroup;
-import api.Advantage;
 import api.BaseAttribute;
+import api.BaseValueChanges;
 import api.CombatTechnique;
 import api.CombatTechniqueImpl;
-import api.Disadvantage;
 import api.Event;
 import api.IAttributes;
 import api.ISpecialAbility;
 import api.SpecialAbility;
+import api.Vantage;
 import api.base.Character;
+import api.history.AttributeChange;
 import api.history.SkillChange;
 import api.skills.BaseSkills;
 import api.skills.Descriptor;
@@ -18,8 +19,8 @@ import api.skills.ImprovementComplexity;
 import api.skills.KarmicDescriptor;
 import api.skills.MagicDescriptors;
 import api.skills.Skill;
-import api.skills.SkillImpl;
 import api.skills.SkillGroup;
+import api.skills.SkillImpl;
 import api.skills.SkillLevler;
 import api.skills.TraditionDescriptors;
 import org.apache.commons.lang3.StringUtils;
@@ -81,24 +82,24 @@ class CharacterXmlTest {
 
 	@Test
 	void loadAdvantages() {
-		Optional<Advantage> loadedAdvantage = barundar.getAdvantages()
-													  .stream()
-													  .filter(advantage -> StringUtils.contains(advantage.getName(), "Zäher Hund"))
-													  .findFirst();
+		Optional<Vantage> loadedAdvantage = barundar.getAdvantages()
+													.stream()
+													.filter(advantage -> StringUtils.contains(advantage.getName(), "Zäher Hund"))
+													.findFirst();
 		assertThat(loadedAdvantage.isPresent(), is(true));
-		Advantage toughAsNails = loadedAdvantage.get();
+		Vantage toughAsNails = loadedAdvantage.get();
 		assertThat(toughAsNails.getCost(), is(20));
 	}
 
 	@Test
 	void loadDisadvantages() {
-		Optional<Disadvantage> loadedDisadvantage = barundar.getDisadvantages()
-															.stream()
-															.filter(disadvantage -> StringUtils.contains(disadvantage.getName(), "Goldgier"))
-															.findFirst();
+		Optional<Vantage> loadedDisadvantage = barundar.getDisadvantages()
+													   .stream()
+													   .filter(disadvantage -> StringUtils.contains(disadvantage.getName(), "Goldgier"))
+													   .findFirst();
 
 		assertThat(loadedDisadvantage.isPresent(), is(true));
-		Disadvantage toughAsNails = loadedDisadvantage.get();
+		Vantage toughAsNails = loadedDisadvantage.get();
 		assertThat(toughAsNails.getCost(), is(5));
 	}
 
@@ -113,6 +114,95 @@ class CharacterXmlTest {
 		CombatTechnique combatTechnique = optionalCombatTechnique.get();
 		assertThat(combatTechnique.getLevel(), is(16));
 	}
+
+	@Test
+	void testIncreaseAbilityByEvent() {
+		AttributeChange growStronger = AttributeChange.builder()
+													  .attribute(BaseAttribute.Strength)
+													  .change(1)
+													  .build();
+		Event build = Event.builder()
+						   .attributeChanges(Collections.singletonList(growStronger))
+						   .build();
+
+		barundar.increase(build);
+		barundar.save(EVENT_DESCRIPTION);
+
+		int strength = barundar.getAttributes()
+							   .getStrength();
+		assertThat(strength, is(17));
+		AttributeChange grownStronger = barundar.getHistory()
+												.get(1)
+												.getAttributeChanges()
+												.get(0);
+		assertThat(grownStronger.getAttribute(), is(BaseAttribute.Strength));
+		assertThat(grownStronger.getChange(), is(1));
+		assertThat(grownStronger.getNewValue(), is(17));
+	}
+
+	@Test
+	void testIncreaseAbilityDirectly() {
+		barundar.getSkillLevler(BaseAttribute.Strength)
+				.level();
+		barundar.save(EVENT_DESCRIPTION);
+
+		int strength = barundar.getAttributes()
+							   .getStrength();
+		assertThat(strength, is(17));
+		AttributeChange grownStronger = barundar.getHistory()
+												.get(1)
+												.getAttributeChanges()
+												.get(0);
+		assertThat(grownStronger.getAttribute(), is(BaseAttribute.Strength));
+		assertThat(grownStronger.getChange(), is(1));
+		assertThat(grownStronger.getNewValue(), is(17));
+	}
+
+	@Test
+	void testIncreaseAbilityBothWays() {
+		AttributeChange growStronger = AttributeChange.builder()
+													  .attribute(BaseAttribute.Strength)
+													  .change(1)
+													  .build();
+		Event build = Event.builder()
+						   .attributeChanges(Collections.singletonList(growStronger))
+						   .build();
+
+		barundar.getSkillLevler(BaseAttribute.Strength)
+				.level();
+		barundar.increase(build);
+		barundar.getSkillLevler(BaseAttribute.Strength)
+				.level();
+		barundar.increase(build);
+		barundar.save(EVENT_DESCRIPTION);
+
+		int strength = barundar.getAttributes()
+							   .getStrength();
+		assertThat(strength, is(20));
+		AttributeChange grownStronger = barundar.getHistory()
+												.get(1)
+												.getAttributeChanges()
+												.get(0);
+		assertThat(grownStronger.getAttribute(), is(BaseAttribute.Strength));
+		assertThat(grownStronger.getChange(), is(4));
+		assertThat(grownStronger.getNewValue(), is(20));
+	}
+
+	@Test
+	void testGetTough() {
+		BaseValueChanges baseValueChanges = BaseValueChanges.builder()
+															.boughtHitPoints(2)
+															.build();
+		Event event = Event.builder()
+						   .baseValueChanges(baseValueChanges)
+						   .build();
+
+		barundar.increase(event);
+		barundar.save(EVENT_DESCRIPTION);
+
+		assertThat(barundar.getBonusLifePoints(), is(2));
+	}
+
 
 	@Test
 	void testLevelSkillByEvent() {

@@ -7,8 +7,8 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 
 import controle.AddNewCombatSkillDialogResult;
 import controle.AddSkillDialogResult;
@@ -34,9 +34,9 @@ import generated.Steigerungskategorie;
 import generated.Talentspezialisierung;
 import generated.Vorteil;
 
+@Log4j2
 public class CharacterModifier {
 
-	private static final Logger LOGGER = Logger.getLogger(CharacterModifier.class);
 
 	private WrappedCharakter charakter;
 	private ObjectFactory factory;
@@ -232,9 +232,9 @@ public class CharacterModifier {
 
 		skill.setName(result.name);
 
-		skill.setAttribut1(result.abilitys[0]);
-		skill.setAttribut2(result.abilitys[1]);
-		skill.setAttribut3(result.abilitys[2]);
+		skill.setAttribut1(result.abilities[0]);
+		skill.setAttribut2(result.abilities[1]);
+		skill.setAttribut3(result.abilities[2]);
 
 		skill.setFertigkeitswert(0);
 		skill.setKategorie(Fertigkeitskategorie.fromValue(result.getGroup().getName()));

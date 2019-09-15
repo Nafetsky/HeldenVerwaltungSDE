@@ -5,6 +5,7 @@ import api.ISpecialAbility;
 import api.Language;
 import api.SpecialAbility;
 import api.history.SkillChange;
+import generated.Eigenschaftssteigerung;
 import generated.Ereignis;
 import generated.Fertigkeitsmodifikation;
 import generated.Kommunikatives;
@@ -78,6 +79,11 @@ public class EventParser {
 		ereignis.setGrund(eventToSave.getDescription());
 		ereignis.setDatum(translator.translate(eventToSave.getDate()));
 
+		List<Eigenschaftssteigerung> abilityChanges = eventToSave.getAttributeChanges()
+																 .stream()
+																 .map(translator::translate)
+																 .collect(Collectors.toList());
+		ereignis.getEigenschaftssteigerung().addAll(abilityChanges);
 		List<Fertigkeitsmodifikation> skillChangesWithNewSkills = buildSkillChangesIncludingNewSkills(eventToSave);
 		ereignis.getFertigkeitsänderung()
 				.addAll(skillChangesWithNewSkills);

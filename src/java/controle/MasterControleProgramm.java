@@ -1,19 +1,14 @@
 package controle;
 
-import java.awt.EventQueue;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.xml.bind.JAXBException;
-
-import api.Skill;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-
+import XsdWrapper.CharacterXml;
+import XsdWrapper.DescriptorTranslator;
+import XsdWrapper.MarshallingHelper;
+import api.BaseAttribute;
+import api.Event;
+import api.base.Character;
+import api.skills.Descriptor;
+import api.skills.Skill;
+import api.skills.SkillImpl;
 import database.FeatGroup;
 import generated.Charakter;
 import generated.MetaData;
@@ -22,47 +17,59 @@ import generated.Schablone;
 import generated.Sonderfertigkeit;
 import graphicalUserInterface.MainFrame;
 import graphicalUserInterface.PaneBuilder;
+import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.StringUtils;
 import utils.CharacterModifier;
 import utils.CharakterGenerator;
-import utils.MarshallingHelper;
 import utils.MetaDataHandler;
 import utils.SkillFinder;
 import utils.WrappedCharakter;
 
+import javax.xml.bind.JAXBException;
+import java.awt.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 /**
- * 
  * @author Stefan no chess computer
  */
+@Log4j2
 public class MasterControleProgramm {
 
-	private static final Logger LOGGER = Logger.getLogger(MasterControleProgramm.class);
 
 	private static final String METADATA_XML = "metadata.xml";
 	private static final String MAIN_DIRECTORY = "heldenverwaltungsDaten";
 	private static final String CHARAKTER_DIRECTORY = "charaktere";
 	private static final String CULTURE_DIRECTORY = "kulturen";
 	private static final String PROFESSION_DIRECTORY = "professionen";
-	WrappedCharakter activeCharakter;
-	SkillFinder finder;
-	CharacterModifier modifier;
-	MarshallingHelper helper;
-	PaneBuilder paneBuilder;
-	MetaData metaData;
-	MetaData metaDataCultures;
-	MetaData metaDataProfessions;
-	MainFrame frame;
-	String fileSeperator;
-	List<WrappedCharakter> unsavedCharakters;
+
+	private Character activeCharacter;
+//	private SkillFinder finder;
+	private CharacterModifier modifier;
+	private MarshallingHelper helper;
+	private PaneBuilder paneBuilder;
+	private MetaData metaData;
+	private MetaData metaDataCultures;
+	private MetaData metaDataProfessions;
+	private MainFrame frame;
+	private String fileSeperator;
+	private List<WrappedCharakter> unsavedCharakters;
 
 	public MasterControleProgramm() throws Exception {
 		fileSeperator = File.separator;
-		unsavedCharakters = new ArrayList<WrappedCharakter>();
-		helper = MarshallingHelper.getInstance();
+		unsavedCharakters = new ArrayList<>();
+		helper = new MarshallingHelper();
 		prepareDirectoryStructure();
 		// loadCharakter("Barundar");
 		loadMetaData();
 		loadCharakter(!getAllCharakterNames().isEmpty() ? getAllCharakterNames().get(0) : "");
-		paneBuilder = new PaneBuilder(activeCharakter, this, getAllCharakterNames());
+		paneBuilder = new PaneBuilder(activeCharacter, this, getAllCharakterNames());
 		frame = new MainFrame(paneBuilder);
 		frame.setVisible(true);
 	}
@@ -82,47 +89,50 @@ public class MasterControleProgramm {
 
 			String fileToName = "";
 			// TODO clean this mess up
-			if (activeCharakter.isCharakter()) {
-				fileToName = MetaDataHandler.getFileToName(metaData, activeCharakter.getName());
-			}
-			if (activeCharakter.isCulture()) {
-				fileToName = MetaDataHandler.getFileToName(metaDataCultures, activeCharakter.getName());
-			}
-			if (activeCharakter.isProfession()) {
-				fileToName = MetaDataHandler.getFileToName(metaDataProfessions, activeCharakter.getName());
-			}
+//			if (activeCharacter.isCharakter()) {
+				fileToName = MetaDataHandler.getFileToName(metaData, activeCharacter.getMetaData().getName());
+//			}
+//			if (activeCharacter.isCulture()) {
+//				fileToName = MetaDataHandler.getFileToName(metaDataCultures, activeCharacter.getName());
+//			}
+//			if (activeCharacter.isProfession()) {
+//				fileToName = MetaDataHandler.getFileToName(metaDataProfessions, activeCharacter.getName());
+//			}
 			if (StringUtils.isEmpty(fileToName)) {
-				if (activeCharakter.isCharakter()) {
-					fileToName = MetaDataHandler.addEntryToMetaData(metaData, activeCharakter.getName());
+//				if (activeCharacter.isCharakter()) {
+					fileToName = MetaDataHandler.addEntryToMetaData(metaData, activeCharacter.getMetaData().getName());
 					fileWriter = new FileOutputStream(new File(MAIN_DIRECTORY + fileSeperator + METADATA_XML));
-					unsavedCharakters.remove(activeCharakter);
-					fileWriter.write(helper.marshall(metaData).getBytes(StandardCharsets.UTF_8));
+					unsavedCharakters.remove(activeCharacter);
+					fileWriter.write(helper.marshall(metaData)
+										   .getBytes(StandardCharsets.UTF_8));
 					fileWriter.flush();
 					fileWriter.close();
 					loadMetaData();
-				} else if (activeCharakter.isCulture()) {
-					fileToName = MetaDataHandler.addEntryToMetaData(metaDataCultures, activeCharakter.getName());
-					fileWriter = new FileOutputStream(new File(
-							MAIN_DIRECTORY + fileSeperator + CULTURE_DIRECTORY + fileSeperator + METADATA_XML));
-					unsavedCharakters.remove(activeCharakter);
-					fileWriter.write(helper.marshall(metaDataCultures).getBytes(StandardCharsets.UTF_8));
-					fileWriter.flush();
-					fileWriter.close();
-					loadMetaData();
-				} else if (activeCharakter.isProfession()) {
-					fileToName = MetaDataHandler.addEntryToMetaData(metaDataProfessions, activeCharakter.getName());
-					fileWriter = new FileOutputStream(new File(
-							MAIN_DIRECTORY + fileSeperator + PROFESSION_DIRECTORY + fileSeperator + METADATA_XML));
-					unsavedCharakters.remove(activeCharakter);
-					fileWriter.write(helper.marshall(metaDataProfessions).getBytes(StandardCharsets.UTF_8));
-					fileWriter.flush();
-					fileWriter.close();
-					loadMetaData();
-				}
+//				} else if (activeCharacter.isCulture()) {
+//					fileToName = MetaDataHandler.addEntryToMetaData(metaDataCultures, activeCharacter.getName());
+//					fileWriter = new FileOutputStream(new File(
+//							MAIN_DIRECTORY + fileSeperator + CULTURE_DIRECTORY + fileSeperator + METADATA_XML));
+//					unsavedCharakters.remove(activeCharacter);
+//					fileWriter.write(helper.marshall(metaDataCultures)
+//										   .getBytes(StandardCharsets.UTF_8));
+//					fileWriter.flush();
+//					fileWriter.close();
+//					loadMetaData();
+//				} else if (activeCharacter.isProfession()) {
+//					fileToName = MetaDataHandler.addEntryToMetaData(metaDataProfessions, activeCharacter.getName());
+//					fileWriter = new FileOutputStream(new File(
+//							MAIN_DIRECTORY + fileSeperator + PROFESSION_DIRECTORY + fileSeperator + METADATA_XML));
+//					unsavedCharakters.remove(activeCharacter);
+//					fileWriter.write(helper.marshall(metaDataProfessions)
+//										   .getBytes(StandardCharsets.UTF_8));
+//					fileWriter.flush();
+//					fileWriter.close();
+//					loadMetaData();
+//				}
 			}
 
-			fileWriter = new FileOutputStream(new File(makeFilePathAndName(fileToName, activeCharakter.getType())));
-			fileWriter.write(helper.marshall(activeCharakter).getBytes(StandardCharsets.UTF_8));
+			fileWriter = new FileOutputStream(new File(makeFilePathAndName(fileToName, WrappedCharakter.CHARAKTER)));
+			fileWriter.write(activeCharacter.getContent().getBytes(StandardCharsets.UTF_8));
 			fileWriter.flush();
 			fileWriter.close();
 		} catch (IOException e) {
@@ -155,7 +165,7 @@ public class MasterControleProgramm {
 	}
 
 	public void handlePrintCharakter() {
-		System.out.println(helper.marshall(activeCharakter));
+		System.out.println(activeCharacter.getContent());
 	}
 
 	public void handleNewSkillSpecialisation(AddFeatDialogResult result, String skillName) {
@@ -172,8 +182,14 @@ public class MasterControleProgramm {
 
 	public Skill handleNewSkill(AddSkillDialogResult result) {
 		if (result.isComplete()) {
-//			return modifier.addSkill(result);
-			return null;
+			DescriptorTranslator translator = new DescriptorTranslator();
+			Descriptor[] descriptors = translator.translateToDescriptors(Arrays.asList(result.attributes));
+			SkillImpl o = new SkillImpl(result.name,result.getGroup(), descriptors, result.costCategory);
+			Event build = Event.builder()
+							   .learnedSkills(Collections.singletonList(o))
+							   .build();
+			activeCharacter.increase(build);
+			return o;
 		}
 		return null;
 	}
@@ -209,19 +225,19 @@ public class MasterControleProgramm {
 
 	private void loadCharakter(String name) {
 		try {
-			WrappedCharakter newActiveCharakter = loadCharakterUnsave(name);
+			Charakter newActiveCharakter = loadCharakterUnsave(name);
 			if (null != newActiveCharakter) {
-				activeCharakter = newActiveCharakter;
+				activeCharacter = new CharacterXml(newActiveCharakter);
 			}
 
-			finder = new SkillFinder(activeCharakter);
-			modifier = new CharacterModifier(activeCharakter);
+//			finder = new SkillFinder(activeCharacter);
+//			modifier = new CharacterModifier(activeCharacter);
 		} catch (Exception e) {
 			LOGGER.error("Went wrong", e);
 		}
 	}
 
-	private WrappedCharakter loadCharakterUnsave(String name) {
+	private Charakter loadCharakterUnsave(String name) {
 		WrappedCharakter newCharkter;
 		newCharkter = searchMetaData(metaData, name, WrappedCharakter.CHARAKTER);
 		if (null != newCharkter) {
@@ -261,15 +277,15 @@ public class MasterControleProgramm {
 		File inputFile = new File(makeFilePathAndName(charakterLine.getDatei(), type));
 		if (inputFile.exists()) {
 			switch (type) {
-			case WrappedCharakter.CHARAKTER:
-				return WrappedCharakter.getWrappedCharakter(helper.unmarshallCharakter(inputFile));
-			case WrappedCharakter.PROFESSION:
-				return WrappedCharakter.getWrappedProfession(helper.unmarshallSchablone(inputFile));
-			case WrappedCharakter.CULTURE:
-				return WrappedCharakter.getWrappedCulture(helper.unmarshallSchablone(inputFile));
-			default:
-				throw new UnsupportedOperationException(
-						"You screwd big time. In this enum is no other value.");
+				case WrappedCharakter.CHARAKTER:
+					return WrappedCharakter.getWrappedCharakter(helper.unmarshallCharakter(inputFile));
+				case WrappedCharakter.PROFESSION:
+					return WrappedCharakter.getWrappedProfession(helper.unmarshallSchablone(inputFile));
+				case WrappedCharakter.CULTURE:
+					return WrappedCharakter.getWrappedCulture(helper.unmarshallSchablone(inputFile));
+				default:
+					throw new UnsupportedOperationException(
+							"You screwd big time. In this enum is no other value.");
 			}
 		} else {
 			return null;
@@ -278,15 +294,15 @@ public class MasterControleProgramm {
 
 	private String makeFilePathAndName(String fileName, int type) {
 		switch (type) {
-		case WrappedCharakter.CHARAKTER:
-			return MAIN_DIRECTORY + fileSeperator + CHARAKTER_DIRECTORY + fileSeperator + fileName;
-		case WrappedCharakter.CULTURE:
-			return MAIN_DIRECTORY + fileSeperator + CULTURE_DIRECTORY + fileSeperator + fileName;
-		case WrappedCharakter.PROFESSION:
-			return MAIN_DIRECTORY + fileSeperator + PROFESSION_DIRECTORY + fileSeperator + fileName;
-		default:
-			throw new UnsupportedOperationException(
-					"trying to save something impossible to save (Profession for the moment)");
+			case WrappedCharakter.CHARAKTER:
+				return MAIN_DIRECTORY + fileSeperator + CHARAKTER_DIRECTORY + fileSeperator + fileName;
+			case WrappedCharakter.CULTURE:
+				return MAIN_DIRECTORY + fileSeperator + CULTURE_DIRECTORY + fileSeperator + fileName;
+			case WrappedCharakter.PROFESSION:
+				return MAIN_DIRECTORY + fileSeperator + PROFESSION_DIRECTORY + fileSeperator + fileName;
+			default:
+				throw new UnsupportedOperationException(
+						"trying to save something impossible to save (Profession for the moment)");
 		}
 	}
 
@@ -306,14 +322,14 @@ public class MasterControleProgramm {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		EventQueue.invokeLater(() ->{
+		EventQueue.invokeLater(() -> {
 			try {
-					@SuppressWarnings("unused")
-					MasterControleProgramm control = new MasterControleProgramm();
-				} catch (Exception e) {
-					LOGGER.error("", e);
-				}
-			});
+				@SuppressWarnings("unused")
+				MasterControleProgramm control = new MasterControleProgramm();
+			} catch (Exception e) {
+				LOGGER.error("", e);
+			}
+		});
 	}
 
 	public void switchActiveCharakter(String newActiveCharakter) {
@@ -323,9 +339,9 @@ public class MasterControleProgramm {
 		if (!getAllCharakterNames().contains(newActiveCharakter)) {
 			return;
 		}
-		if (activeCharakter == null || !StringUtils.equals(activeCharakter.getName(), newActiveCharakter)) {
+		if (activeCharacter == null || !StringUtils.equals(activeCharacter.getMetaData().getName(), newActiveCharakter)) {
 			loadCharakter(newActiveCharakter);
-			paneBuilder = new PaneBuilder(activeCharakter, this, getAllCharakterNames());
+			paneBuilder = new PaneBuilder(activeCharacter, this, getAllCharakterNames());
 			frame.setPaneBuilder(paneBuilder);
 		}
 	}
@@ -338,14 +354,14 @@ public class MasterControleProgramm {
 			if (getCultures().contains(addNew.getCulture())) {
 				WrappedCharakter cultureToAdd = loadCharakterUnsave(addNew.getCulture());
 				modifier.applyTemplate(cultureToAdd);
-				paneBuilder = new PaneBuilder(activeCharakter, this, getAllCharakterNames());
+				paneBuilder = new PaneBuilder(activeCharacter, this, getAllCharakterNames());
 				frame.setPaneBuilder(paneBuilder);
 			}
 
 			if (getProfessions().contains(addNew.getProfession())) {
 				WrappedCharakter professionToAply = loadCharakterUnsave(addNew.getProfession());
 				modifier.applyTemplate(professionToAply);
-				paneBuilder = new PaneBuilder(activeCharakter, this, getAllCharakterNames());
+				paneBuilder = new PaneBuilder(activeCharacter, this, getAllCharakterNames());
 				frame.setPaneBuilder(paneBuilder);
 			}
 		}
@@ -375,17 +391,17 @@ public class MasterControleProgramm {
 		List<String> allCulturesNames = new ArrayList<String>();
 		MetaData metaDataToRead;
 		switch (type) {
-		case WrappedCharakter.CHARAKTER:
-			metaDataToRead = metaData;
-			break;
-		case WrappedCharakter.CULTURE:
-			metaDataToRead = metaDataCultures;
-			break;
-		case WrappedCharakter.PROFESSION:
-			metaDataToRead = metaDataProfessions;
-			break;
-		default:
-			throw new UnsupportedOperationException(Integer.toString(type) + " is no valid WrappedCharakter type");
+			case WrappedCharakter.CHARAKTER:
+				metaDataToRead = metaData;
+				break;
+			case WrappedCharakter.CULTURE:
+				metaDataToRead = metaDataCultures;
+				break;
+			case WrappedCharakter.PROFESSION:
+				metaDataToRead = metaDataProfessions;
+				break;
+			default:
+				throw new UnsupportedOperationException(Integer.toString(type) + " is no valid WrappedCharakter type");
 		}
 		for (MetaDataLine metaDate : metaDataToRead.getCharakters()) {
 			allCulturesNames.add(metaDate.getName());
@@ -412,21 +428,25 @@ public class MasterControleProgramm {
 	}
 
 	public void handleChangeName(String value) {
-		activeCharakter.setName(value);
+//		activeCharacter.getMetaData().setName(value);
 
 	}
 
 	public void handleChangeCulture(String value) {
-		activeCharakter.setCulture(value);
+		//
 	}
 
 	public void handleChangeAge(String value) {
 		try {
-			activeCharakter.getAngaben().setAlter(Integer.parseInt(value));
+			activeCharacter.getMetaData()
+						   .setAge(Integer.parseInt(value));
 		} catch (NumberFormatException e) {
 			LOGGER.error(value + " is no valid age", e);
 		}
 
 	}
 
+	public void handleIncreaseAttribute(BaseAttribute abilityAbstract) {
+		activeCharacter.getSkillLevler(abilityAbstract);
+	}
 }

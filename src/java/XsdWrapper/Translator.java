@@ -411,4 +411,12 @@ public class Translator {
 								  .map(this::translate)
 								  .collect(Collectors.toList());
 	}
+
+	public Eigenschaftssteigerung translate(AttributeChange attributeChange) {
+		Eigenschaftssteigerung change = factory.createEigenschaftssteigerung();
+		change.setEigenschaft(translate(attributeChange.getAttribute()));
+		change.setSteigerung(attributeChange.getChange());
+		change.setNeuerWert(attributeChange.getNewValue());
+		return change;
+	}
 }

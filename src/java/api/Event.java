@@ -34,5 +34,7 @@ public class Event {
 	private List<SkillChange> skillChanges = new ArrayList<>();
 	@Builder.Default
 	private List<ISpecialAbility> abilities = new ArrayList<>();
+	@Builder.Default
+	private BaseValueChanges baseValueChanges = BaseValueChanges.builder().build();
 
 }

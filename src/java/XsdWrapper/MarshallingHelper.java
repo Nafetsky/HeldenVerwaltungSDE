@@ -1,4 +1,4 @@
-package utility;
+package XsdWrapper;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -19,29 +19,17 @@ import generated.ObjectFactory;
 import generated.Schablone;
 
 public class MarshallingHelper {
-	private static MarshallingHelper INSTANCE;
 
-	JAXBContext jaxbContext;
-	Unmarshaller jaxbUnmarshaller;
-	Marshaller marshaller;
-	ObjectFactory factory;
+	private JAXBContext jaxbContext;
+	private Unmarshaller jaxbUnmarshaller;
+	private Marshaller marshaller;
+	private ObjectFactory factory;
 
-	private MarshallingHelper() throws JAXBException {
+	public MarshallingHelper() throws JAXBException {
 		jaxbContext = JAXBContext.newInstance(ObjectFactory.class);
 		jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 		marshaller = jaxbContext.createMarshaller();
 		factory = new ObjectFactory();
-	}
-
-	public static MarshallingHelper getInstance() {
-		if (INSTANCE == null) {
-			try {
-				INSTANCE = new MarshallingHelper();
-			} catch (JAXBException e) {
-				e.printStackTrace();
-			}
-		}
-		return INSTANCE;
 	}
 
 	@SuppressWarnings("unchecked")

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -21,14 +22,13 @@ import generated.ObjectFactory;
 import generated.Sonderfertigkeit;
 import generated.Talentspezialisierung;
 
+@Log4j2
 public class SkillFinder {
 
 	WrappedCharakter charakter;
 	
 	ObjectFactory factory;
 	
-	private static final Logger LOGGER = Logger.getLogger(SkillFinder.class);
-
 	public SkillFinder(WrappedCharakter charakter) {
 		this.charakter = charakter;
 		factory = new ObjectFactory();

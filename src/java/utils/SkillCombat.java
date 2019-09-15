@@ -1,5 +1,6 @@
 package utils;
 
+import api.skills.Skill;
 import database.CostCategory;
 import database.SpecialSkillGroup;
 import generated.Kampftechnik;
