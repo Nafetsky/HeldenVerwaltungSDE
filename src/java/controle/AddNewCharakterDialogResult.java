@@ -1,44 +1,18 @@
 package controle;
 
+import api.Sex;
+import lombok.Builder;
+import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
+@Data
+@Builder
 public class AddNewCharakterDialogResult implements AddDialogResult {
-	private String name;
-	private String species;
-	private String culture;
-	private String profession;
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getSpecies() {
-		return species;
-	}
-
-	public void setSpecies(String species) {
-		this.species = species;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setCulture(String culture) {
-		this.culture = culture;
-	}
-
-	public String getCulture() {
-		return culture;
-	}
-
-	public void setProfession(String profession) {
-		this.profession = profession;
-	}
-
-	public String getProfession() {
-		return profession;
-	}
+	private final String name;
+	private final String species;
+	private final String culture;
+	private final String profession;
+	private final Sex sex;
 
 	@Override
 	public boolean isComplete() {

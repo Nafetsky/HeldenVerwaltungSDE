@@ -18,7 +18,7 @@ public class Language implements ILanguage {
 
 	@Override
 	public int getCost() {
-		return level<4?level*2:0;
+		return level < 4 ? level * 2 : 0;
 	}
 
 	@Override

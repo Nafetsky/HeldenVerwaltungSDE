@@ -1,13 +1,16 @@
 package XsdWrapper;
 
 import api.AbilityGroup;
+import api.Advantage;
 import api.BaseAttribute;
 import api.BaseValueChanges;
 import api.CombatTechnique;
 import api.CombatTechniqueImpl;
 import api.Event;
 import api.IAttributes;
+import api.ILanguage;
 import api.ISpecialAbility;
+import api.Language;
 import api.SpecialAbility;
 import api.Vantage;
 import api.base.Character;
@@ -32,9 +35,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -43,6 +48,9 @@ import static org.hamcrest.Matchers.is;
 class CharacterXmlTest {
 
 	private static final String EVENT_DESCRIPTION = "Krit beim Zechen";
+	public static final String BOSPERANO = "Bosperano";
+	public static final String ANGRAM_RUNES = "Angram-Bilderschrift";
+	public static final String WIZARD = "Zauberer";
 
 	private Character barundar;
 
@@ -92,6 +100,22 @@ class CharacterXmlTest {
 	}
 
 	@Test
+	void getNewAdvantage() {
+		Event event = Event.builder()
+						   .advantages(Collections.singletonList(new Advantage(WIZARD, 25)))
+						   .build();
+
+		barundar.increase(event);
+
+		Vantage wizard = barundar.getAdvantages()
+								   .stream()
+								   .filter(vantage -> StringUtils.equals(vantage.getName(), WIZARD))
+								   .findFirst()
+								   .get();
+		assertThat(wizard.getCost(), is(25));
+	}
+
+	@Test
 	void loadDisadvantages() {
 		Optional<Vantage> loadedDisadvantage = barundar.getDisadvantages()
 													   .stream()
@@ -99,8 +123,8 @@ class CharacterXmlTest {
 													   .findFirst();
 
 		assertThat(loadedDisadvantage.isPresent(), is(true));
-		Vantage toughAsNails = loadedDisadvantage.get();
-		assertThat(toughAsNails.getCost(), is(5));
+		Vantage greedy = loadedDisadvantage.get();
+		assertThat(greedy.getCost(), is(5));
 	}
 
 	@Test
@@ -114,6 +138,97 @@ class CharacterXmlTest {
 		CombatTechnique combatTechnique = optionalCombatTechnique.get();
 		assertThat(combatTechnique.getLevel(), is(16));
 	}
+
+	@Test
+	void loadLanguages() {
+		List<ILanguage> languages = barundar.getLanguages();
+
+		assertThat(languages, hasSize(3));
+		List<String> languageNames = languages.stream()
+											  .map(ISpecialAbility::getName)
+											  .collect(Collectors.toList());
+		assertThat(languageNames, containsInAnyOrder("Rogolan", "Garethi", BOSPERANO));
+	}
+
+	@Test
+	void learnLanguage() {
+		Language angramToLearn = new Language("Angram");
+		angramToLearn.setLevel(1);
+		Event event = Event.builder()
+						   .abilities(Collections.singletonList(angramToLearn))
+						   .build();
+
+		barundar.increase(event);
+
+		List<ILanguage> languages = barundar.getLanguages();
+		assertThat(languages, hasSize(4));
+		List<String> languageNames = languages.stream()
+											  .map(ISpecialAbility::getName)
+											  .collect(Collectors.toList());
+		assertThat(languageNames, containsInAnyOrder("Rogolan", "Garethi", BOSPERANO, "Angram"));
+
+		ILanguage angramLearned = languages.stream()
+										   .filter(lan -> StringUtils.equals(lan.getName(), "Angram"))
+										   .findFirst()
+										   .get();
+		assertThat(angramLearned.getLevel(), is(1));
+	}
+
+	@Test
+	void learnImproveLanguage() {
+		Language bosperanoToIncrease = new Language(BOSPERANO);
+		bosperanoToIncrease.setLevel(1);
+		Event event = Event.builder()
+						   .abilities(Collections.singletonList(bosperanoToIncrease))
+						   .build();
+
+		barundar.increase(event);
+
+		List<ILanguage> languages = barundar.getLanguages();
+		assertThat(languages, hasSize(3));
+		List<String> languageNames = languages.stream()
+											  .map(ISpecialAbility::getName)
+											  .collect(Collectors.toList());
+		assertThat(languageNames, containsInAnyOrder("Rogolan", "Garethi", BOSPERANO));
+
+		ILanguage bosperanoIncreased = languages.stream()
+												.filter(lan -> StringUtils.equals(lan.getName(), BOSPERANO))
+												.findFirst()
+												.get();
+		assertThat(bosperanoIncreased.getLevel(), is(3));
+	}
+
+	@Test
+	void loadScriptures() {
+		List<ISpecialAbility> scriptures = barundar.getScriptures();
+
+		assertThat(scriptures, hasSize(2));
+		List<String> languageNames = scriptures.stream()
+											   .map(ISpecialAbility::getName)
+											   .collect(Collectors.toList());
+		assertThat(languageNames, containsInAnyOrder("Rogolan Runen", "Kusliker Zeichen"));
+	}
+
+	@Test
+	void learnScriptures() {
+		SpecialAbility build = SpecialAbility.builder()
+											 .name(ANGRAM_RUNES)
+											 .cost(4)
+											 .group(AbilityGroup.SCRIPTURE)
+											 .build();
+		Event event = Event.builder()
+						   .abilities(Collections.singletonList(build))
+						   .build();
+		barundar.increase(event);
+
+		List<ISpecialAbility> scriptures = barundar.getScriptures();
+		assertThat(scriptures, hasSize(3));
+		List<String> languageNames = scriptures.stream()
+											   .map(ISpecialAbility::getName)
+											   .collect(Collectors.toList());
+		assertThat(languageNames, containsInAnyOrder("Rogolan Runen", "Kusliker Zeichen", ANGRAM_RUNES));
+	}
+
 
 	@Test
 	void testIncreaseAbilityByEvent() {
@@ -201,7 +316,10 @@ class CharacterXmlTest {
 		barundar.save(EVENT_DESCRIPTION);
 
 		assertThat(barundar.getBonusLifePoints(), is(2));
-		assertThat(barundar.getHistory().get(1).getBaseValueChanges().getBoughtHitPoints(), is(2));
+		assertThat(barundar.getHistory()
+						   .get(1)
+						   .getBaseValueChanges()
+						   .getBoughtHitPoints(), is(2));
 	}
 
 	@Test
@@ -218,7 +336,10 @@ class CharacterXmlTest {
 		barundar.save(EVENT_DESCRIPTION);
 
 		assertThat(barundar.getBonusLifePoints(), is(4));
-		assertThat(barundar.getHistory().get(1).getBaseValueChanges().getBoughtHitPoints(), is(4));
+		assertThat(barundar.getHistory()
+						   .get(1)
+						   .getBaseValueChanges()
+						   .getBoughtHitPoints(), is(4));
 	}
 
 	@Test
@@ -236,8 +357,14 @@ class CharacterXmlTest {
 
 		assertThat(barundar.getBonusArcaneEnergy(), is(1));
 		assertThat(barundar.getBonusKarmaPoints(), is(3));
-		assertThat(barundar.getHistory().get(1).getBaseValueChanges().getBoughtAstralPoints(), is(1));
-		assertThat(barundar.getHistory().get(1).getBaseValueChanges().getBoughtKarmaPoints(), is(3));
+		assertThat(barundar.getHistory()
+						   .get(1)
+						   .getBaseValueChanges()
+						   .getBoughtAstralPoints(), is(1));
+		assertThat(barundar.getHistory()
+						   .get(1)
+						   .getBaseValueChanges()
+						   .getBoughtKarmaPoints(), is(3));
 	}
 
 	@Test
@@ -510,7 +637,6 @@ class CharacterXmlTest {
 
 	@Test
 	void testLearnCombatTechnique() {
-
 		String skillName = "Kettenwaffen";
 		CombatTechniqueImpl technique = new CombatTechniqueImpl(skillName, BaseAttribute.Strength, ImprovementComplexity.D);
 		Event build = Event.builder()

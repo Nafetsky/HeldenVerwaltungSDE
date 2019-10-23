@@ -4,6 +4,7 @@ import api.AbilityGroup;
 import api.Advantage;
 import api.BaseValueChanges;
 import api.CombatTechnique;
+import api.ILanguage;
 import api.ISpecialAbility;
 import api.history.AttributeChange;
 import api.BaseAttribute;
@@ -18,6 +19,7 @@ import api.skills.Skill;
 import api.history.SkillChange;
 import api.skills.SkillGroup;
 import api.SpecialAbility;
+import database.CostCategory;
 import generated.Attributskürzel;
 import generated.Basistalent;
 import generated.Eigenschaftssteigerung;
@@ -70,11 +72,13 @@ public class Translator {
 	}
 
 	public Sex translate(Geschlecht sex) {
-		switch (sex) {
-			case WEIBLICH:
-				return Sex.Female;
-			case MÄNNLICH:
-				return Sex.Male;
+		if (null != sex) {
+			switch (sex) {
+				case WEIBLICH:
+					return Sex.Female;
+				case MÄNNLICH:
+					return Sex.Male;
+			}
 		}
 		return Sex.Unspecified;
 	}
@@ -169,7 +173,7 @@ public class Translator {
 		return SpecialAbility.builder()
 							 .name(script.getName())
 							 .cost(complexity * 2)
-							 .group(AbilityGroup.MUNDANE)
+							 .group(AbilityGroup.SCRIPTURE)
 							 .build();
 	}
 
@@ -428,5 +432,34 @@ public class Translator {
 							   .boughtAstralPoints(ereignis.getAsPGekauft() == null ? 0 : ereignis.getAsPGekauft())
 							   .boughtKarmaPoints(ereignis.getKaPGekauft() == null ? 0 : ereignis.getKaPGekauft())
 							   .build();
+	}
+
+	public Sprache translateLanguage(ILanguage language) {
+		Sprache sprache = factory.createSprache();
+		sprache.setName(language.getName());
+		sprache.setStufe(language.getLevel());
+		return sprache;
+
+	}
+
+	public Schrift translateScripture(ISpecialAbility scripture) {
+		Schrift schrift = factory.createSchrift();
+		schrift.setName(scripture.getName());
+		schrift.setKomplexität(Steigerungskategorie.values()[scripture.getCost()/2 - 1]);
+		return schrift;
+	}
+
+	public Vorteil translate(Advantage advantage) {
+		Vorteil vorteil = factory.createVorteil();
+		vorteil.setName(advantage.getName());
+		vorteil.setKosten(advantage.getCost());
+		return vorteil;
+	}
+
+	public Nachteil translate(Disadvantage disadvantage) {
+		Nachteil nachteil = factory.createNachteil();
+		nachteil.setName(disadvantage.getName());
+		nachteil.setKosten(disadvantage.getCost());
+		return nachteil;
 	}
 }

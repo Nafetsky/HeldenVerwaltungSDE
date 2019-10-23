@@ -1,31 +1,37 @@
-package controle;
+package main;
 
 import XsdWrapper.CharacterXml;
 import XsdWrapper.DescriptorTranslator;
 import XsdWrapper.MarshallingHelper;
+import api.AbilityGroup;
+import api.Advantage;
 import api.BaseAttribute;
+import api.DescribesSkill;
+import api.Disadvantage;
 import api.Event;
+import api.ILanguage;
+import api.ISpecialAbility;
+import api.Language;
+import api.SpecialAbility;
 import api.base.Character;
 import api.skills.Descriptor;
 import api.skills.Skill;
 import api.skills.SkillImpl;
-import database.FeatGroup;
-import generated.Charakter;
+import controle.AddFeatDialogResult;
+import controle.AddNewCharakterDialogResult;
+import controle.AddNewCombatSkillDialogResult;
+import controle.AddNewScriptDialogResult;
+import controle.AddSkillDialogResult;
+import controle.AddVantageDialogResult;
 import generated.MetaData;
 import generated.MetaDataLine;
-import generated.Schablone;
-import generated.Sonderfertigkeit;
 import graphicalUserInterface.MainFrame;
 import graphicalUserInterface.PaneBuilder;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
-import utils.CharacterModifier;
-import utils.CharakterGenerator;
-import utils.MetaDataHandler;
-import utils.WrappedCharakter;
 
 import javax.xml.bind.JAXBException;
-import java.awt.*;
+import java.awt.EventQueue;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -34,6 +40,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
 
 /**
  * @author Stefan no chess computer
@@ -48,9 +55,12 @@ public class MasterControleProgramm {
 	private static final String CULTURE_DIRECTORY = "kulturen";
 	private static final String PROFESSION_DIRECTORY = "professionen";
 
+	private static final int CHARACTER = 1;
+	private static final int CULTURE = 2;
+	private static final int PROFESSION = 3;
+
+
 	private Character activeCharacter;
-	//	private SkillFinder finder;
-	private CharacterModifier modifier;
 	private MarshallingHelper helper;
 	private PaneBuilder paneBuilder;
 	private MetaData metaData;
@@ -58,7 +68,7 @@ public class MasterControleProgramm {
 	private MetaData metaDataProfessions;
 	private MainFrame frame;
 	private String fileSeperator;
-	private List<WrappedCharakter> unsavedCharakters;
+	private List<Character> unsavedCharakters;
 
 	public MasterControleProgramm() throws Exception {
 		fileSeperator = File.separator;
@@ -73,16 +83,21 @@ public class MasterControleProgramm {
 		frame.setVisible(true);
 	}
 
-	public void handlencreaseSkill(String name) {
-		modifier.increaseSkillByOne(name);
+	public void handleIncreaseSkill(String name) {
+		activeCharacter.getSkillLevler(name)
+					   .level();
 	}
 
 	public void handleAddAp(int newAp) {
-		modifier.changeApBy(newAp);
+		Event newApEvent = Event.builder()
+								.adventurePoints(newAp)
+								.build();
+		activeCharacter.increase(newApEvent);
 	}
 
 	public void handleSaveActiveCharakter(String reason) {
-		modifier.saveChanges(reason);
+		activeCharacter.save(reason);
+
 		try {
 			FileOutputStream fileWriter;
 
@@ -132,7 +147,7 @@ public class MasterControleProgramm {
 //				}
 			}
 
-			fileWriter = new FileOutputStream(new File(makeFilePathAndName(fileToName, WrappedCharakter.CHARAKTER)));
+			fileWriter = new FileOutputStream(new File(makeFilePathAndName(fileToName, CHARACTER)));
 			fileWriter.write(activeCharacter.getContent()
 											.getBytes(StandardCharsets.UTF_8));
 			fileWriter.flush();
@@ -171,22 +186,36 @@ public class MasterControleProgramm {
 	}
 
 	public void handleNewSkillSpecialisation(AddFeatDialogResult result, String skillName) {
-		modifier.addSkillSpecialisation(result.name, skillName);
+		ISpecialAbility o = SpecialAbility.builder()
+										  .name(result.getName())
+										  .descriptors(Collections.singletonList(new DescribesSkill(skillName)))
+										  .cost(result.getCost())
+										  .build();
+		List<ISpecialAbility> abilities = Collections.singletonList(o);
+		Event event = Event.builder()
+						   .abilities(abilities)
+						   .build();
+		activeCharacter.increase(event);
 	}
 
-	public Sonderfertigkeit handleNewFeat(AddFeatDialogResult result, FeatGroup group) {
-		return handleNewFeat(result.name, result.cost, group);
-	}
-
-	public Sonderfertigkeit handleNewFeat(String name, int cost, FeatGroup group) {
-		return modifier.addFeat(name, cost, group);
+	public ISpecialAbility handleNewFeat(AddFeatDialogResult result) {
+		ISpecialAbility feat = SpecialAbility.builder()
+											 .name(result.getName())
+											 .cost(result.getCost())
+											 .group(result.getGroup())
+											 .build();
+		Event build = Event.builder()
+						   .abilities(Collections.singletonList(feat))
+						   .build();
+		activeCharacter.increase(build);
+		return feat;
 	}
 
 	public Skill handleNewSkill(AddSkillDialogResult result) {
 		if (result.isComplete()) {
 			DescriptorTranslator translator = new DescriptorTranslator();
-			Descriptor[] descriptors = translator.translateToDescriptors(Arrays.asList(result.attributes));
-			SkillImpl o = new SkillImpl(result.name, result.getGroup(), descriptors, result.costCategory);
+			Descriptor[] descriptors = translator.translateToDescriptors(Arrays.asList(result.getDescriptors()));
+			SkillImpl o = new SkillImpl(result.getName(), result.getGroup(), descriptors, result.getCostCategory());
 			Event build = Event.builder()
 							   .learnedSkills(Collections.singletonList(o))
 							   .build();
@@ -227,9 +256,9 @@ public class MasterControleProgramm {
 
 	private void loadCharakter(String name) {
 		try {
-			Charakter newActiveCharakter = loadCharakterUnsave(name);
+			Character newActiveCharakter = loadCharakterUnsave(name);
 			if (null != newActiveCharakter) {
-				activeCharacter = new CharacterXml(newActiveCharakter);
+				activeCharacter = newActiveCharakter;
 			}
 
 //			finder = new SkillFinder(activeCharacter);
@@ -239,30 +268,31 @@ public class MasterControleProgramm {
 		}
 	}
 
-	private Charakter loadCharakterUnsave(String name) {
-		WrappedCharakter newCharkter;
-		newCharkter = searchMetaData(metaData, name, WrappedCharakter.CHARAKTER);
+	private Character loadCharakterUnsave(String name) {
+		Character newCharkter;
+		newCharkter = searchMetaData(metaData, name, CHARACTER);
 		if (null != newCharkter) {
 			return newCharkter;
 		}
-		newCharkter = searchMetaData(metaDataCultures, name, WrappedCharakter.CULTURE);
+		newCharkter = searchMetaData(metaDataCultures, name, CULTURE);
 		if (null != newCharkter) {
 			return newCharkter;
 		}
 
-		newCharkter = searchMetaData(metaDataProfessions, name, WrappedCharakter.PROFESSION);
+		newCharkter = searchMetaData(metaDataProfessions, name, PROFESSION);
 		if (null != newCharkter) {
 			return newCharkter;
 		}
-		for (WrappedCharakter charakter : unsavedCharakters) {
-			if (StringUtils.equals(name, charakter.getName())) {
-				return charakter;
+		for (Character character : unsavedCharakters) {
+			if (StringUtils.equals(name, character.getMetaData()
+												  .getName())) {
+				return character;
 			}
 		}
 		return newCharkter;
 	}
 
-	private WrappedCharakter searchMetaData(MetaData metaDataParam, String name, int type) {
+	private Character searchMetaData(MetaData metaDataParam, String name, int type) {
 		for (MetaDataLine charakterLine : metaDataParam.getCharakters()) {
 			if (StringUtils.equals(charakterLine.getName(), name)) {
 				try {
@@ -275,19 +305,21 @@ public class MasterControleProgramm {
 		return null;
 	}
 
-	private WrappedCharakter loadCharacter(int type, MetaDataLine charakterLine) throws JAXBException {
+	private Character loadCharacter(int type, MetaDataLine charakterLine) throws JAXBException {
 		File inputFile = new File(makeFilePathAndName(charakterLine.getDatei(), type));
 		if (inputFile.exists()) {
 			switch (type) {
-				case WrappedCharakter.CHARAKTER:
-					return WrappedCharakter.getWrappedCharakter(helper.unmarshallCharakter(inputFile));
-				case WrappedCharakter.PROFESSION:
-					return WrappedCharakter.getWrappedProfession(helper.unmarshallSchablone(inputFile));
-				case WrappedCharakter.CULTURE:
-					return WrappedCharakter.getWrappedCulture(helper.unmarshallSchablone(inputFile));
+				case CHARACTER:
+					return new CharacterXml(helper.unmarshallCharakter(inputFile));
+				case CULTURE:
+//					return WrappedCharakter.getWrappedCulture(helper.unmarshallSchablone(inputFile));
+				case PROFESSION:
+//					return WrappedCharakter.getWrappedProfession(helper.unmarshallSchablone(inputFile));
+					throw new UnsupportedOperationException(
+							"No support for cultures and professions yet. And perhaps never");
 				default:
 					throw new UnsupportedOperationException(
-							"You screwd big time. In this enum is no other value.");
+							"You screwed big time. In this enum is no other value.");
 			}
 		} else {
 			return null;
@@ -296,11 +328,11 @@ public class MasterControleProgramm {
 
 	private String makeFilePathAndName(String fileName, int type) {
 		switch (type) {
-			case WrappedCharakter.CHARAKTER:
+			case CHARACTER:
 				return MAIN_DIRECTORY + fileSeperator + CHARAKTER_DIRECTORY + fileSeperator + fileName;
-			case WrappedCharakter.CULTURE:
+			case CULTURE:
 				return MAIN_DIRECTORY + fileSeperator + CULTURE_DIRECTORY + fileSeperator + fileName;
-			case WrappedCharakter.PROFESSION:
+			case PROFESSION:
 				return MAIN_DIRECTORY + fileSeperator + PROFESSION_DIRECTORY + fileSeperator + fileName;
 			default:
 				throw new UnsupportedOperationException(
@@ -314,8 +346,9 @@ public class MasterControleProgramm {
 			allCharakterNames.add(metaDate.getName());
 		}
 		allCharakterNames.addAll(getCultures());
-		for (WrappedCharakter charakter : unsavedCharakters) {
-			allCharakterNames.add(charakter.getName());
+		for (Character charakter : unsavedCharakters) {
+			allCharakterNames.add(charakter.getMetaData()
+										   .getName());
 		}
 		return allCharakterNames;
 	}
@@ -351,19 +384,19 @@ public class MasterControleProgramm {
 
 	public void handleNewCharakter(AddNewCharakterDialogResult addNew) {
 		if (null != addNew && addNew.isComplete()) {
-			Charakter charakter = CharakterGenerator.generteNewCharakter(addNew);
-			unsavedCharakters.add(WrappedCharakter.getWrappedCharakter(charakter));
+			Character character = new CharacterXml(CharakterGenerator.generteNewCharakter(addNew));
+			unsavedCharakters.add(character);
 			switchActiveCharakter(addNew.getName());
 			if (getCultures().contains(addNew.getCulture())) {
-				WrappedCharakter cultureToAdd = loadCharakterUnsave(addNew.getCulture());
-				modifier.applyTemplate(cultureToAdd);
+//				WrappedCharakter cultureToAdd = loadCharakterUnsave(addNew.getCulture());
+//				modifier.applyTemplate(cultureToAdd);
 				paneBuilder = new PaneBuilder(activeCharacter, this, getAllCharakterNames());
 				frame.setPaneBuilder(paneBuilder);
 			}
 
 			if (getProfessions().contains(addNew.getProfession())) {
-				WrappedCharakter professionToAply = loadCharakterUnsave(addNew.getProfession());
-				modifier.applyTemplate(professionToAply);
+//				WrappedCharakter professionToAply = loadCharakterUnsave(addNew.getProfession());
+//				modifier.applyTemplate(professionToAply);
 				paneBuilder = new PaneBuilder(activeCharacter, this, getAllCharakterNames());
 				frame.setPaneBuilder(paneBuilder);
 			}
@@ -371,36 +404,38 @@ public class MasterControleProgramm {
 	}
 
 	public void handleNewCulture(String result) {
-		Schablone template = CharakterGenerator.generateNewSchablone(result);
-		unsavedCharakters.add(WrappedCharakter.getWrappedCulture(template));
-		switchActiveCharakter(template.getName());
+		throw new UnsupportedOperationException("Not yet supported");
+//		Schablone template = CharakterGenerator.generateNewSchablone(result);
+//		unsavedCharakters.add(WrappedCharakter.getWrappedCulture(template));
+//		switchActiveCharakter(template.getName());
 	}
 
 	public void handleNewProfession(String result) {
-		Schablone template = CharakterGenerator.generateNewSchablone(result);
-		unsavedCharakters.add(WrappedCharakter.getWrappedProfession(template));
-		switchActiveCharakter(template.getName());
+		throw new UnsupportedOperationException("Not yet supported");
+//		Schablone template = CharakterGenerator.generateNewSchablone(result);
+//		unsavedCharakters.add(WrappedCharakter.getWrappedProfession(template));
+//		switchActiveCharakter(template.getName());
 	}
 
 	public List<String> getCultures() {
-		return getAllFromMeta(WrappedCharakter.CULTURE);
+		return getAllFromMeta(CULTURE);
 	}
 
 	public List<String> getProfessions() {
-		return getAllFromMeta(WrappedCharakter.PROFESSION);
+		return getAllFromMeta(PROFESSION);
 	}
 
 	private List<String> getAllFromMeta(int type) {
 		List<String> allCulturesNames = new ArrayList<String>();
 		MetaData metaDataToRead;
 		switch (type) {
-			case WrappedCharakter.CHARAKTER:
+			case CHARACTER:
 				metaDataToRead = metaData;
 				break;
-			case WrappedCharakter.CULTURE:
+			case CULTURE:
 				metaDataToRead = metaDataCultures;
 				break;
-			case WrappedCharakter.PROFESSION:
+			case PROFESSION:
 				metaDataToRead = metaDataProfessions;
 				break;
 			default:
@@ -413,21 +448,41 @@ public class MasterControleProgramm {
 	}
 
 	public boolean handleNewAdvantage(AddVantageDialogResult result) {
+		Event.EventBuilder builder = Event.builder();
 		if (result.isAdvantage()) {
-			modifier.addAdvantage(result.getName(), result.getCost());
+			List<Advantage> advantages = Collections.singletonList(new Advantage(result.getName(), result.getCost()));
+			builder.advantages(advantages);
 		} else {
-			modifier.addDisadvantage(result.getName(), result.getCost());
+			List<Disadvantage> disadvantages = Collections.singletonList(new Disadvantage(result.getName(), result.getCost()));
+			builder.disadvantages(disadvantages);
 		}
+		Event event = builder.build();
+		activeCharacter.increase(event);
 		return true;
 
 	}
 
-	public void handleIncreaseLangue(String name) {
-		modifier.increaseLanguage(name);
+	public void handleIncreaseLanguage(String name) {
+//		modifier.increaseLanguage(name);
+		ILanguage o = new Language(name);
+		o.setLevel(1);
+		Event build = Event.builder()
+						   .abilities(Collections.singletonList(o))
+						   .build();
+		activeCharacter.increase(build);
 	}
 
 	public void handleAddScript(AddNewScriptDialogResult result) {
-		modifier.addScript(result.getName(), result.getCostCategorie());
+		ISpecialAbility o = SpecialAbility.builder()
+										  .name(result.getName())
+										  .cost(result.getCostCategorie()
+													  .getFactor() * 2)
+										  .group(AbilityGroup.SCRIPTURE)
+										  .build();
+		Event build = Event.builder()
+						   .abilities(Collections.singletonList(o))
+						   .build();
+		activeCharacter.increase(build);
 	}
 
 	public void handleChangeName(String value) {
@@ -440,12 +495,13 @@ public class MasterControleProgramm {
 	}
 
 	public void handleChangeAge(String value) {
-		try {
-			activeCharacter.getMetaData()
-						   .setAge(Integer.parseInt(value));
-		} catch (NumberFormatException e) {
-			LOGGER.error(value + " is no valid age", e);
-		}
+		throw new UnsupportedOperationException("Age change not yet implemented");
+//		try {
+//			activeCharacter.getMetaData()
+//						   .setAge(Integer.parseInt(value));
+//		} catch (NumberFormatException e) {
+//			LOGGER.error(value + " is no valid age", e);
+//		}
 
 	}
 

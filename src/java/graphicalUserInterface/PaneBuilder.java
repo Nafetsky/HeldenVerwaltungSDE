@@ -4,8 +4,10 @@ import api.AbilityGroup;
 import api.Advantage;
 import api.BaseAttribute;
 import api.CombatTechnique;
+import api.Disadvantage;
 import api.ILanguage;
 import api.ISpecialAbility;
+import api.SpecialAbility;
 import api.Vantage;
 import api.base.Character;
 import api.skills.BaseDescriptors;
@@ -19,13 +21,10 @@ import controle.AddNewCombatSkillDialogResult;
 import controle.AddNewScriptDialogResult;
 import controle.AddSkillDialogResult;
 import controle.AddVantageDialogResult;
-import controle.MasterControleProgramm;
-import database.FeatGroup;
-import database.SpecialSkillGroup;
+import main.MasterControleProgramm;
 import generated.MerkmalMagie;
 import generated.Nachteil;
 import generated.Schrift;
-import generated.Sonderfertigkeit;
 import generated.Vorteil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -225,7 +224,7 @@ public class PaneBuilder {
 		bAddLanguage.addActionListener((ActionEvent e) -> {
 			String language = JOptionPane.showInputDialog(pCommunicatives, "Welche Sprache soll hinzugefügt werden?");
 			if (StringUtils.isNotEmpty(language)) {
-				controleInstance.handleIncreaseLangue(language);
+				controleInstance.handleIncreaseLanguage(language);
 				List<ILanguage> currentLanguages = charakter.getLanguages();
 				pLanguages.setLayout(new GridLayout(currentLanguages.size(), 3));
 				addLanguageRow(pLanguages, language);
@@ -239,6 +238,9 @@ public class PaneBuilder {
 				 .map(ILanguage.class::cast)
 				 .collect(Collectors.toList());
 		DefaultTableModel tableModel = makeTable(makeToList(charakter.getScriptures()));
+		for(ISpecialAbility result:charakter.getScriptures()){
+			tableModel.addRow(new Object[]{result.getName(), result.getCost()});
+		}
 		JTable scripts = new JTable(tableModel);
 		pCommunicatives.add(scripts);
 
@@ -270,7 +272,7 @@ public class PaneBuilder {
 		JButton bIncreaseLanguageLevel = new JButton();
 		bIncreaseLanguageLevel.setText("Steigere Sprache");
 		bIncreaseLanguageLevel.addActionListener((ActionEvent e) -> {
-			controleInstance.handleIncreaseLangue(language.getName());
+			controleInstance.handleIncreaseLanguage(language.getName());
 			fLanguageLevel.setText(language.getLevel() < 4 ? Integer.toString(language.getLevel()) : "M");
 		});
 		pLanguages.add(bIncreaseLanguageLevel);
@@ -324,7 +326,7 @@ public class PaneBuilder {
 			for (Vantage advantege : data) {
 				tableModel.addRow(new String[]{advantege.getName(), Integer.toString(advantege.getCost())});
 			}
-		} else if (data.get(0) instanceof Nachteil) {
+		} else if (data.get(0) instanceof Disadvantage) {
 			for (Vantage disadvantege : data) {
 				tableModel.addRow(new String[]{disadvantege.getName(),
 						Integer.toString(disadvantege.getCost())});
@@ -613,7 +615,7 @@ public class PaneBuilder {
 	private JButton makeIncreaseSkillButton(Increasable skill, JTextField field, JLabel costs) {
 		JButton increaseSkillButton = new JButton("+1");
 		increaseSkillButton.addActionListener(((ActionEvent e) -> {
-			controleInstance.handlencreaseSkill(skill.getName());
+			controleInstance.handleIncreaseSkill(skill.getName());
 			field.setText(Integer.toString(skill.getLevel()));
 			costs.setText(CostCalculator.calcCostForNextLevel(skill) + " AP");
 		}));
@@ -623,7 +625,7 @@ public class PaneBuilder {
 	private JButton buttonAddSkillSpecialisation(JPanel skillTable, JTextField fSpecialisations, String skillName) {
 		JButton buttonAddSkillSpecalisation = new JButton("Fertigkeitsspezialisierung hinzufügen");
 		buttonAddSkillSpecalisation.addActionListener((ActionEvent e) -> {
-			AddFeatDialogResult result = getAddFeatResultDialog(skillTable, false);
+			AddFeatDialogResult result = InputPopups.getAddFeatResultDialog(skillTable, false);
 			if (result != null) {
 				controleInstance.handleNewSkillSpecialisation(result, skillName);
 				String specialisations = charakter.getSpecialAbilities(AbilityGroup.SPECIALISATION)
@@ -651,9 +653,9 @@ public class PaneBuilder {
 
 		JButton buttonAddFeat = new JButton("Sonderfertigkeit hinzufügen");
 		buttonAddFeat.addActionListener((ActionEvent e) -> {
-			AddFeatDialogResult result = getAddFeatResultDialog(featComponent);
+			AddFeatDialogResult result = getAddFeatResultDialog(featComponent, true, group);
 			if (result != null) {
-				ISpecialAbility newFeat = controleInstance.handleNewFeat(result, group);
+				ISpecialAbility newFeat = controleInstance.handleNewFeat(result);
 				featTableComponent.setLayout(new GridLayout(charakter.getSpecialAbilities(group)
 																  .size(), 3));
 				addFeatRow(featTableComponent, newFeat);
@@ -679,11 +681,7 @@ public class PaneBuilder {
 		featTableComponent.add(costField);
 	}
 
-	private AddFeatDialogResult getAddFeatResultDialog(Component parent) {
-		return getAddFeatResultDialog(parent, true);
-	}
-
-	private AddFeatDialogResult getAddFeatResultDialog(Component parent, boolean twoFields) {
+	private AddFeatDialogResult getAddFeatResultDialog(Component parent, boolean twoFields, AbilityGroup group) {
 		JPanel insertFeatPanel = new JPanel(new GridLayout(0, 1));
 
 		JTextField fieldName = new JTextField();
@@ -704,7 +702,7 @@ public class PaneBuilder {
 				if (cost < 1) {
 					throw new NumberFormatException(cost + " is no valid cost value for a feat");
 				}
-				return new AddFeatDialogResult(fieldName.getText(), cost);
+				return new AddFeatDialogResult(fieldName.getText(), cost, group);
 			} catch (NumberFormatException e) {
 				// TODO pop something up the user is an idiot
 			}

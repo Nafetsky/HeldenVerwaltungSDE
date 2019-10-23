@@ -1,8 +1,9 @@
-package utils;
+package main;
 
 import javax.xml.bind.DataBindingException;
 import javax.xml.bind.JAXBException;
 
+import XsdWrapper.MarshallingHelper;
 import controle.AddNewCharakterDialogResult;
 import database.Species;
 import generated.Charakter;
@@ -45,8 +46,7 @@ public class CharakterGenerator {
 	public static Schablone generateNewSchablone(String name){
 		Schablone template;
 		try {
-			template = MarshallingHelper.getInstance()
-					.unmarshallSchablone(EMPTY_TEMPLATE);
+			template = new MarshallingHelper().unmarshallSchablone(EMPTY_TEMPLATE);
 		} catch (JAXBException e) {
 			e.printStackTrace();
 			throw new DataBindingException("something went wrong unmarshalling empty data", e);
@@ -58,8 +58,7 @@ public class CharakterGenerator {
 	private static Charakter makeEmptyCharakter() {
 		Charakter emptyCharakter;
 		try {
-			emptyCharakter = MarshallingHelper.getInstance()
-					.unmarshallCharakter(EMPTY_CHARAKTER );
+			emptyCharakter = new MarshallingHelper().unmarshallCharakter(EMPTY_CHARAKTER );
 			return emptyCharakter;
 		} catch (JAXBException e) {
 			e.printStackTrace();

@@ -1,7 +1,10 @@
 package graphicalUserInterface;
 
+import api.AbilityGroup;
 import api.BaseAttribute;
+import api.Sex;
 import api.skills.ImprovementComplexity;
+import controle.AddFeatDialogResult;
 import controle.AddNewCharakterDialogResult;
 import controle.AddNewCombatSkillDialogResult;
 import controle.AddNewScriptDialogResult;
@@ -166,6 +169,15 @@ public class InputPopups {
 		newCharakterPanel.add(new JLabel(NAME_LABEL));
 		newCharakterPanel.add(fieldName);
 
+		JComboBox<Sex> comboBoxSex = new JComboBox<>();
+
+		for (Sex sex : Sex.values()) {
+			comboBoxSex.addItem(sex);
+		}
+		newCharakterPanel.add(new JLabel("Geschlecht:"));
+		newCharakterPanel.add(comboBoxSex);
+
+
 		JComboBox<String> comboBoxSpecies = new JComboBox<>();
 
 		for (Species acronym : Species.values()) {
@@ -196,13 +208,14 @@ public class InputPopups {
 				JOptionPane.PLAIN_MESSAGE);
 
 		if (result == 0 && StringUtils.isNotEmpty(fieldName.getText())) {
-			AddNewCharakterDialogResult addNewCharakter = new AddNewCharakterDialogResult();
-			addNewCharakter.setName(fieldName.getText());
-			addNewCharakter.setSpecies((String) (comboBoxSpecies.getSelectedItem()));
-			addNewCharakter.setCulture((String) comboBoxCulture.getSelectedItem());
-			addNewCharakter.setProfession((String) comboBoxProfession.getSelectedItem());
 
-			return addNewCharakter;
+			return AddNewCharakterDialogResult.builder()
+											  .name(fieldName.getText())
+											  .species((String) (comboBoxSpecies.getSelectedItem()))
+											  .culture((String) comboBoxCulture.getSelectedItem())
+											  .profession((String) comboBoxProfession.getSelectedItem())
+											  .sex((Sex) comboBoxSex.getSelectedItem())
+											  .build();
 		}
 
 		return null;
@@ -254,4 +267,37 @@ public class InputPopups {
 
 	}
 
+	public static AddFeatDialogResult getAddFeatResultDialog(Component parent, boolean twoFields) {
+		JPanel insertFeatPanel = new JPanel(new GridLayout(0, 1));
+
+		JTextField fieldName = new JTextField();
+		insertFeatPanel.add(fieldName);
+		insertFeatPanel.add(new JLabel("Name:"));
+		JTextField fieldCost = new JTextField();
+		if (twoFields) {
+			fieldCost.setToolTipText("Die AP Kosten der neuen Sonderfertigkeit (als ganze Zahl");
+			insertFeatPanel.add(new JLabel("Kosten:"));
+			insertFeatPanel.add(fieldCost);
+		}
+
+		JComboBox<AbilityGroup> comboBoxAbilityGroup = new JComboBox<>();
+		for (AbilityGroup group : AbilityGroup.values()) {
+			comboBoxAbilityGroup.addItem(group);
+		}
+
+		int result = JOptionPane.showConfirmDialog(parent, insertFeatPanel, "Test", JOptionPane.OK_CANCEL_OPTION,
+				JOptionPane.PLAIN_MESSAGE);
+		if (result == 0 && StringUtils.isNotEmpty(fieldName.getText())) {
+			try {
+				int cost = twoFields ? Integer.parseInt(fieldCost.getText()) : 1;
+				if (cost < 1) {
+					throw new NumberFormatException(cost + " is no valid cost value for a feat");
+				}
+				return new AddFeatDialogResult(fieldName.getText(), cost, (AbilityGroup) comboBoxAbilityGroup.getSelectedItem());
+			} catch (NumberFormatException e) {
+				// TODO pop something up the user is an idiot
+			}
+		}
+		return null;
+	}
 }

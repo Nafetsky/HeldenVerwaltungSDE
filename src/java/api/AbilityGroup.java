@@ -6,6 +6,7 @@ public enum AbilityGroup {
 	MAGICAL,
 	KARMA,
 	COMBAT,
-	SPECIALISATION
+	SPECIALISATION,
+	SCRIPTURE
 
 }

@@ -238,7 +238,7 @@ class EventParserTest {
 		ISpecialAbility specialAbility = learnedAbilities.get(0);
 		assertThat(specialAbility.getName(), is(name));
 		assertThat(specialAbility.getCost(), is(4));
-		assertThat(specialAbility.getGroup(), is(AbilityGroup.MUNDANE));
+		assertThat(specialAbility.getGroup(), is(AbilityGroup.SCRIPTURE));
 	}
 
 

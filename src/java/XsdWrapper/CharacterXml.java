@@ -11,6 +11,7 @@ import api.IAttributes;
 import api.ILanguage;
 import api.IMetaData;
 import api.ISpecialAbility;
+import api.Language;
 import api.Vantage;
 import api.base.Character;
 import api.history.AttributeChange;
@@ -24,7 +25,11 @@ import data.Metadata;
 import generated.Charakter;
 import generated.Eigenschaftswerte;
 import generated.Fertigkeit;
+import generated.Nachteil;
+import generated.Schrift;
 import generated.Sonderfertigkeit;
+import generated.Sprache;
+import generated.Vorteil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
@@ -244,6 +249,7 @@ public class CharacterXml implements Character {
 	@Override
 	public void increase(Event event) {
 		increaseAbilities(event);
+		getNewVantages(event);
 		applyBaseChanges(event);
 		learnNewSkills(event);
 		learnNewCombatTechniques(event);
@@ -268,6 +274,26 @@ public class CharacterXml implements Character {
 		}
 		currentChanges.getBaseValueChanges()
 					  .merge(baseValueChanges);
+	}
+
+	private void getNewVantages(Event event) {
+		List<Vorteil> advantages = event.getAdvantages()
+									 .stream()
+									 .map(translator::translate)
+									 .collect(Collectors.toList());
+		wrapped.getVorteile()
+			   .getVorteil()
+			   .addAll(advantages);
+
+		List<Nachteil> disadvantages = event.getDisadvantages()
+									  .stream()
+									  .map(translator::translate)
+									  .collect(Collectors.toList());
+		wrapped.getNachteile()
+			   .getNachteil()
+			   .addAll(disadvantages);
+
+
 	}
 
 	private void increaseAbilities(Event event) {
@@ -419,12 +445,49 @@ public class CharacterXml implements Character {
 		List<Sonderfertigkeit> sonderfertigkeiten = event.getAbilities()
 														 .stream()
 														 .filter(sA -> sA.getGroup() != AbilityGroup.SPECIALISATION)
+														 .filter(sA -> sA.getGroup() != AbilityGroup.SCRIPTURE)
+														 .filter(sA -> !(sA instanceof Language))
 														 .map(translator::translate)
 														 .collect(Collectors.toList());
 		wrapped.getSonderfertigkeiten()
 			   .getSonderfertigkeit()
 			   .addAll(sonderfertigkeiten);
 
+		List<Sprache> languages = event.getAbilities()
+									   .stream()
+									   .filter(sA -> sA instanceof ILanguage)
+									   .map(sA -> (ILanguage) sA)
+									   .map(translator::translateLanguage)
+									   .collect(Collectors.toList());
+		increaseLanguages(languages);
+
+		List<Schrift> scriptures = event.getAbilities()
+										.stream()
+										.filter(sA -> sA.getGroup() == AbilityGroup.SCRIPTURE)
+										.map(translator::translateScripture)
+										.collect(Collectors.toList());
+		wrapped.getKommunikatives()
+			   .getSchriften()
+			   .addAll(scriptures);
+
+
+	}
+
+	private void increaseLanguages(List<Sprache> languagesToAdd) {
+		List<Sprache> sprachen = wrapped.getKommunikatives()
+										.getSprachen();
+		for (Sprache languageToAdd : languagesToAdd) {
+			Optional<Sprache> languageToIncrease = sprachen.stream()
+														   .filter(l -> StringUtils.equals(l.getName(), languageToAdd.getName()))
+														   .findFirst();
+			if (languageToIncrease.isPresent()) {
+				Sprache match = languageToIncrease.get();
+				int value = match.getStufe() + languageToAdd.getStufe();
+				match.setStufe(Math.min(value, 4));
+			} else {
+				sprachen.add(languageToAdd);
+			}
+		}
 	}
 
 	private SkillChange findOrBuildSkillChange(String name) {
