@@ -27,6 +27,7 @@ import generated.Nachteil;
 import generated.Schrift;
 import generated.Vorteil;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import utility.CostCalculator;
 
@@ -58,10 +59,10 @@ import java.util.stream.Collectors;
 
 public class PaneBuilder {
 
-	Character charakter;
-	MasterControleProgramm controleInstance;
-	List<String> charakterNames;
-	TreeGenerator treeGenerator;
+	private Character charakter;
+	private MasterControleProgramm controleInstance;
+	private List<String> charakterNames;
+	private TreeGenerator treeGenerator;
 
 	public PaneBuilder(Character character, MasterControleProgramm controleInstance,
 					   List<String> charakterNames) {
@@ -238,7 +239,7 @@ public class PaneBuilder {
 				 .map(ILanguage.class::cast)
 				 .collect(Collectors.toList());
 		DefaultTableModel tableModel = makeTable(makeToList(charakter.getScriptures()));
-		for(ISpecialAbility result:charakter.getScriptures()){
+		for (ISpecialAbility result : charakter.getScriptures()) {
 			tableModel.addRow(new Object[]{result.getName(), result.getCost()});
 		}
 		JTable scripts = new JTable(tableModel);
@@ -288,7 +289,7 @@ public class PaneBuilder {
 	}
 
 	private List<Object> makeToList(List<?> list) {
-		List<Object> resultList = new ArrayList<Object>();
+		List<Object> resultList = new ArrayList<>();
 		for (Object obj : list) {
 			resultList.add(obj);
 		}
@@ -405,11 +406,16 @@ public class PaneBuilder {
 			JLabel labelSkillGroup = new JLabel(merkmal.name());
 			labelSkillGroup.setHorizontalAlignment(SwingConstants.CENTER);
 			baseSkillPanel.add(labelSkillGroup);
-			List<Skill> skills = Arrays.stream(BaseSkills.values())
-									   .filter(skill -> skill.getMerkmal()
-															 .equals(merkmal))
-									   .map(BaseSkills::getSkill)
-									   .collect(Collectors.toList());
+//			List<Skill> skills = Arrays.stream(BaseSkills.values())
+//									   .filter(skill -> skill.getMerkmal()
+//															 .equals(merkmal))
+//									   .map(BaseSkills::getSkill)
+//									   .collect(Collectors.toList());
+			List<Skill> skills = charakter.getSkills(SkillGroup.BASE)
+										  .stream()
+										  .filter(skill -> ArrayUtils.contains(skill.getDescriptors(), merkmal))
+										  .sorted((left, right) -> String.CASE_INSENSITIVE_ORDER.compare(left.getName(), right.getName()))
+										  .collect(Collectors.toList());
 			Component baseSkillsByCategory = makeSkillTable(skills);
 			baseSkillPanel.add(baseSkillsByCategory);
 		}
@@ -601,9 +607,9 @@ public class PaneBuilder {
 		JTextField fSpecialisations = new JTextField();
 		fSpecialisations.setEnabled(false);
 		String specialisations = charakter.getSpecialAbilities(AbilityGroup.SPECIALISATION)
-								  .stream()
-								  .map(ISpecialAbility::getName)
-								  .collect(Collectors.joining(", "));
+										  .stream()
+										  .map(ISpecialAbility::getName)
+										  .collect(Collectors.joining(", "));
 		fSpecialisations.setText(specialisations);
 
 		skillTable.add(fSpecialisations);
@@ -629,9 +635,9 @@ public class PaneBuilder {
 			if (result != null) {
 				controleInstance.handleNewSkillSpecialisation(result, skillName);
 				String specialisations = charakter.getSpecialAbilities(AbilityGroup.SPECIALISATION)
-										  .stream()
-										  .map(ISpecialAbility::getName)
-										  .collect(Collectors.joining(", "));
+												  .stream()
+												  .map(ISpecialAbility::getName)
+												  .collect(Collectors.joining(", "));
 				fSpecialisations.setText(specialisations);
 			}
 		});
@@ -657,7 +663,7 @@ public class PaneBuilder {
 			if (result != null) {
 				ISpecialAbility newFeat = controleInstance.handleNewFeat(result);
 				featTableComponent.setLayout(new GridLayout(charakter.getSpecialAbilities(group)
-																  .size(), 3));
+																	 .size(), 3));
 				addFeatRow(featTableComponent, newFeat);
 				tabbedPane.repaint();
 			}

@@ -506,6 +506,6 @@ public class MasterControleProgramm {
 	}
 
 	public void handleIncreaseAttribute(BaseAttribute abilityAbstract) {
-		activeCharacter.getSkillLevler(abilityAbstract);
+		activeCharacter.getSkillLevler(abilityAbstract).level();
 	}
 }
