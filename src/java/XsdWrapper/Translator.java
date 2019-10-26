@@ -4,11 +4,13 @@ import api.AbilityGroup;
 import api.Advantage;
 import api.BaseValueChanges;
 import api.CombatTechnique;
+import api.DescribesSkill;
 import api.ILanguage;
 import api.ISpecialAbility;
 import api.history.AttributeChange;
 import api.BaseAttribute;
 import api.skills.BaseDescriptors;
+import api.skills.BaseSkills;
 import api.skills.Descriptor;
 import api.Disadvantage;
 import api.skills.ImprovementComplexity;
@@ -19,6 +21,7 @@ import api.skills.Skill;
 import api.history.SkillChange;
 import api.skills.SkillGroup;
 import api.SpecialAbility;
+import api.skills.SkillSpecialisation;
 import database.CostCategory;
 import generated.Attributskürzel;
 import generated.Basistalent;
@@ -37,6 +40,7 @@ import generated.Sonderfertigkeit;
 import generated.Spezies;
 import generated.Sprache;
 import generated.Steigerungskategorie;
+import generated.Talentspezialisierung;
 import generated.Vorteil;
 
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -45,7 +49,10 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -179,6 +186,7 @@ public class Translator {
 
 	public List<ISpecialAbility> translateToSpecialAbility(List<Sonderfertigkeit> sonderfertigkeiten) {
 		return sonderfertigkeiten.stream()
+								 .filter(Objects::nonNull)
 								 .map(this::translate)
 								 .collect(Collectors.toList());
 	}
@@ -445,7 +453,7 @@ public class Translator {
 	public Schrift translateScripture(ISpecialAbility scripture) {
 		Schrift schrift = factory.createSchrift();
 		schrift.setName(scripture.getName());
-		schrift.setKomplexität(Steigerungskategorie.values()[scripture.getCost()/2 - 1]);
+		schrift.setKomplexität(Steigerungskategorie.values()[scripture.getCost() / 2 - 1]);
 		return schrift;
 	}
 
@@ -461,5 +469,33 @@ public class Translator {
 		nachteil.setName(disadvantage.getName());
 		nachteil.setKosten(disadvantage.getCost());
 		return nachteil;
+	}
+
+	public Talentspezialisierung translateToSpecialisation(ISpecialAbility spec) {
+		Talentspezialisierung talentspezialisierung = factory.createTalentspezialisierung();
+		talentspezialisierung.setName(spec.getName());
+		String specialisedSkill = spec.getDescriptors()
+									  .stream()
+									  .filter(descriptor -> descriptor instanceof DescribesSkill)
+									  .map(descriptor -> ((DescribesSkill) descriptor).getSkillName())
+									  .findFirst()
+									  .orElse("misses Description");
+		talentspezialisierung.setFertigkeit(specialisedSkill);
+		return talentspezialisierung;
+	}
+
+	public List<ISpecialAbility> translate(List<Talentspezialisierung> talentspezialisierungs) {
+		List<ISpecialAbility> result = new ArrayList<>();
+		Map<String, Integer> counter = new HashMap<>();
+		for (Talentspezialisierung talentspezialisierung : talentspezialisierungs) {
+			String skillName = talentspezialisierung.getFertigkeit();
+			int factor = BaseSkills.getSkill(skillName)
+								   .getCategory()
+								   .getFactor();
+			Integer multiplier = counter.merge(skillName, 1, (a, b) -> a + 1);
+			result.add(new SkillSpecialisation(skillName, talentspezialisierung.getName(), multiplier * factor));
+		}
+
+		return result;
 	}
 }

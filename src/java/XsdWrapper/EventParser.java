@@ -1,5 +1,6 @@
 package XsdWrapper;
 
+import api.AbilityGroup;
 import api.Event;
 import api.ISpecialAbility;
 import api.Language;
@@ -11,12 +12,14 @@ import generated.Fertigkeitsmodifikation;
 import generated.Kommunikatives;
 import generated.ObjectFactory;
 import generated.Sonderfertigkeit;
+import generated.Talentspezialisierung;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class EventParser {
@@ -49,6 +52,11 @@ public class EventParser {
 
 	private List<ISpecialAbility> collectAllLearnedSpecialAbilities(Ereignis ereignis) {
 		List<ISpecialAbility> specialAbilities = translator.translateToSpecialAbility(ereignis.getSonderfertigkeitshinzugewinn());
+
+		List<ISpecialAbility> specialisations = translator.translate(ereignis.getTalentspezialisierungshinzugewinn());
+		specialAbilities.addAll(specialisations);
+
+
 		Kommunikatives kommunikatives = ereignis.getKommunikatives();
 		if (null == kommunikatives) {
 			return specialAbilities;
@@ -68,8 +76,8 @@ public class EventParser {
 
 	private LocalDateTime parseDate(Ereignis ereignis) {
 		XMLGregorianCalendar datum = ereignis.getDatum();
-		int hour = datum.getHour() < 0 ? 0 : datum.getHour();
-		int minute = datum.getMinute() < 0 ? 0 : datum.getMinute();
+		int hour = Math.max(datum.getHour(), 0);
+		int minute = Math.max(datum.getMinute(), 0);
 		return LocalDateTime.of(datum.getYear(), datum.getMonth(), datum.getDay(), hour, minute);
 	}
 
@@ -85,26 +93,39 @@ public class EventParser {
 																 .map(translator::translate)
 																 .collect(Collectors.toList());
 		insertBaseChanges(eventToSave, ereignis);
-		ereignis.getEigenschaftssteigerung().addAll(abilityChanges);
+		ereignis.getEigenschaftssteigerung()
+				.addAll(abilityChanges);
 		List<Fertigkeitsmodifikation> skillChangesWithNewSkills = buildSkillChangesIncludingNewSkills(eventToSave);
 		ereignis.getFertigkeitsänderung()
 				.addAll(skillChangesWithNewSkills);
 
 		Collection<Sonderfertigkeit> sonderfertigkeiten = eventToSave.getAbilities()
 																	 .stream()
+																	 .filter(Objects::nonNull)
 																	 .map(translator::translate)
 																	 .collect(Collectors.toList());
 		ereignis.getSonderfertigkeitshinzugewinn()
 				.addAll(sonderfertigkeiten);
+		List<Talentspezialisierung> specialisations = eventToSave.getAbilities()
+																 .stream()
+																 .filter(Objects::nonNull)
+																 .filter(feat -> feat.getGroup() == AbilityGroup.SPECIALISATION)
+																 .map(translator::translateToSpecialisation)
+																 .collect(Collectors.toList());
+		ereignis.getTalentspezialisierungshinzugewinn()
+				.addAll(specialisations);
 
 		return ereignis;
 
 	}
 
 	private void insertBaseChanges(Event eventToSave, Ereignis ereignis) {
-		ereignis.setLePGekauft(eventToSave.getBaseValueChanges().getBoughtHitPoints());
-		ereignis.setAsPGekauft(eventToSave.getBaseValueChanges().getBoughtAstralPoints());
-		ereignis.setKaPGekauft(eventToSave.getBaseValueChanges().getBoughtKarmaPoints());
+		ereignis.setLePGekauft(eventToSave.getBaseValueChanges()
+										  .getBoughtHitPoints());
+		ereignis.setAsPGekauft(eventToSave.getBaseValueChanges()
+										  .getBoughtAstralPoints());
+		ereignis.setKaPGekauft(eventToSave.getBaseValueChanges()
+										  .getBoughtKarmaPoints());
 	}
 
 	private List<Fertigkeitsmodifikation> buildSkillChangesIncludingNewSkills(Event eventToSave) {

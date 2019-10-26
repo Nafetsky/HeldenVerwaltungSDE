@@ -6,6 +6,7 @@ import api.BaseAttribute;
 import api.BaseValueChanges;
 import api.CombatTechnique;
 import api.CombatTechniqueImpl;
+import api.DescribesSkill;
 import api.Event;
 import api.IAttributes;
 import api.ILanguage;
@@ -33,7 +34,9 @@ import utility.TestPreparer;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -108,10 +111,10 @@ class CharacterXmlTest {
 		barundar.increase(event);
 
 		Vantage wizard = barundar.getAdvantages()
-								   .stream()
-								   .filter(vantage -> StringUtils.equals(vantage.getName(), WIZARD))
-								   .findFirst()
-								   .get();
+								 .stream()
+								 .filter(vantage -> StringUtils.equals(vantage.getName(), WIZARD))
+								 .findFirst()
+								 .get();
 		assertThat(wizard.getCost(), is(25));
 	}
 
@@ -487,6 +490,34 @@ class CharacterXmlTest {
 		assertThat(iSpecialAbility.getName(), is("Freiklettern"));
 		assertThat(iSpecialAbility.getCost(), is(8));
 		assertThat(iSpecialAbility.getGroup(), is(AbilityGroup.MUNDANE));
+	}
+
+
+	@Test
+	void testLearnSpecialisation() {
+		final String name = "Pferde";
+		ISpecialAbility specialisation = SpecialAbility.builder()
+													   .name(name)
+													   .group(AbilityGroup.SPECIALISATION)
+													   .descriptors(Collections.singletonList(new DescribesSkill("Reiten")))
+													   .cost(2)
+													   .build();
+		Event build = Event.builder()
+						   .abilities(Collections.singletonList(specialisation))
+						   .build();
+
+		barundar.increase(build);
+		barundar.save("Learn Stuff");
+
+		List<Event> history = barundar.getHistory();
+		assertThat(history, hasSize(2));
+		Event event = history.get(history.size() - 1);
+		assertThat(event.getAbilities(), hasSize(1));
+		ISpecialAbility iSpecialAbility = event.getAbilities()
+											   .get(0);
+		assertThat(iSpecialAbility.getName(), is(name));
+		assertThat(iSpecialAbility.getCost(), is(2));
+		assertThat(iSpecialAbility.getGroup(), is(AbilityGroup.SPECIALISATION));
 	}
 
 	@Test

@@ -29,6 +29,7 @@ import generated.Nachteil;
 import generated.Schrift;
 import generated.Sonderfertigkeit;
 import generated.Sprache;
+import generated.Talentspezialisierung;
 import generated.Vorteil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -452,6 +453,16 @@ public class CharacterXml implements Character {
 		wrapped.getSonderfertigkeiten()
 			   .getSonderfertigkeit()
 			   .addAll(sonderfertigkeiten);
+
+		List<Talentspezialisierung> specs = event.getAbilities()
+												 .stream()
+												 .filter(sA -> sA.getGroup() == AbilityGroup.SPECIALISATION)
+												 .map(translator::translateToSpecialisation)
+												 .collect(Collectors.toList());
+		wrapped.getSonderfertigkeiten()
+			   .getTalentspezialisierung()
+			   .addAll(specs);
+
 
 		List<Sprache> languages = event.getAbilities()
 									   .stream()

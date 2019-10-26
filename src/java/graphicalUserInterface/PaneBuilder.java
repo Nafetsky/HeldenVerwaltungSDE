@@ -4,6 +4,7 @@ import api.AbilityGroup;
 import api.Advantage;
 import api.BaseAttribute;
 import api.CombatTechnique;
+import api.DescribesSkill;
 import api.Disadvantage;
 import api.ILanguage;
 import api.ISpecialAbility;
@@ -608,6 +609,7 @@ public class PaneBuilder {
 		fSpecialisations.setEnabled(false);
 		String specialisations = charakter.getSpecialAbilities(AbilityGroup.SPECIALISATION)
 										  .stream()
+										  .filter(spec -> toSkill(spec, skill))
 										  .map(ISpecialAbility::getName)
 										  .collect(Collectors.joining(", "));
 		fSpecialisations.setText(specialisations);
@@ -616,6 +618,13 @@ public class PaneBuilder {
 		JButton buttonAddSkillSpecalisation = buttonAddSkillSpecialisation(skillTable, fSpecialisations,
 				skill.getName());
 		skillTable.add(buttonAddSkillSpecalisation);
+	}
+
+	private boolean toSkill(ISpecialAbility spec, Skill skill) {
+		return spec.getDescriptors()
+			.stream()
+			.filter(descriptor -> descriptor instanceof DescribesSkill)
+			.anyMatch(descriptor -> StringUtils.equals(((DescribesSkill) descriptor).getSkillName(), skill.getName()));
 	}
 
 	private JButton makeIncreaseSkillButton(Increasable skill, JTextField field, JLabel costs) {
