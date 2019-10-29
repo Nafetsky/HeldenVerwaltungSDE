@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 
 /**
@@ -213,18 +214,21 @@ public class MasterControleProgramm {
 		return feat;
 	}
 
-	public Skill handleNewSkill(AddSkillDialogResult result) {
+	public Optional<Skill> handleNewSkill(AddSkillDialogResult result) {
 		if (result.isComplete()) {
 			DescriptorTranslator translator = new DescriptorTranslator();
 			Descriptor[] descriptors = translator.translateToDescriptors(Arrays.asList(result.getDescriptors()));
-			SkillImpl o = new SkillImpl(result.getName(), result.getGroup(), descriptors, result.getCostCategory());
+			SkillImpl o = new SkillImpl(result.getName(), result.getGroup(), result.getAbilities(), descriptors, result.getCostCategory());
 			Event build = Event.builder()
 							   .learnedSkills(Collections.singletonList(o))
 							   .build();
 			activeCharacter.increase(build);
-			return o;
+			return activeCharacter.getSkills()
+						   .stream()
+						   .filter(skill -> StringUtils.equals(skill.getName(), result.getName()))
+						   .findFirst();
 		}
-		return null;
+		return Optional.empty();
 	}
 
 	public CombatTechnique handleNewCombatSkill(AddNewCombatSkillDialogResult result) {

@@ -521,21 +521,42 @@ public class PaneBuilder {
 		skillPane.add(skillTableFromXml);
 		JButton addNewSkillButton = new JButton(addButtonText);
 		addNewSkillButton.addActionListener((ActionEvent e) -> {
-			AddSkillDialogResult toAddSkillResultDialog;
+			Optional<AddSkillDialogResult> userInput;
 			if (skillGroup == SkillGroup.CEREMONY || skillGroup == SkillGroup.LITURGICAL_CHANT) {
-				toAddSkillResultDialog = InputPopups.getAddSkillResultDialog(skillPane, "Tradition");
+				userInput = InputPopups.getAddSkillResultDialog(skillPane, "Tradition");
 			} else {
-				toAddSkillResultDialog = InputPopups.getAddSkillResultDialog(skillPane,
+				userInput = InputPopups.getAddSkillResultDialog(skillPane,
 						getNamesOfMagicAttributeValues(), "Repräsentation");
 			}
+			if(!userInput.isPresent()){
+				return;
+			}
+			AddSkillDialogResult toAddSkillResultDialog = userInput.get();
 
 			toAddSkillResultDialog.setGroup(skillGroup);
-			Skill skill = controleInstance.handleNewSkill(toAddSkillResultDialog);
-			((JPanel) skillTableFromXml).setLayout(new GridLayout(skills.size(), 7));
-			fillSingleSkillRow((JPanel) skillTableFromXml, true, skill);
+			Optional<Skill> skill = controleInstance.handleNewSkill(toAddSkillResultDialog);
+			if(!skill.isPresent()){
+				return;
+			}
+			((JPanel) skillTableFromXml).setLayout(new GridLayout(charakter.getSkills(skillGroup).size(), getNumberOfColumn(skillGroup)));
+			fillSingleSkillRow((JPanel) skillTableFromXml, true, skill.get());
 			tabbedPane.repaint();
 		});
 		skillPane.add(addNewSkillButton);
+	}
+
+	private int getNumberOfColumn(SkillGroup skillGroup) {
+		switch(skillGroup){
+			case SPELL:
+			case RITUAL:
+			case LITURGICAL_CHANT:
+			case CEREMONY:
+				return 8;
+			case BASE:
+			default:
+				return 7;
+
+		}
 	}
 
 	private String[] getNamesOfMagicAttributeValues() {
@@ -567,10 +588,9 @@ public class PaneBuilder {
 		return skillTable;
 	}
 
-	private void fillSingleSkillRow(JPanel skillTable, boolean supernaturalSkills, Skill skill) {
+	private void fillSingleSkillRow(JPanel skillTable, boolean isSupernaturalSkill, Skill skill) {
 		skillTable.add(new JLabel(skill.getName()));
-		// physicalSkills.add(abstractSkill.getAttribut1+abstractSkill.getAttribut2abstractSkill.getAttribut3);
-		if (supernaturalSkills) {
+		if (isSupernaturalSkill) {
 			Optional<BaseAttribute[]> attributes = skill.getAttributes();
 			String labelText = attributes.map(Arrays::toString)
 										 .orElse("Attribute nicht gesetzt");

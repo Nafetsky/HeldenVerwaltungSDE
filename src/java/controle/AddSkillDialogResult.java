@@ -30,7 +30,7 @@ public class AddSkillDialogResult implements AddDialogResult {
 	}
 
 	public void setGroup(SkillGroup group) {
-		if (group != null) {
+		if (this.group != null) {
 			throw new UnsupportedOperationException("Can't set group, if it is already set");
 		}
 		this.group = group;

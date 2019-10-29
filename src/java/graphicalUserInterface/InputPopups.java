@@ -36,11 +36,11 @@ public class InputPopups {
 	}
 
 
-	public static AddSkillDialogResult getAddSkillResultDialog(Component parent, String representationTradition) {
+	public static Optional<AddSkillDialogResult> getAddSkillResultDialog(Component parent, String representationTradition) {
 		return getAddSkillResultDialog(parent, null, representationTradition);
 	}
 
-	public static AddSkillDialogResult getAddSkillResultDialog(Component parent, Object[] attributesToChoose,
+	public static Optional<AddSkillDialogResult> getAddSkillResultDialog(Component parent, Object[] attributesToChoose,
 															   String representationTradition) {
 		JPanel insertSkillPanel = new JPanel(new GridLayout(0, 2));
 
@@ -48,11 +48,11 @@ public class InputPopups {
 		insertSkillPanel.add(new JLabel(NAME_LABEL));
 		insertSkillPanel.add(fieldName);
 
-		JComboBox<Attributskürzel> ability1 = new JComboBox<>();
-		JComboBox<Attributskürzel> ability2 = new JComboBox<>();
-		JComboBox<Attributskürzel> ability3 = new JComboBox<>();
+		JComboBox<BaseAttribute> ability1 = new JComboBox<>();
+		JComboBox<BaseAttribute> ability2 = new JComboBox<>();
+		JComboBox<BaseAttribute> ability3 = new JComboBox<>();
 
-		for (Attributskürzel acronym : Attributskürzel.values()) {
+		for (BaseAttribute acronym : BaseAttribute.values()) {
 			ability1.addItem(acronym);
 			ability2.addItem(acronym);
 			ability3.addItem(acronym);
@@ -99,10 +99,10 @@ public class InputPopups {
 			attributesToReturn[1] = attributesToChoose == null ? ((JTextField) attribute).getText()
 					: ((JComboBox<?>) attribute).getSelectedItem()
 												.toString();
-			return new AddSkillDialogResult(fieldName.getText(), (ImprovementComplexity) costCategory.getSelectedItem(),
-					abilities, attributesToReturn);
+			return Optional.of(new AddSkillDialogResult(fieldName.getText(), (ImprovementComplexity) costCategory.getSelectedItem(),
+					abilities, attributesToReturn));
 		}
-		return null;
+		return Optional.empty();
 	}
 
 	public static Optional<AddNewCombatSkillDialogResult> getAddCombatSkillResultDialog(Component parent) {
