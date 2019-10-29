@@ -334,6 +334,8 @@ public class Translator {
 				return buildCombatSpecialAbility(specialAbilityToParse);
 			case MUNDANE:
 				return buildMundaneSpecialAbility(specialAbilityToParse);
+			case MAGICAL:
+				return buildMagicalSpecialAbility(specialAbilityToParse);
 		}
 		return null;
 	}
@@ -351,6 +353,14 @@ public class Translator {
 		sonderfertigkeit.setName(specialAbilityToParse.getName());
 		sonderfertigkeit.setKosten(specialAbilityToParse.getCost());
 		sonderfertigkeit.setKategorie(SpecialAbilityKeys.MUNDANE.getName());
+		return sonderfertigkeit;
+	}
+
+	private Sonderfertigkeit buildMagicalSpecialAbility(ISpecialAbility specialAbilityToParse) {
+		Sonderfertigkeit sonderfertigkeit = factory.createSonderfertigkeit();
+		sonderfertigkeit.setName(specialAbilityToParse.getName());
+		sonderfertigkeit.setKosten(specialAbilityToParse.getCost());
+		sonderfertigkeit.setKategorie(SpecialAbilityKeys.MAGICAL.getName());
 		return sonderfertigkeit;
 	}
 

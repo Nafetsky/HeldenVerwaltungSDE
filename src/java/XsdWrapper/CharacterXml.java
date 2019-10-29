@@ -447,7 +447,7 @@ public class CharacterXml implements Character {
 														 .stream()
 														 .filter(sA -> sA.getGroup() != AbilityGroup.SPECIALISATION)
 														 .filter(sA -> sA.getGroup() != AbilityGroup.SCRIPTURE)
-														 .filter(sA -> !(sA instanceof Language))
+														 .filter(sA -> sA.getGroup() != AbilityGroup.LANGUAGE)
 														 .map(translator::translate)
 														 .collect(Collectors.toList());
 		wrapped.getSonderfertigkeiten()

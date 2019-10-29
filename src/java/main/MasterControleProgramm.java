@@ -193,6 +193,7 @@ public class MasterControleProgramm {
 										  .name(result.getName())
 										  .descriptors(Collections.singletonList(new DescribesSkill(skillName)))
 										  .cost(result.getCost())
+										  .group(AbilityGroup.SPECIALISATION)
 										  .build();
 		List<ISpecialAbility> abilities = Collections.singletonList(o);
 		Event event = Event.builder()
