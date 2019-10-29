@@ -8,11 +8,9 @@ import api.DescribesSkill;
 import api.Disadvantage;
 import api.ILanguage;
 import api.ISpecialAbility;
-import api.SpecialAbility;
 import api.Vantage;
 import api.base.Character;
 import api.skills.BaseDescriptors;
-import api.skills.BaseSkills;
 import api.skills.Increasable;
 import api.skills.Skill;
 import api.skills.SkillGroup;
@@ -68,7 +66,6 @@ public class PaneBuilder {
 	public PaneBuilder(Character character, MasterControleProgramm controleInstance,
 					   List<String> charakterNames) {
 		this.charakter = character;
-//		finder = new SkillFinder(character);
 		this.controleInstance = controleInstance;
 		this.charakterNames = charakterNames;
 		treeGenerator = new TreeGenerator();
@@ -523,17 +520,18 @@ public class PaneBuilder {
 		addNewSkillButton.addActionListener((ActionEvent e) -> {
 			Optional<AddSkillDialogResult> userInput;
 			userInput = InputPopups.getAddSkillResultDialog(skillPane, "Tradition");
-			if(!userInput.isPresent()){
+			if (!userInput.isPresent()) {
 				return;
 			}
 			AddSkillDialogResult toAddSkillResultDialog = userInput.get();
 
 			toAddSkillResultDialog.setGroup(skillGroup);
 			Optional<Skill> skill = controleInstance.handleNewSkill(toAddSkillResultDialog);
-			if(!skill.isPresent()){
+			if (!skill.isPresent()) {
 				return;
 			}
-			((JPanel) skillTableFromXml).setLayout(new GridLayout(charakter.getSkills(skillGroup).size(), getNumberOfColumn(skillGroup)));
+			((JPanel) skillTableFromXml).setLayout(new GridLayout(charakter.getSkills(skillGroup)
+																		   .size(), getNumberOfColumn(skillGroup)));
 			fillSingleSkillRow((JPanel) skillTableFromXml, true, skill.get());
 			tabbedPane.repaint();
 		});
@@ -541,7 +539,7 @@ public class PaneBuilder {
 	}
 
 	private int getNumberOfColumn(SkillGroup skillGroup) {
-		switch(skillGroup){
+		switch (skillGroup) {
 			case SPELL:
 			case RITUAL:
 			case LITURGICAL_CHANT:
@@ -573,8 +571,8 @@ public class PaneBuilder {
 					SkillGroup.LITURGICAL_CHANT, SkillGroup.CEREMONY};
 			boolean supernaturalSkills = (Arrays.asList(supernatural)
 												.contains(skillGroup));
-			int numberOfColums = supernaturalSkills ? 8 : 7;
-			skillTable.setLayout(new GridLayout(skills.size(), numberOfColums));
+			int numberOfColumns = supernaturalSkills ? 8 : 7;
+			skillTable.setLayout(new GridLayout(skills.size(), numberOfColumns));
 			for (Skill skill : skills) {
 				fillSingleSkillRow(skillTable, supernaturalSkills, skill);
 			}
@@ -609,7 +607,7 @@ public class PaneBuilder {
 		fSpecialisations.setEnabled(false);
 		String specialisations = charakter.getSpecialAbilities(AbilityGroup.SPECIALISATION)
 										  .stream()
-										  .filter(spec -> toSkill(spec, skill))
+										  .filter(spec -> appliesToSkill(spec, skill))
 										  .map(ISpecialAbility::getName)
 										  .collect(Collectors.joining(", "));
 		fSpecialisations.setText(specialisations);
@@ -620,11 +618,16 @@ public class PaneBuilder {
 		skillTable.add(buttonAddSkillSpecalisation);
 	}
 
-	private boolean toSkill(ISpecialAbility spec, Skill skill) {
+	private boolean appliesToSkill(ISpecialAbility spec, Skill skill) {
+		String name = skill.getName();
+		return appliesToSkill(spec, name);
+	}
+
+	private boolean appliesToSkill(ISpecialAbility spec, String name) {
 		return spec.getDescriptors()
 				   .stream()
 				   .filter(descriptor -> descriptor instanceof DescribesSkill)
-				   .anyMatch(descriptor -> StringUtils.equals(((DescribesSkill) descriptor).getSkillName(), skill.getName()));
+				   .anyMatch(descriptor -> StringUtils.equals(((DescribesSkill) descriptor).getSkillName(), name));
 	}
 
 	private JButton makeIncreaseSkillButton(Increasable skill, JTextField field, JLabel costs) {
@@ -645,6 +648,7 @@ public class PaneBuilder {
 				controleInstance.handleNewSkillSpecialisation(result, skillName);
 				String specialisations = charakter.getSpecialAbilities(AbilityGroup.SPECIALISATION)
 												  .stream()
+												  .filter(sA -> appliesToSkill(sA, skillName))
 												  .map(ISpecialAbility::getName)
 												  .collect(Collectors.joining(", "));
 				fSpecialisations.setText(specialisations);
