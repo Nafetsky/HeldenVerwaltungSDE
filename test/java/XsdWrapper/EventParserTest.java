@@ -146,7 +146,7 @@ class EventParserTest {
 		skill.setAttribut3(Attributskürzel.IN);
 		skill.setKategorie(Fertigkeitskategorie.ZAUBER);
 		List<String> merkmals = skill.getMerkmal();
-		merkmals.add("REPRÄSENTATION_MAGIER");
+		merkmals.add("TRADITION_MAGIER");
 		merkmals.add("Elementar");
 		skillChange.setNeueFertigkeit(skill);
 		ereignis.getFertigkeitsänderung().add(skillChange);

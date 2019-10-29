@@ -13,11 +13,11 @@ import java.util.stream.Collectors;
 
 public class DescriptorTranslator {
 
-	public static final String PREFIX = "REPRÄSENTATION_";
+	public static final String PREFIX = "TRADITION_";
 	public static final String GUILD_MAGE_XSD_NAME = "MAGIER";
 	public static final String ELF_XSD_NAME = "ELF";
 	public static final String WITCH_XSD_NAME = "HEXE";
-	public static final String PRAIOS_XSD_NAME = "Praios";
+	public static final String PRAIOS_XSD_NAME = "PRAIOS";
 
 	public Descriptor[] translateToDescriptors(List<String> merkmals) {
 		List<Descriptor> collect = merkmals.stream()

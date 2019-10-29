@@ -12,7 +12,7 @@ class AddSkillDialogResultTest {
 
 	@Test
 	void setGroup() {
-		AddSkillDialogResult dasd = new AddSkillDialogResult("dasd", ImprovementComplexity.A, new BaseAttribute[]{BaseAttribute.Courage, BaseAttribute.Charisma, BaseAttribute.Strength}, new String[]{"Antimagie", "REPRÄSENTATION_MAGIER"});
+		AddSkillDialogResult dasd = new AddSkillDialogResult("dasd", ImprovementComplexity.A, new BaseAttribute[]{BaseAttribute.Courage, BaseAttribute.Charisma, BaseAttribute.Strength}, new String[]{"Antimagie", "TRADITION_MAGIER"});
 
 		dasd.setGroup(SkillGroup.SPELL);
 

@@ -522,12 +522,7 @@ public class PaneBuilder {
 		JButton addNewSkillButton = new JButton(addButtonText);
 		addNewSkillButton.addActionListener((ActionEvent e) -> {
 			Optional<AddSkillDialogResult> userInput;
-			if (skillGroup == SkillGroup.CEREMONY || skillGroup == SkillGroup.LITURGICAL_CHANT) {
-				userInput = InputPopups.getAddSkillResultDialog(skillPane, "Tradition");
-			} else {
-				userInput = InputPopups.getAddSkillResultDialog(skillPane,
-						getNamesOfMagicAttributeValues(), "Repräsentation");
-			}
+			userInput = InputPopups.getAddSkillResultDialog(skillPane, "Tradition");
 			if(!userInput.isPresent()){
 				return;
 			}
