@@ -120,12 +120,15 @@ public class CostCalculator {
 
 	public static int calcCostForNextLevel(Increasable increasable){
 		int currentLevel = increasable.getLevel();
+		if(increasable instanceof CombatTechnique && currentLevel < 6){
+			throw new ArithmeticException("Can not calculate for combat skills below 6");
+		}
 		int factor = increasable.getComplexity()
 								.getFactor();
 		if(currentLevel <= 11){
 			return factor;
 		}
-		return (currentLevel - 11) * factor;
+		return (currentLevel - 10) * factor;
 	}
 
 	public static int calcCostForNextLevelAbility(int level){

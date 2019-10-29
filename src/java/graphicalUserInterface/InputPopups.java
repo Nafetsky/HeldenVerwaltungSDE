@@ -23,6 +23,7 @@ import javax.swing.JTextField;
 import java.awt.Component;
 import java.awt.GridLayout;
 import java.util.List;
+import java.util.Optional;
 
 public class InputPopups {
 
@@ -104,7 +105,7 @@ public class InputPopups {
 		return null;
 	}
 
-	public static AddNewCombatSkillDialogResult getAddCombatSkillResultDialog(Component parent) {
+	public static Optional<AddNewCombatSkillDialogResult> getAddCombatSkillResultDialog(Component parent) {
 		JPanel insertSkillPanel = new JPanel(new GridLayout(0, 2));
 
 		JTextField fieldName = new JTextField();
@@ -132,10 +133,10 @@ public class InputPopups {
 				JOptionPane.PLAIN_MESSAGE);
 		if (result == 0 && StringUtils.isNotEmpty(fieldName.getText())) {
 			BaseAttribute ability = (BaseAttribute) ability1.getSelectedItem();
-			return new AddNewCombatSkillDialogResult(fieldName.getText(), ability,
-					(ImprovementComplexity) costCategory.getSelectedItem());
+			return Optional.of(new AddNewCombatSkillDialogResult(fieldName.getText(), ability,
+					(ImprovementComplexity) costCategory.getSelectedItem()));
 		}
-		return null;
+		return Optional.empty();
 	}
 
 	public static AddNewScriptDialogResult getAddNewScriptDialogResult(Component parent) {

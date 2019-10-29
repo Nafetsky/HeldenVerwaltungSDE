@@ -6,6 +6,8 @@ import XsdWrapper.MarshallingHelper;
 import api.AbilityGroup;
 import api.Advantage;
 import api.BaseAttribute;
+import api.CombatTechnique;
+import api.CombatTechniqueImpl;
 import api.DescribesSkill;
 import api.Disadvantage;
 import api.Event;
@@ -225,10 +227,15 @@ public class MasterControleProgramm {
 		return null;
 	}
 
-	public Skill handleNewCombatSkill(AddNewCombatSkillDialogResult result) {
+	public CombatTechnique handleNewCombatSkill(AddNewCombatSkillDialogResult result) {
 		if (result.isComplete()) {
-//			return modifier.addSkill(result);
-			return null;
+			CombatTechnique combatTechnique = new CombatTechniqueImpl(result.getName(), result.getAbility(), result.getCostCategory());
+			combatTechnique.setLevel(6);
+			Event event = Event.builder()
+							   .learnedCombatTechniques(Collections.singletonList(combatTechnique))
+							   .build();
+			activeCharacter.increase(event);
+			return combatTechnique;
 		}
 		return null;
 	}
@@ -506,6 +513,7 @@ public class MasterControleProgramm {
 	}
 
 	public void handleIncreaseAttribute(BaseAttribute abilityAbstract) {
-		activeCharacter.getSkillLevler(abilityAbstract).level();
+		activeCharacter.getSkillLevler(abilityAbstract)
+					   .level();
 	}
 }

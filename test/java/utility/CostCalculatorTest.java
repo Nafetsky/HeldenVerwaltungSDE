@@ -1,6 +1,8 @@
 package utility;
 
 
+import api.BaseAttribute;
+import api.CombatTechniqueImpl;
 import api.base.Character;
 import api.skills.Descriptor;
 import api.skills.ImprovementComplexity;
@@ -21,6 +23,7 @@ import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -141,6 +144,23 @@ class CostCalculatorTest {
 		CostCalculator costCalculator = new CostCalculator(barundar);
 		int cost = costCalculator.calcUsedAP();
 		assertThat(cost, is(1725));
+	}
+
+	@Test
+	void testCostForNextLevel(){
+		CombatTechniqueImpl daggers = new CombatTechniqueImpl("Dolche", BaseAttribute.Agility, ImprovementComplexity.B);
+
+		daggers.setLevel(5);
+		assertThrows(ArithmeticException.class, ()-> CostCalculator.calcCostForNextLevel(daggers));
+
+		daggers.setLevel(7);
+		assertThat(CostCalculator.calcCostForNextLevel(daggers), is(2));
+
+		daggers.setLevel(11);
+		assertThat(CostCalculator.calcCostForNextLevel(daggers), is(2));
+
+		daggers.setLevel(12);
+		assertThat(CostCalculator.calcCostForNextLevel(daggers), is(4));
 	}
 
 }

@@ -407,11 +407,6 @@ public class PaneBuilder {
 			JLabel labelSkillGroup = new JLabel(merkmal.name());
 			labelSkillGroup.setHorizontalAlignment(SwingConstants.CENTER);
 			baseSkillPanel.add(labelSkillGroup);
-//			List<Skill> skills = Arrays.stream(BaseSkills.values())
-//									   .filter(skill -> skill.getMerkmal()
-//															 .equals(merkmal))
-//									   .map(BaseSkills::getSkill)
-//									   .collect(Collectors.toList());
 			List<Skill> skills = charakter.getSkills(SkillGroup.BASE)
 										  .stream()
 										  .filter(skill -> ArrayUtils.contains(skill.getDescriptors(), merkmal))
@@ -432,31 +427,27 @@ public class PaneBuilder {
 		skillTabel.setLayout(new GridLayout(charakter.getCombatTechniques()
 													 .size(), 5));
 		for (CombatTechnique combatTechnique : charakter.getCombatTechniques()) {
-			JLabel labelName = new JLabel(combatTechnique.getName());
-			skillTabel.add(labelName);
-			JTextField fieldAbilityAcronym = new JTextField(combatTechnique.getAttribute()
-																		   .name());
-			fieldAbilityAcronym.setEnabled(false);
-			skillTabel.add(fieldAbilityAcronym);
-			JTextField fieldSkillValue = new JTextField();
-			fieldSkillValue.setText(Integer.toString(combatTechnique.getLevel()));
-			fieldSkillValue.setEnabled(false);
-			skillTabel.add(fieldSkillValue);
-			JLabel labelCost = new JLabel(CostCalculator.calcCostForNextLevel(combatTechnique) + " AP");
-			JButton buttonIncreaseSkill = makeIncreaseSkillButton(combatTechnique, fieldSkillValue, labelCost);
-			skillTabel.add(buttonIncreaseSkill);
-			skillTabel.add(labelCost);
+			addCombatTechniqueLine(skillTabel, combatTechnique);
 
 		}
 		combatSkillPane.add(skillTabel);
 
 		JButton addNewCombatSkillButton = new JButton("Neue Kampftechnik erlernen");
 		addNewCombatSkillButton.addActionListener((ActionEvent e) -> {
-			AddNewCombatSkillDialogResult toAddCombatSkillResultDialog = InputPopups
+			Optional<AddNewCombatSkillDialogResult> toAddCombatSkillResultDialog = InputPopups
 					.getAddCombatSkillResultDialog(combatSkillPane);
-			Skill skill = controleInstance.handleNewCombatSkill(toAddCombatSkillResultDialog);
-			if (skill != null) {
-				addNewCombatSkillToInterface(tabbedPane, skillTabel, toAddCombatSkillResultDialog, skill);
+			if (toAddCombatSkillResultDialog.isPresent()) {
+				CombatTechnique skill = controleInstance.handleNewCombatSkill(toAddCombatSkillResultDialog.get());
+//				addNewCombatSkillToInterface(tabbedPane, skillTabel, toAddCombatSkillResultDialog.get(), skill);
+				List<CombatTechnique> currentCombatTechniques = charakter.getCombatTechniques();
+				skillTabel.setLayout(new GridLayout(currentCombatTechniques
+						.size(), 5));
+				CombatTechnique combatTechnique = currentCombatTechniques.stream()
+																		 .filter(skillToFilter -> StringUtils.equals(skill.getName(), skillToFilter.getName()))
+																		 .findFirst()
+																		 .get();
+				addCombatTechniqueLine(skillTabel, combatTechnique);
+				tabbedPane.repaint();
 			}
 		});
 		combatSkillPane.add(addNewCombatSkillButton);
@@ -466,27 +457,21 @@ public class PaneBuilder {
 		return new JScrollPane(combatSkillPane);
 	}
 
-	private void addNewCombatSkillToInterface(JTabbedPane tabbedPane, JPanel skillTabel,
-											  AddNewCombatSkillDialogResult toAddCombatSkillResultDialog, Skill skill) {
-		skillTabel.setLayout(new GridLayout(charakter.getCombatTechniques()
-													 .size(), 5));
-
-		JLabel labelName = new JLabel(skill.getName());
+	private void addCombatTechniqueLine(JPanel skillTabel, CombatTechnique combatTechnique) {
+		JLabel labelName = new JLabel(combatTechnique.getName());
 		skillTabel.add(labelName);
-		JTextField fieldAbilityAcronym = new JTextField(toAddCombatSkillResultDialog.getAbility()
-																					.name());
+		JTextField fieldAbilityAcronym = new JTextField(combatTechnique.getAttribute()
+																	   .name());
 		fieldAbilityAcronym.setEnabled(false);
 		skillTabel.add(fieldAbilityAcronym);
 		JTextField fieldSkillValue = new JTextField();
-		fieldSkillValue.setText(Integer.toString(skill.getLevel()));
+		fieldSkillValue.setText(Integer.toString(combatTechnique.getLevel()));
 		fieldSkillValue.setEnabled(false);
 		skillTabel.add(fieldSkillValue);
-		JLabel labelCost = new JLabel(CostCalculator.calcCostForNextLevel(skill) + " AP");
-		JButton buttonIncreaseSkill = makeIncreaseSkillButton(skill, fieldSkillValue, labelCost);
+		JLabel labelCost = new JLabel(CostCalculator.calcCostForNextLevel(combatTechnique) + " AP");
+		JButton buttonIncreaseSkill = makeIncreaseSkillButton(combatTechnique, fieldSkillValue, labelCost);
 		skillTabel.add(buttonIncreaseSkill);
 		skillTabel.add(labelCost);
-
-		tabbedPane.repaint();
 	}
 
 	public Component makeMagicPane(JTabbedPane tabbedPane) {
@@ -622,9 +607,9 @@ public class PaneBuilder {
 
 	private boolean toSkill(ISpecialAbility spec, Skill skill) {
 		return spec.getDescriptors()
-			.stream()
-			.filter(descriptor -> descriptor instanceof DescribesSkill)
-			.anyMatch(descriptor -> StringUtils.equals(((DescribesSkill) descriptor).getSkillName(), skill.getName()));
+				   .stream()
+				   .filter(descriptor -> descriptor instanceof DescribesSkill)
+				   .anyMatch(descriptor -> StringUtils.equals(((DescribesSkill) descriptor).getSkillName(), skill.getName()));
 	}
 
 	private JButton makeIncreaseSkillButton(Increasable skill, JTextField field, JLabel costs) {

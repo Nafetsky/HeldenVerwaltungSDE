@@ -408,6 +408,7 @@ public class Translator {
 		kampftechnik.setName(combatTechnique.getName());
 		kampftechnik.setSteigerungskosten(translate(combatTechnique.getComplexity()));
 		kampftechnik.setLeiteigenschaft(translate(combatTechnique.getAttribute()));
+		kampftechnik.setKampftechnikwert(combatTechnique.getLevel());
 		return kampftechnik;
 	}
 
