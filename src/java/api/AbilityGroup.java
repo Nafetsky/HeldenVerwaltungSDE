@@ -7,6 +7,6 @@ public enum AbilityGroup {
 	KARMA,
 	COMBAT,
 	SPECIALISATION,
+	LANGUAGE,
 	SCRIPTURE
-
 }

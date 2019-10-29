@@ -51,9 +51,12 @@ import static org.hamcrest.Matchers.is;
 class CharacterXmlTest {
 
 	private static final String EVENT_DESCRIPTION = "Krit beim Zechen";
-	public static final String BOSPERANO = "Bosperano";
-	public static final String ANGRAM_RUNES = "Angram-Bilderschrift";
-	public static final String WIZARD = "Zauberer";
+	private static final String BOSPERANO = "Bosperano";
+	private static final String ANGRAM_RUNES = "Angram-Bilderschrift";
+	private static final String WIZARD = "Zauberer";
+	public static final String ROGOLAN = "Rogolan";
+	public static final String GARETHI = "Garethi";
+	public static final String ANGRAM = "Angram";
 
 	private Character barundar;
 
@@ -150,12 +153,12 @@ class CharacterXmlTest {
 		List<String> languageNames = languages.stream()
 											  .map(ISpecialAbility::getName)
 											  .collect(Collectors.toList());
-		assertThat(languageNames, containsInAnyOrder("Rogolan", "Garethi", BOSPERANO));
+		assertThat(languageNames, containsInAnyOrder(ROGOLAN, GARETHI, BOSPERANO));
 	}
 
 	@Test
 	void learnLanguage() {
-		Language angramToLearn = new Language("Angram");
+		Language angramToLearn = new Language(ANGRAM);
 		angramToLearn.setLevel(1);
 		Event event = Event.builder()
 						   .abilities(Collections.singletonList(angramToLearn))
@@ -168,10 +171,10 @@ class CharacterXmlTest {
 		List<String> languageNames = languages.stream()
 											  .map(ISpecialAbility::getName)
 											  .collect(Collectors.toList());
-		assertThat(languageNames, containsInAnyOrder("Rogolan", "Garethi", BOSPERANO, "Angram"));
+		assertThat(languageNames, containsInAnyOrder(ROGOLAN, GARETHI, BOSPERANO, ANGRAM));
 
 		ILanguage angramLearned = languages.stream()
-										   .filter(lan -> StringUtils.equals(lan.getName(), "Angram"))
+										   .filter(lan -> StringUtils.equals(lan.getName(), ANGRAM))
 										   .findFirst()
 										   .get();
 		assertThat(angramLearned.getLevel(), is(1));
@@ -192,7 +195,7 @@ class CharacterXmlTest {
 		List<String> languageNames = languages.stream()
 											  .map(ISpecialAbility::getName)
 											  .collect(Collectors.toList());
-		assertThat(languageNames, containsInAnyOrder("Rogolan", "Garethi", BOSPERANO));
+		assertThat(languageNames, containsInAnyOrder(ROGOLAN, GARETHI, BOSPERANO));
 
 		ILanguage bosperanoIncreased = languages.stream()
 												.filter(lan -> StringUtils.equals(lan.getName(), BOSPERANO))
@@ -469,8 +472,9 @@ class CharacterXmlTest {
 
 	@Test
 	void testLearnMundaneSpecialAbility() {
+		String freeClimbing = "Freiklettern";
 		ISpecialAbility feintLevel2 = SpecialAbility.builder()
-													.name("Freiklettern")
+													.name(freeClimbing)
 													.group(AbilityGroup.MUNDANE)
 													.cost(8)
 													.build();
@@ -487,9 +491,30 @@ class CharacterXmlTest {
 		assertThat(event.getAbilities(), hasSize(1));
 		ISpecialAbility iSpecialAbility = event.getAbilities()
 											   .get(0);
-		assertThat(iSpecialAbility.getName(), is("Freiklettern"));
+		assertThat(iSpecialAbility.getName(), is(freeClimbing));
 		assertThat(iSpecialAbility.getCost(), is(8));
 		assertThat(iSpecialAbility.getGroup(), is(AbilityGroup.MUNDANE));
+
+		ISpecialAbility freeClimbingFeat = barundar.getSpecialAbilities()
+												   .stream()
+												   .filter(sA -> StringUtils.equals(sA.getName(), freeClimbing))
+												   .findFirst()
+												   .get();
+		assertThat(freeClimbingFeat.getCost(), is(8));
+	}
+
+	@Test
+	void testLanguagesAreOwnGroup(){
+		boolean areLanguagesSpecialAbilities = barundar.getSpecialAbilities()
+							.stream()
+							.anyMatch(sA -> sA instanceof ILanguage);
+		assertThat(areLanguagesSpecialAbilities, is(true));
+
+		boolean areLanguagesMundaneSpecialAbilities = barundar.getSpecialAbilities(AbilityGroup.MUNDANE)
+													   .stream()
+													   .anyMatch(sA -> sA instanceof ILanguage);
+		assertThat(areLanguagesMundaneSpecialAbilities, is(false));
+
 	}
 
 

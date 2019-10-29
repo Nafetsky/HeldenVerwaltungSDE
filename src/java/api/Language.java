@@ -11,7 +11,7 @@ import java.util.List;
 public class Language implements ILanguage {
 
 	private final String name;
-	private final AbilityGroup group = AbilityGroup.MUNDANE;
+	private final AbilityGroup group = AbilityGroup.LANGUAGE;
 
 	private int level;
 
