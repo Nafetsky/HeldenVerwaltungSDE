@@ -22,7 +22,6 @@ import api.history.SkillChange;
 import api.skills.SkillGroup;
 import api.SpecialAbility;
 import api.skills.SkillSpecialisation;
-import database.CostCategory;
 import generated.Attributskürzel;
 import generated.Basistalent;
 import generated.Eigenschaftssteigerung;
@@ -327,17 +326,19 @@ public class Translator {
 		}
 	}
 
-	public Sonderfertigkeit translate(ISpecialAbility specialAbilityToParse) {
+	public Optional<Sonderfertigkeit> translate(ISpecialAbility specialAbilityToParse) {
 		AbilityGroup group = specialAbilityToParse.getGroup();
 		switch (group) {
 			case COMBAT:
-				return buildCombatSpecialAbility(specialAbilityToParse);
+				return Optional.of(buildCombatSpecialAbility(specialAbilityToParse));
 			case MUNDANE:
-				return buildMundaneSpecialAbility(specialAbilityToParse);
+				return Optional.of(buildMundaneSpecialAbility(specialAbilityToParse));
 			case MAGICAL:
-				return buildMagicalSpecialAbility(specialAbilityToParse);
+				return Optional.of(buildMagicalSpecialAbility(specialAbilityToParse));
+			case KARMA:
+				return Optional.of(buildKarmicSpecialAbility(specialAbilityToParse));
 		}
-		return null;
+		return Optional.empty();
 	}
 
 	private Sonderfertigkeit buildCombatSpecialAbility(ISpecialAbility specialAbilityToParse) {
@@ -361,6 +362,14 @@ public class Translator {
 		sonderfertigkeit.setName(specialAbilityToParse.getName());
 		sonderfertigkeit.setKosten(specialAbilityToParse.getCost());
 		sonderfertigkeit.setKategorie(SpecialAbilityKeys.MAGICAL.getName());
+		return sonderfertigkeit;
+	}
+
+	private Sonderfertigkeit buildKarmicSpecialAbility(ISpecialAbility specialAbilityToParse) {
+		Sonderfertigkeit sonderfertigkeit = factory.createSonderfertigkeit();
+		sonderfertigkeit.setName(specialAbilityToParse.getName());
+		sonderfertigkeit.setKosten(specialAbilityToParse.getCost());
+		sonderfertigkeit.setKategorie(SpecialAbilityKeys.KARMA.getName());
 		return sonderfertigkeit;
 	}
 

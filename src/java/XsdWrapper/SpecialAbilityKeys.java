@@ -10,8 +10,10 @@ import java.util.Arrays;
 public enum SpecialAbilityKeys {
 
 	COMBAT(AbilityGroup.COMBAT, "Kampf"),
+	KARMA(AbilityGroup.KARMA, "Karmal"),
 	MAGICAL(AbilityGroup.MAGICAL, "Magisch"),
 	MUNDANE(AbilityGroup.MUNDANE, "Allgemein");
+
 
 	final private AbilityGroup group;
 	final private String name;

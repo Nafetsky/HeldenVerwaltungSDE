@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class EventParser {
@@ -103,6 +104,8 @@ public class EventParser {
 																	 .stream()
 																	 .filter(Objects::nonNull)
 																	 .map(translator::translate)
+																	 .filter(Optional::isPresent)
+																	 .map(Optional::get)
 																	 .collect(Collectors.toList());
 		ereignis.getSonderfertigkeitshinzugewinn()
 				.addAll(sonderfertigkeiten);
