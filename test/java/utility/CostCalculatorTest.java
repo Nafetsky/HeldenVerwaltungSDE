@@ -2,7 +2,9 @@ package utility;
 
 
 import api.BaseAttribute;
+import api.BaseValueChanges;
 import api.CombatTechniqueImpl;
+import api.Event;
 import api.base.Character;
 import api.skills.Descriptor;
 import api.skills.ImprovementComplexity;
@@ -16,6 +18,7 @@ import generated.MerkmalProfan;
 import generated.ObjectFactory;
 import generated.Talente;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -32,7 +35,7 @@ class CostCalculatorTest {
 	private ObjectFactory factory;
 
 	@BeforeEach
-	void init(){
+	void init() {
 		factory = new ObjectFactory();
 	}
 
@@ -40,7 +43,7 @@ class CostCalculatorTest {
 	void testCostCalculatorCombatForB() {
 		assertThat(CostCalculator.calcCostCombat(7, ImprovementComplexity.B), is(2));
 		assertThat(CostCalculator.calcCostCombat(12, ImprovementComplexity.B), is(12));
-		assertThat( CostCalculator.calcCostCombat(14, ImprovementComplexity.B), is(22));
+		assertThat(CostCalculator.calcCostCombat(14, ImprovementComplexity.B), is(22));
 		assertThat(CostCalculator.calcCostCombat(16, ImprovementComplexity.B), is(40));
 	}
 
@@ -73,30 +76,30 @@ class CostCalculatorTest {
 		assertThat(CostCalculator.calcCostBaseAbility(16), is(165));
 		assertThat(CostCalculator.calcCostBaseAbility(17), is(225));
 	}
-	
-	
+
+
 	@Test
-	void testCompleteBaseAbilityCosts(){
+	void testCompleteBaseAbilityCosts() {
 		Character character = mock(Character.class);
 		Attributes attributes = Attributes.builder()
-									 .courage(16)
-									 .sagacity(14)
-									 .intuition(14)
-									 .charisma(9)
-									 .dexterity(9)
-									 .agility(14)
-									 .constitution(16)
-									 .strength(16)
-									 .build();
+										  .courage(16)
+										  .sagacity(14)
+										  .intuition(14)
+										  .charisma(9)
+										  .dexterity(9)
+										  .agility(14)
+										  .constitution(16)
+										  .strength(16)
+										  .build();
 		when(character.getAttributes()).thenReturn(attributes);
 
 		CostCalculator costCalculator = new CostCalculator(character);
 		assertThat(costCalculator.calcAllBaseAbilityCosts(), is(795));
 	}
 
-	
+
 	@Test
-	void testBaseSkillCostCalculation(){
+	void testBaseSkillCostCalculation() {
 //		Talente talente = makeExampleSkillsFor88AP();
 //		int cost = CostCalculator.calcAllBaseSkillCosts(talente);
 //		assertThat(cost, is(88));
@@ -122,11 +125,10 @@ class CostCalculatorTest {
 		list.add(basis);
 		return talente;
 	}
-	
-	
-	
+
+
 	@Test
-	void testSpecialCostCalculation(){
+	void testSpecialCostCalculation() {
 		List<Skill> skills = new ArrayList<>();
 		assertThat(CostCalculator.calcAllSkillCosts(skills), is(0));
 		Skill skill = new SkillImpl("", SkillGroup.SPELL, new Descriptor[]{MagicDescriptors.DEMONIC}, ImprovementComplexity.A);
@@ -134,24 +136,26 @@ class CostCalculatorTest {
 		skills.add(skill);
 		assertThat(CostCalculator.calcAllSkillCosts(skills), is(2));
 	}
-	
-	
+
+
 	@Test
-	void testCompleteTest() throws Exception{
+	void testCompleteTest() throws Exception {
 		Character barundar;
 		TestPreparer preparer = new TestPreparer();
 		barundar = preparer.getBarundar();
 		CostCalculator costCalculator = new CostCalculator(barundar);
+
 		int cost = costCalculator.calcUsedAP();
+
 		assertThat(cost, is(1725));
 	}
 
 	@Test
-	void testCostForNextLevel(){
+	void testCostForNextLevel() {
 		CombatTechniqueImpl daggers = new CombatTechniqueImpl("Dolche", BaseAttribute.Agility, ImprovementComplexity.B);
 
 		daggers.setLevel(5);
-		assertThrows(ArithmeticException.class, ()-> CostCalculator.calcCostForNextLevel(daggers));
+		assertThrows(ArithmeticException.class, () -> CostCalculator.calcCostForNextLevel(daggers));
 
 		daggers.setLevel(7);
 		assertThat(CostCalculator.calcCostForNextLevel(daggers), is(2));

@@ -34,6 +34,7 @@ import generated.Vorteil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
+import utility.CostCalculator;
 
 import javax.xml.bind.JAXBException;
 import java.time.LocalDate;
@@ -68,7 +69,8 @@ public class CharacterXml implements Character {
 
 	@Override
 	public int getUsedAdventurePoints() {
-		return 0;
+		CostCalculator calculator = new CostCalculator(this);
+		return calculator.calcUsedAP();
 	}
 
 	@Override
@@ -124,12 +126,12 @@ public class CharacterXml implements Character {
 
 	@Override
 	public int getBonusLifePoints() {
-		return wrapped.getLeP();
+		return Optional.ofNullable(wrapped.getLeP()).orElse(0);
 	}
 
 	@Override
 	public int getBonusArcaneEnergy() {
-		return wrapped.getAsP();
+		return Optional.ofNullable(wrapped.getAsP()).orElse(0);
 	}
 
 	@Override
@@ -139,7 +141,7 @@ public class CharacterXml implements Character {
 
 	@Override
 	public int getBonusKarmaPoints() {
-		return wrapped.getKaP();
+		return Optional.ofNullable(wrapped.getKaP()).orElse(0);
 	}
 
 	@Override

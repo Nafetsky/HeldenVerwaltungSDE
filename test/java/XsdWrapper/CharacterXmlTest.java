@@ -30,6 +30,7 @@ import api.skills.TraditionDescriptors;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import utility.CostCalculator;
 import utility.TestPreparer;
 
 import java.util.Arrays;
@@ -54,9 +55,9 @@ class CharacterXmlTest {
 	private static final String BOSPERANO = "Bosperano";
 	private static final String ANGRAM_RUNES = "Angram-Bilderschrift";
 	private static final String WIZARD = "Zauberer";
-	public static final String ROGOLAN = "Rogolan";
-	public static final String GARETHI = "Garethi";
-	public static final String ANGRAM = "Angram";
+	private static final String ROGOLAN = "Rogolan";
+	private static final String GARETHI = "Garethi";
+	private static final String ANGRAM = "Angram";
 
 	private Character barundar;
 
@@ -317,7 +318,9 @@ class CharacterXmlTest {
 		Event event = Event.builder()
 						   .baseValueChanges(baseValueChanges)
 						   .build();
+		CostCalculator costCalculator = new CostCalculator(barundar);
 
+		int usedAp = costCalculator.calcUsedAP();
 		barundar.increase(event);
 		barundar.save(EVENT_DESCRIPTION);
 
@@ -326,6 +329,33 @@ class CharacterXmlTest {
 						   .get(1)
 						   .getBaseValueChanges()
 						   .getBoughtHitPoints(), is(2));
+		int usedApAfterIncrease = costCalculator.calcUsedAP();
+
+		assertThat(usedApAfterIncrease, is(usedAp + 8));
+	}
+
+	@Test
+	void testGetReallyTough() {
+		BaseValueChanges baseValueChanges = BaseValueChanges.builder()
+															.boughtHitPoints(13)
+															.build();
+		Event event = Event.builder()
+						   .baseValueChanges(baseValueChanges)
+						   .build();
+		CostCalculator costCalculator = new CostCalculator(barundar);
+
+		int usedAp = costCalculator.calcUsedAP();
+		barundar.increase(event);
+		barundar.save(EVENT_DESCRIPTION);
+
+		assertThat(barundar.getBonusLifePoints(), is(13));
+		assertThat(barundar.getHistory()
+						   .get(1)
+						   .getBaseValueChanges()
+						   .getBoughtHitPoints(), is(13));
+		int usedApAfterIncrease = costCalculator.calcUsedAP();
+
+		assertThat(usedApAfterIncrease, is(usedAp + 56));
 	}
 
 	@Test
@@ -504,15 +534,15 @@ class CharacterXmlTest {
 	}
 
 	@Test
-	void testLanguagesAreOwnGroup(){
+	void testLanguagesAreOwnGroup() {
 		boolean areLanguagesSpecialAbilities = barundar.getSpecialAbilities()
-							.stream()
-							.anyMatch(sA -> sA instanceof ILanguage);
+													   .stream()
+													   .anyMatch(sA -> sA instanceof ILanguage);
 		assertThat(areLanguagesSpecialAbilities, is(true));
 
 		boolean areLanguagesMundaneSpecialAbilities = barundar.getSpecialAbilities(AbilityGroup.MUNDANE)
-													   .stream()
-													   .anyMatch(sA -> sA instanceof ILanguage);
+															  .stream()
+															  .anyMatch(sA -> sA instanceof ILanguage);
 		assertThat(areLanguagesMundaneSpecialAbilities, is(false));
 
 	}
@@ -749,6 +779,13 @@ class CharacterXmlTest {
 		assertThat(powerAttack.isPresent(), is(true));
 		ISpecialAbility iSpecialAbility = powerAttack.get();
 		assertThat(iSpecialAbility.getCost(), is(15));
+	}
+
+	@Test
+	void testUsedAp() {
+		assertThat(barundar.getAllAdventurePoints(), is(2252));
+		assertThat(barundar.getUsedAdventurePoints(), is(1725));
+		assertThat(barundar.getFreeAdventurePoints(), is(527));
 	}
 
 }

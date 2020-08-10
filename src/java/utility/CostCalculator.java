@@ -36,6 +36,9 @@ public class CostCalculator {
 		int sum = character.getMetaData()
 						   .getRace()
 						   .getCost();
+		sum += calcCostSkill(character.getBonusLifePoints(), ImprovementComplexity.D, true);
+		sum += calcCostSkill(character.getBonusArcaneEnergy(), ImprovementComplexity.D, true);
+		sum += calcCostSkill(character.getBonusKarmaPoints(), ImprovementComplexity.D, true);
 		return sum;
 	}
 
