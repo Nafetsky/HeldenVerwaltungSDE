@@ -35,6 +35,8 @@ public interface Character {
 
 	int getLostArcaneEnergy();
 
+	int getRestoredArcaneEnergy();
+
 	int getBonusKarmaPoints();
 
 

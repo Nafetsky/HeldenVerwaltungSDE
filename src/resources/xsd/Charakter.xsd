@@ -36,11 +36,11 @@
 			<element name="Vorteile" type="tns:Vorteile"></element>
 			<element name="Nachteile" type="tns:Nachteile"></element>
 			<element name="AP" type="int" />
-			<element name="LeP" type="int" maxOccurs="1" minOccurs="0">
-			</element>
-			<element name="AsP" type="int" maxOccurs="1" minOccurs="0">
-			</element>
-			<element name="KaP" type="int" maxOccurs="1" minOccurs="0"></element>
+			<element name="LeP" type="int" maxOccurs="1" minOccurs="0"/>
+			<element name="AsP" type="int" maxOccurs="1" minOccurs="0"/>
+			<element name="LostAsP" type="int" maxOccurs="1" minOccurs="0"/>
+			<element name="RestoredAsP" type="int" maxOccurs="1" minOccurs="0"/>
+			<element name="KaP" type="int" maxOccurs="1" minOccurs="0"/>
 			<element name="Talente" type="tns:Talente"></element>
 			<element name="Zauber" type="tns:Zauber"></element>
 			<element name="Rituale" type="tns:Rituale"></element>
@@ -218,7 +218,8 @@
 			<element name="Name" type="string" />
 			<element name="Attribut1" type="tns:Attributskürzel" />
 			<element name="Attribut2" type="tns:Attributskürzel" />
-			<element name="Attribut3" type="tns:Attributskürzel" />			<element name="Fertigkeitswert" type="int" />
+			<element name="Attribut3" type="tns:Attributskürzel" />
+			<element name="Fertigkeitswert" type="int" />
 			<element name="Steigerungskosten" type="tns:Steigerungskategorie" />
 			<element name="Kategorie" type="tns:Fertigkeitskategorie" />
 			<element name="Merkmal" type="tns:Merkmal" maxOccurs="unbounded" />

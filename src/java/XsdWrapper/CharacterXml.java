@@ -136,7 +136,12 @@ public class CharacterXml implements Character {
 
 	@Override
 	public int getLostArcaneEnergy() {
-		return 0;
+		return Optional.ofNullable(wrapped.getLostAsP()).orElse(0);
+	}
+
+	@Override
+	public int getRestoredArcaneEnergy() {
+		return Optional.ofNullable(wrapped.getRestoredAsP()).orElse(0);
 	}
 
 	@Override
@@ -269,8 +274,17 @@ public class CharacterXml implements Character {
 		}
 		int boughtAstralPoints = baseValueChanges.getBoughtAstralPoints();
 		if (boughtAstralPoints > 0) {
-			wrapped.setAsP(wrapped.getLeP() == null ? boughtAstralPoints : wrapped.getLeP() + boughtAstralPoints);
+			wrapped.setAsP(wrapped.getAsP() == null ? boughtAstralPoints : wrapped.getAsP() + boughtAstralPoints);
 		}
+		int lostAstralPoints = baseValueChanges.getLostAstralPoints();
+		if (lostAstralPoints > 0) {
+			wrapped.setLostAsP(wrapped.getLostAsP() == null ? lostAstralPoints : wrapped.getLostAsP() + lostAstralPoints);
+		}
+		int restoredAstralPoints = baseValueChanges.getRestoredAstralPoints();
+		if (restoredAstralPoints > 0) {
+			wrapped.setRestoredAsP(wrapped.getRestoredAsP() == null ? restoredAstralPoints : wrapped.getRestoredAsP() + restoredAstralPoints);
+		}
+
 		int boughtKarmaPoints = baseValueChanges.getBoughtKarmaPoints();
 		if (boughtKarmaPoints > 0) {
 			wrapped.setKaP(wrapped.getLeP() == null ? boughtKarmaPoints : wrapped.getLeP() + boughtKarmaPoints);

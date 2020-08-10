@@ -151,6 +151,44 @@ class CostCalculatorTest {
 	}
 
 	@Test
+	void testLostAspDoNotGainPoints() throws Exception {
+		TestPreparer preparer = new TestPreparer();
+		Character barundar = preparer.getBarundar();
+		CostCalculator costCalculator = new CostCalculator(barundar);
+
+		BaseValueChanges build = BaseValueChanges.builder()
+												 .lostAstralPoints(2)
+												 .build();
+		Event changeEvent = Event.builder()
+								 .baseValueChanges(build)
+								 .build();
+		barundar.increase(changeEvent);
+		int cost = costCalculator.calcUsedAP();
+
+		assertThat(cost, is(1725));
+	}
+
+	@Test
+	void testRestoreLostAsp() throws Exception {
+		Character barundar;
+		TestPreparer preparer = new TestPreparer();
+		barundar = preparer.getBarundar();
+		CostCalculator costCalculator = new CostCalculator(barundar);
+
+		BaseValueChanges build = BaseValueChanges.builder()
+												 .lostAstralPoints(2)
+												 .restoredAstralPoints(2)
+												 .build();
+		Event changeEvent = Event.builder()
+								 .baseValueChanges(build)
+								 .build();
+		barundar.increase(changeEvent);
+		int cost = costCalculator.calcUsedAP();
+
+		assertThat(cost, is(1729));
+	}
+
+	@Test
 	void testCostForNextLevel() {
 		CombatTechniqueImpl daggers = new CombatTechniqueImpl("Dolche", BaseAttribute.Agility, ImprovementComplexity.B);
 

@@ -2,7 +2,7 @@
 // Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.8-b130911.1802 generiert 
 // Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2017.05.05 um 11:28:12 PM CEST 
+// Generiert: 2020.08.10 um 05:07:24 PM CEST 
 //
 
 
@@ -23,7 +23,7 @@ import javax.xml.bind.annotation.XmlType;
  * <pre>
  * &lt;complexType name="Charakter">
  *   &lt;complexContent>
- *     &lt;restriction api.base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="Name" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="Geschlecht" type="{http://www.example.org/Charakter/}Geschlecht"/>
@@ -37,6 +37,8 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="AP" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *         &lt;element name="LeP" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
  *         &lt;element name="AsP" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
+ *         &lt;element name="LostAsP" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
+ *         &lt;element name="RestoredAsP" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
  *         &lt;element name="KaP" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
  *         &lt;element name="Talente" type="{http://www.example.org/Charakter/}Talente"/>
  *         &lt;element name="Zauber" type="{http://www.example.org/Charakter/}Zauber"/>
@@ -68,6 +70,8 @@ import javax.xml.bind.annotation.XmlType;
     "ap",
     "leP",
     "asP",
+    "lostAsP",
+    "restoredAsP",
     "kaP",
     "talente",
     "zauber",
@@ -105,6 +109,10 @@ public class Charakter {
     protected Integer leP;
     @XmlElement(name = "AsP")
     protected Integer asP;
+    @XmlElement(name = "LostAsP")
+    protected Integer lostAsP;
+    @XmlElement(name = "RestoredAsP")
+    protected Integer restoredAsP;
     @XmlElement(name = "KaP")
     protected Integer kaP;
     @XmlElement(name = "Talente", required = true)
@@ -402,6 +410,54 @@ public class Charakter {
      */
     public void setAsP(Integer value) {
         this.asP = value;
+    }
+
+    /**
+     * Ruft den Wert der lostAsP-Eigenschaft ab.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Integer }
+     *     
+     */
+    public Integer getLostAsP() {
+        return lostAsP;
+    }
+
+    /**
+     * Legt den Wert der lostAsP-Eigenschaft fest.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Integer }
+     *     
+     */
+    public void setLostAsP(Integer value) {
+        this.lostAsP = value;
+    }
+
+    /**
+     * Ruft den Wert der restoredAsP-Eigenschaft ab.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Integer }
+     *     
+     */
+    public Integer getRestoredAsP() {
+        return restoredAsP;
+    }
+
+    /**
+     * Legt den Wert der restoredAsP-Eigenschaft fest.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Integer }
+     *     
+     */
+    public void setRestoredAsP(Integer value) {
+        this.restoredAsP = value;
     }
 
     /**
