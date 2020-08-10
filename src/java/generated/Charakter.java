@@ -2,7 +2,7 @@
 // Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.8-b130911.1802 generiert 
 // Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2020.08.10 um 05:07:24 PM CEST 
+// Generiert: 2020.08.10 um 05:36:22 PM CEST 
 //
 
 
@@ -40,6 +40,8 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="LostAsP" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
  *         &lt;element name="RestoredAsP" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
  *         &lt;element name="KaP" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
+ *         &lt;element name="LostKaP" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
+ *         &lt;element name="RestoredKaP" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
  *         &lt;element name="Talente" type="{http://www.example.org/Charakter/}Talente"/>
  *         &lt;element name="Zauber" type="{http://www.example.org/Charakter/}Zauber"/>
  *         &lt;element name="Rituale" type="{http://www.example.org/Charakter/}Rituale"/>
@@ -73,6 +75,8 @@ import javax.xml.bind.annotation.XmlType;
     "lostAsP",
     "restoredAsP",
     "kaP",
+    "lostKaP",
+    "restoredKaP",
     "talente",
     "zauber",
     "rituale",
@@ -115,6 +119,10 @@ public class Charakter {
     protected Integer restoredAsP;
     @XmlElement(name = "KaP")
     protected Integer kaP;
+    @XmlElement(name = "LostKaP")
+    protected Integer lostKaP;
+    @XmlElement(name = "RestoredKaP")
+    protected Integer restoredKaP;
     @XmlElement(name = "Talente", required = true)
     protected Talente talente;
     @XmlElement(name = "Zauber", required = true)
@@ -482,6 +490,54 @@ public class Charakter {
      */
     public void setKaP(Integer value) {
         this.kaP = value;
+    }
+
+    /**
+     * Ruft den Wert der lostKaP-Eigenschaft ab.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Integer }
+     *     
+     */
+    public Integer getLostKaP() {
+        return lostKaP;
+    }
+
+    /**
+     * Legt den Wert der lostKaP-Eigenschaft fest.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Integer }
+     *     
+     */
+    public void setLostKaP(Integer value) {
+        this.lostKaP = value;
+    }
+
+    /**
+     * Ruft den Wert der restoredKaP-Eigenschaft ab.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Integer }
+     *     
+     */
+    public Integer getRestoredKaP() {
+        return restoredKaP;
+    }
+
+    /**
+     * Legt den Wert der restoredKaP-Eigenschaft fest.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Integer }
+     *     
+     */
+    public void setRestoredKaP(Integer value) {
+        this.restoredKaP = value;
     }
 
     /**

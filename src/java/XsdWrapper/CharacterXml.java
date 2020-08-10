@@ -150,6 +150,16 @@ public class CharacterXml implements Character {
 	}
 
 	@Override
+	public int getLostKarma() {
+		return Optional.ofNullable(wrapped.getLostKaP()).orElse(0);
+	}
+
+	@Override
+	public int getRestoredKarma() {
+		return Optional.ofNullable(wrapped.getRestoredKaP()).orElse(0);
+	}
+
+	@Override
 	public List<Skill> getSkills() {
 		List<Skill> skills = wrapped.getTalente()
 									.getTalent()
@@ -288,6 +298,14 @@ public class CharacterXml implements Character {
 		int boughtKarmaPoints = baseValueChanges.getBoughtKarmaPoints();
 		if (boughtKarmaPoints > 0) {
 			wrapped.setKaP(wrapped.getLeP() == null ? boughtKarmaPoints : wrapped.getLeP() + boughtKarmaPoints);
+		}
+		int lostKarmaPoints = baseValueChanges.getLostKarmaPoints();
+		if (lostKarmaPoints > 0) {
+			wrapped.setLostKaP(wrapped.getLostAsP() == null ? lostKarmaPoints : wrapped.getLostKaP() + lostKarmaPoints);
+		}
+		int restoredKarmaPoints = baseValueChanges.getRestoredKarmaPoints();
+		if (restoredKarmaPoints > 0) {
+			wrapped.setRestoredKaP(wrapped.getRestoredKaP() == null ? restoredKarmaPoints : wrapped.getRestoredKaP() + restoredKarmaPoints);
 		}
 		currentChanges.getBaseValueChanges()
 					  .merge(baseValueChanges);

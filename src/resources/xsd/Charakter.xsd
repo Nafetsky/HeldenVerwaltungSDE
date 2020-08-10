@@ -41,6 +41,8 @@
 			<element name="LostAsP" type="int" maxOccurs="1" minOccurs="0"/>
 			<element name="RestoredAsP" type="int" maxOccurs="1" minOccurs="0"/>
 			<element name="KaP" type="int" maxOccurs="1" minOccurs="0"/>
+			<element name="LostKaP" type="int" maxOccurs="1" minOccurs="0"/>
+			<element name="RestoredKaP" type="int" maxOccurs="1" minOccurs="0"/>
 			<element name="Talente" type="tns:Talente"></element>
 			<element name="Zauber" type="tns:Zauber"></element>
 			<element name="Rituale" type="tns:Rituale"></element>

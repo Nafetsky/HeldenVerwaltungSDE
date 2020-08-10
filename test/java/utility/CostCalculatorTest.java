@@ -189,6 +189,26 @@ class CostCalculatorTest {
 	}
 
 	@Test
+	void testRestoreLostKap() throws Exception {
+		Character barundar;
+		TestPreparer preparer = new TestPreparer();
+		barundar = preparer.getBarundar();
+		CostCalculator costCalculator = new CostCalculator(barundar);
+
+		BaseValueChanges karmaChange = BaseValueChanges.builder()
+												 .lostKarmaPoints(2)
+												 .restoredKarmaPoints(2)
+												 .build();
+		Event changeEvent = Event.builder()
+								 .baseValueChanges(karmaChange)
+								 .build();
+		barundar.increase(changeEvent);
+		int cost = costCalculator.calcUsedAP();
+
+		assertThat(cost, is(1729));
+	}
+
+	@Test
 	void testCostForNextLevel() {
 		CombatTechniqueImpl daggers = new CombatTechniqueImpl("Dolche", BaseAttribute.Agility, ImprovementComplexity.B);
 

@@ -39,6 +39,10 @@ public interface Character {
 
 	int getBonusKarmaPoints();
 
+	int getLostKarma();
+
+	int getRestoredKarma();
+
 
 	List<Skill> getSkills();
 
@@ -65,6 +69,5 @@ public interface Character {
 	void save(String message);
 
 	String getContent();
-
 
 }

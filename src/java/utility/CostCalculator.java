@@ -40,6 +40,7 @@ public class CostCalculator {
 		sum += calcCostSkill(character.getBonusArcaneEnergy(), ImprovementComplexity.D, true);
 		sum += character.getRestoredArcaneEnergy() * 2;
 		sum += calcCostSkill(character.getBonusKarmaPoints(), ImprovementComplexity.D, true);
+		sum += character.getRestoredKarma() * 2;
 		return sum;
 	}
 
