@@ -25,6 +25,7 @@ import controle.AddNewCombatSkillDialogResult;
 import controle.AddNewScriptDialogResult;
 import controle.AddSkillDialogResult;
 import controle.AddVantageDialogResult;
+import database.BaseResourceData;
 import generated.MetaData;
 import generated.MetaDataLine;
 import graphicalUserInterface.MainFrame;

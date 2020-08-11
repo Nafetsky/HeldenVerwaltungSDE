@@ -3,6 +3,7 @@ package XsdWrapper;
 import api.AbilityGroup;
 import api.Advantage;
 import api.BaseAttribute;
+import api.BaseResource;
 import api.BaseValueChanges;
 import api.CombatTechnique;
 import api.Disadvantage;
@@ -11,7 +12,6 @@ import api.IAttributes;
 import api.ILanguage;
 import api.IMetaData;
 import api.ISpecialAbility;
-import api.Language;
 import api.Vantage;
 import api.base.Character;
 import api.history.AttributeChange;
@@ -22,6 +22,7 @@ import api.skills.SkillGroup;
 import api.skills.SkillLevler;
 import data.Attributes;
 import data.Metadata;
+import database.BaseResourceData;
 import generated.Charakter;
 import generated.Eigenschaftswerte;
 import generated.Fertigkeit;
@@ -40,6 +41,7 @@ import javax.xml.bind.JAXBException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -126,37 +128,44 @@ public class CharacterXml implements Character {
 
 	@Override
 	public int getBonusLifePoints() {
-		return Optional.ofNullable(wrapped.getLeP()).orElse(0);
+		return Optional.ofNullable(wrapped.getLeP())
+					   .orElse(0);
 	}
 
 	@Override
 	public int getBonusArcaneEnergy() {
-		return Optional.ofNullable(wrapped.getAsP()).orElse(0);
+		return Optional.ofNullable(wrapped.getAsP())
+					   .orElse(0);
 	}
 
 	@Override
 	public int getLostArcaneEnergy() {
-		return Optional.ofNullable(wrapped.getLostAsP()).orElse(0);
+		return Optional.ofNullable(wrapped.getLostAsP())
+					   .orElse(0);
 	}
 
 	@Override
 	public int getRestoredArcaneEnergy() {
-		return Optional.ofNullable(wrapped.getRestoredAsP()).orElse(0);
+		return Optional.ofNullable(wrapped.getRestoredAsP())
+					   .orElse(0);
 	}
 
 	@Override
 	public int getBonusKarmaPoints() {
-		return Optional.ofNullable(wrapped.getKaP()).orElse(0);
+		return Optional.ofNullable(wrapped.getKaP())
+					   .orElse(0);
 	}
 
 	@Override
 	public int getLostKarma() {
-		return Optional.ofNullable(wrapped.getLostKaP()).orElse(0);
+		return Optional.ofNullable(wrapped.getLostKaP())
+					   .orElse(0);
 	}
 
 	@Override
 	public int getRestoredKarma() {
-		return Optional.ofNullable(wrapped.getRestoredKaP()).orElse(0);
+		return Optional.ofNullable(wrapped.getRestoredKaP())
+					   .orElse(0);
 	}
 
 	@Override
@@ -313,17 +322,17 @@ public class CharacterXml implements Character {
 
 	private void getNewVantages(Event event) {
 		List<Vorteil> advantages = event.getAdvantages()
-									 .stream()
-									 .map(translator::translate)
-									 .collect(Collectors.toList());
+										.stream()
+										.map(translator::translate)
+										.collect(Collectors.toList());
 		wrapped.getVorteile()
 			   .getVorteil()
 			   .addAll(advantages);
 
 		List<Nachteil> disadvantages = event.getDisadvantages()
-									  .stream()
-									  .map(translator::translate)
-									  .collect(Collectors.toList());
+											.stream()
+											.map(translator::translate)
+											.collect(Collectors.toList());
 		wrapped.getNachteile()
 			   .getNachteil()
 			   .addAll(disadvantages);
@@ -391,11 +400,47 @@ public class CharacterXml implements Character {
 			return levelSkill(name, foundSkill.get());
 		}
 
-		CombatTechnique combatTechnique = getCombatTechniques().stream()
-															   .filter(skill -> StringUtils.equals(skill.getName(), name))
-															   .findFirst()
-															   .orElseThrow(() -> new UnsupportedOperationException("The Character " + wrapped.getName() + " has no skill " + name));
-		return levelSkill(name, combatTechnique);
+		Optional<CombatTechnique> foundCombatTechnique = getCombatTechniques().stream()
+																			  .filter(skill -> StringUtils.equals(skill.getName(), name))
+																			  .findFirst();
+		if (foundCombatTechnique.isPresent()) {
+			return levelSkill(name, foundCombatTechnique.get());
+		}
+
+		Optional<Increasable> baseResource = findBaseResource(name);
+		if (baseResource.isPresent()) {
+			return levelResource(baseResource.get());
+		}
+
+
+		throw new UnsupportedOperationException("The Character " + wrapped.getName() + " has no skill " + name);
+	}
+
+	private Optional<Increasable> findBaseResource(String name) {
+		Optional<BaseResourceData> foundBaseResource = Arrays.stream(BaseResourceData.values())
+															 .filter(baseResourceData -> StringUtils.contains(name, baseResourceData.getName()))
+															 .findFirst();
+		if (foundBaseResource.isPresent()) {
+			return buidIncreasebaleOfbaseResource(foundBaseResource.get(), name);
+		}
+
+		return Optional.empty();
+	}
+
+	private Optional<Increasable> buidIncreasebaleOfbaseResource(BaseResourceData baseResourceData, String name) {
+		BaseResource value = new BaseResource(name);
+		switch (baseResourceData) {
+			case LIFE:
+				value.setLevel(getBonusLifePoints());
+				return Optional.of(value);
+			case ARCANE_ENERGY:
+				value.setLevel(getBonusLifePoints());
+				return Optional.of(value);
+			case KARMA:
+				value.setLevel(getBonusLifePoints());
+				return Optional.of(value);
+		}
+		return null;
 	}
 
 	@Override
@@ -474,6 +519,32 @@ public class CharacterXml implements Character {
 	}
 
 
+	private SkillLevler levelResource(Increasable increasable) {
+		return () -> {
+			int level = increasable.getLevel();
+			increasable.setLevel(level + 1);
+
+			String name = increasable.getName();
+			BaseValueChanges baseValueChanges = findOrBuildBaseChange(name);
+			if (StringUtils.equals(name, BaseResourceData.BUY_PREFIX +  "LeP")) {
+				baseValueChanges.setBoughtHitPoints(baseValueChanges.getBoughtHitPoints() + 1);
+			} else if (StringUtils.equals(name, BaseResourceData.BUY_PREFIX + "AsP")) {
+				baseValueChanges.setBoughtAstralPoints(baseValueChanges.getBoughtAstralPoints() + 1);
+			} else if (StringUtils.equals(name, BaseResourceData.LOOSE_PREFIX + "AsP")) {
+				baseValueChanges.setLostAstralPoints(baseValueChanges.getLostAstralPoints() + 1);
+			} else if (StringUtils.equals(name, BaseResourceData.RESTORE_PREFIX + "AsP")) {
+				baseValueChanges.setRestoredAstralPoints(baseValueChanges.getRestoredAstralPoints() + 1);
+			} else if (StringUtils.equals(name, BaseResourceData.BUY_PREFIX + "KaP")) {
+				baseValueChanges.setBoughtKarmaPoints(baseValueChanges.getBoughtKarmaPoints() + 1);
+			} else if (StringUtils.equals(name, BaseResourceData.LOOSE_PREFIX + "KaP")) {
+				baseValueChanges.setLostKarmaPoints(baseValueChanges.getLostKarmaPoints() + 1);
+			} else if (StringUtils.equals(name, BaseResourceData.RESTORE_PREFIX + "KaP")) {
+				baseValueChanges.setRestoredKarmaPoints(baseValueChanges.getRestoredKarmaPoints() + 1);
+			}
+		};
+	}
+
+
 	private void learnNewSpecialAbilities(Event event) {
 		currentChanges.getAbilities()
 					  .addAll(event.getAbilities());
@@ -516,8 +587,6 @@ public class CharacterXml implements Character {
 		wrapped.getKommunikatives()
 			   .getSchriften()
 			   .addAll(scriptures);
-
-
 	}
 
 	private void increaseLanguages(List<Sprache> languagesToAdd) {
@@ -537,6 +606,7 @@ public class CharacterXml implements Character {
 		}
 	}
 
+
 	private SkillChange findOrBuildSkillChange(String name) {
 		Optional<SkillChange> first = currentChanges.getSkillChanges()
 													.stream()
@@ -550,6 +620,10 @@ public class CharacterXml implements Character {
 		currentChanges.getSkillChanges()
 					  .add(newChange);
 		return newChange;
+	}
+
+	private BaseValueChanges findOrBuildBaseChange(String name) {
+		return currentChanges.getBaseValueChanges();
 	}
 
 	private void applySkillChanges(Event event) {

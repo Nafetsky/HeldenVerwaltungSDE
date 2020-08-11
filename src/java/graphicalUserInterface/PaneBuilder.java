@@ -133,9 +133,8 @@ public class PaneBuilder {
 			JTextField fName = new JTextField();
 			fName.setText(charakter.getMetaData()
 								   .getName());
-			fName.addFocusListener(new WriteThroughFocusListener(() -> {
-				return fName.getText();
-			}, (String value) -> controleInstance.handleChangeName(value)));
+			WriteThroughFocusListener nameChanger = new WriteThroughFocusListener(fName::getText, (String value) -> controleInstance.handleChangeName(value));
+			fName.addFocusListener(nameChanger);
 			baseInfosPanel.add(lName);
 			baseInfosPanel.add(fName);
 
@@ -153,11 +152,8 @@ public class PaneBuilder {
 			JTextField fAge = new JTextField();
 			fAge.setText(Integer.toString(charakter.getMetaData()
 												   .getAge()));
-			fAge.addFocusListener(new WriteThroughFocusListener(() -> {
-				return fAge.getText();
-			}, (String value) -> {
-				controleInstance.handleChangeAge(value);
-			}));
+			WriteThroughFocusListener ageChanger = new WriteThroughFocusListener(fAge::getText, (String value) -> controleInstance.handleChangeAge(value));
+			fAge.addFocusListener(ageChanger);
 			baseInfosPanel.add(lAge);
 			baseInfosPanel.add(fAge);
 
@@ -176,9 +172,9 @@ public class PaneBuilder {
 			baseInfosPanel.add(lableUsedAP);
 			baseInfosPanel.add(fieldUsedAp);
 
-			JButton bAddAp = new JButton("AP hinzuf�gen");
+			JButton bAddAp = new JButton("AP hinzufügen");
 			bAddAp.addActionListener((ActionEvent e) -> {
-				String addUpString = JOptionPane.showInputDialog(baseInfosPanel, "Wie viele Ap hinzuf�gen?");
+				String addUpString = JOptionPane.showInputDialog(baseInfosPanel, "Wie viele Ap hinzufügen?");
 				try {
 					int addUp = Integer.parseInt(addUpString);
 					controleInstance.handleAddAp(addUp);
@@ -189,6 +185,9 @@ public class PaneBuilder {
 			});
 			baseInfosPanel.add(bAddAp);
 		}
+
+		JPanel baseResourcePanel = new BaseResourcePanelBuilder().buildBaseResourcePanel(charakter, controleInstance);
+		baseInfosPanel.add(baseResourcePanel);
 
 		baseInfosPanel.add(makeCommunicatives());
 

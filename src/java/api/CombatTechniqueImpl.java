@@ -1,7 +1,6 @@
 package api;
 
 import api.skills.ImprovementComplexity;
-import api.skills.Increasable;
 import lombok.Data;
 
 @Data

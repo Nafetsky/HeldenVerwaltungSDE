@@ -379,6 +379,23 @@ class CharacterXmlTest {
 	}
 
 	@Test
+	void testGetTougherInTwoSteps() {
+		BaseValueChanges baseValueChanges = BaseValueChanges.builder()
+															.boughtHitPoints(2)
+															.build();
+		Event event = Event.builder()
+						   .baseValueChanges(baseValueChanges)
+						   .build();
+
+		barundar.increase(event);
+		barundar.save(EVENT_DESCRIPTION);
+		barundar.increase(event);
+		barundar.save(EVENT_DESCRIPTION + "2");
+
+		assertThat(barundar.getBonusLifePoints(), is(4));
+	}
+
+	@Test
 	void testIncreaseOtherValues() {
 		BaseValueChanges baseValueChanges = BaseValueChanges.builder()
 															.boughtAstralPoints(1)
