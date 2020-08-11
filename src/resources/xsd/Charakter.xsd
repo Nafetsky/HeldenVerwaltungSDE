@@ -343,8 +343,20 @@
 			<element name="AsPGekauft" type="int" maxOccurs="1"
 				minOccurs="0">
 			</element>
+			<element name="AsPVerloren" type="int" maxOccurs="1"
+					 minOccurs="0">
+			</element>
+			<element name="AsPWiederhergestellt" type="int" maxOccurs="1"
+					 minOccurs="0">
+			</element>
 			<element name="KaPGekauft" type="int" maxOccurs="1"
 				minOccurs="0">
+			</element>
+			<element name="KaPVerloren" type="int" maxOccurs="1"
+					 minOccurs="0">
+			</element>
+			<element name="KaPWiederhergestellt" type="int" maxOccurs="1"
+					 minOccurs="0">
 			</element>
 		</sequence>
 	</complexType>

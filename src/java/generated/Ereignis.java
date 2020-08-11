@@ -2,7 +2,7 @@
 // Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.8-b130911.1802 generiert 
 // Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2020.08.10 um 05:36:22 PM CEST 
+// Generiert: 2020.08.11 um 04:30:43 PM CEST 
 //
 
 
@@ -42,7 +42,11 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *         &lt;element name="Kampftechnikänderung" type="{http://www.example.org/Charakter/}Fertigkeitsmodifikation" maxOccurs="unbounded" minOccurs="0"/>
  *         &lt;element name="LePGekauft" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
  *         &lt;element name="AsPGekauft" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
+ *         &lt;element name="AsPVerloren" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
+ *         &lt;element name="AsPWiederhergestellt" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
  *         &lt;element name="KaPGekauft" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
+ *         &lt;element name="KaPVerloren" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
+ *         &lt;element name="KaPWiederhergestellt" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -67,7 +71,11 @@ import javax.xml.datatype.XMLGregorianCalendar;
     "kampftechnik\u00e4nderung",
     "lePGekauft",
     "asPGekauft",
-    "kaPGekauft"
+    "asPVerloren",
+    "asPWiederhergestellt",
+    "kaPGekauft",
+    "kaPVerloren",
+    "kaPWiederhergestellt"
 })
 public class Ereignis {
 
@@ -99,8 +107,16 @@ public class Ereignis {
     protected Integer lePGekauft;
     @XmlElement(name = "AsPGekauft")
     protected Integer asPGekauft;
+    @XmlElement(name = "AsPVerloren")
+    protected Integer asPVerloren;
+    @XmlElement(name = "AsPWiederhergestellt")
+    protected Integer asPWiederhergestellt;
     @XmlElement(name = "KaPGekauft")
     protected Integer kaPGekauft;
+    @XmlElement(name = "KaPVerloren")
+    protected Integer kaPVerloren;
+    @XmlElement(name = "KaPWiederhergestellt")
+    protected Integer kaPWiederhergestellt;
 
     /**
      * Ruft den Wert der datum-Eigenschaft ab.
@@ -474,6 +490,54 @@ public class Ereignis {
     }
 
     /**
+     * Ruft den Wert der asPVerloren-Eigenschaft ab.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Integer }
+     *     
+     */
+    public Integer getAsPVerloren() {
+        return asPVerloren;
+    }
+
+    /**
+     * Legt den Wert der asPVerloren-Eigenschaft fest.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Integer }
+     *     
+     */
+    public void setAsPVerloren(Integer value) {
+        this.asPVerloren = value;
+    }
+
+    /**
+     * Ruft den Wert der asPWiederhergestellt-Eigenschaft ab.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Integer }
+     *     
+     */
+    public Integer getAsPWiederhergestellt() {
+        return asPWiederhergestellt;
+    }
+
+    /**
+     * Legt den Wert der asPWiederhergestellt-Eigenschaft fest.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Integer }
+     *     
+     */
+    public void setAsPWiederhergestellt(Integer value) {
+        this.asPWiederhergestellt = value;
+    }
+
+    /**
      * Ruft den Wert der kaPGekauft-Eigenschaft ab.
      * 
      * @return
@@ -495,6 +559,54 @@ public class Ereignis {
      */
     public void setKaPGekauft(Integer value) {
         this.kaPGekauft = value;
+    }
+
+    /**
+     * Ruft den Wert der kaPVerloren-Eigenschaft ab.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Integer }
+     *     
+     */
+    public Integer getKaPVerloren() {
+        return kaPVerloren;
+    }
+
+    /**
+     * Legt den Wert der kaPVerloren-Eigenschaft fest.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Integer }
+     *     
+     */
+    public void setKaPVerloren(Integer value) {
+        this.kaPVerloren = value;
+    }
+
+    /**
+     * Ruft den Wert der kaPWiederhergestellt-Eigenschaft ab.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Integer }
+     *     
+     */
+    public Integer getKaPWiederhergestellt() {
+        return kaPWiederhergestellt;
+    }
+
+    /**
+     * Legt den Wert der kaPWiederhergestellt-Eigenschaft fest.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Integer }
+     *     
+     */
+    public void setKaPWiederhergestellt(Integer value) {
+        this.kaPWiederhergestellt = value;
     }
 
 }

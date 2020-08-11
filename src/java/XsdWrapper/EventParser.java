@@ -1,6 +1,7 @@
 package XsdWrapper;
 
 import api.AbilityGroup;
+import api.BaseValueChanges;
 import api.Event;
 import api.ISpecialAbility;
 import api.Language;
@@ -123,12 +124,16 @@ public class EventParser {
 	}
 
 	private void insertBaseChanges(Event eventToSave, Ereignis ereignis) {
-		ereignis.setLePGekauft(eventToSave.getBaseValueChanges()
-										  .getBoughtHitPoints());
-		ereignis.setAsPGekauft(eventToSave.getBaseValueChanges()
-										  .getBoughtAstralPoints());
-		ereignis.setKaPGekauft(eventToSave.getBaseValueChanges()
-										  .getBoughtKarmaPoints());
+		BaseValueChanges baseValueChanges = eventToSave.getBaseValueChanges();
+		ereignis.setLePGekauft(baseValueChanges.getBoughtHitPoints());
+
+		ereignis.setAsPGekauft(baseValueChanges.getBoughtAstralPoints());
+		ereignis.setAsPVerloren(baseValueChanges.getLostAstralPoints());
+		ereignis.setAsPWiederhergestellt(baseValueChanges.getRestoredAstralPoints());
+
+		ereignis.setKaPGekauft(baseValueChanges.getBoughtKarmaPoints());
+		ereignis.setKaPVerloren(baseValueChanges.getLostKarmaPoints());
+		ereignis.setKaPWiederhergestellt(baseValueChanges.getRestoredKarmaPoints());
 	}
 
 	private List<Fertigkeitsmodifikation> buildSkillChangesIncludingNewSkills(Event eventToSave) {

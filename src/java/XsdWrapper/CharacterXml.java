@@ -525,22 +525,29 @@ public class CharacterXml implements Character {
 			increasable.setLevel(level + 1);
 
 			String name = increasable.getName();
-			BaseValueChanges baseValueChanges = findOrBuildBaseChange(name);
+//			BaseValueChanges baseValueChanges = findOrBuildBaseChange(name);
+			BaseValueChanges baseValueChanges = BaseValueChanges.builder().build();
+
+
 			if (StringUtils.equals(name, BaseResourceData.BUY_PREFIX +  "LeP")) {
-				baseValueChanges.setBoughtHitPoints(baseValueChanges.getBoughtHitPoints() + 1);
+				baseValueChanges.setBoughtHitPoints(1);
 			} else if (StringUtils.equals(name, BaseResourceData.BUY_PREFIX + "AsP")) {
-				baseValueChanges.setBoughtAstralPoints(baseValueChanges.getBoughtAstralPoints() + 1);
+				baseValueChanges.setBoughtAstralPoints(1);
 			} else if (StringUtils.equals(name, BaseResourceData.LOOSE_PREFIX + "AsP")) {
-				baseValueChanges.setLostAstralPoints(baseValueChanges.getLostAstralPoints() + 1);
+				baseValueChanges.setLostAstralPoints(1);
 			} else if (StringUtils.equals(name, BaseResourceData.RESTORE_PREFIX + "AsP")) {
-				baseValueChanges.setRestoredAstralPoints(baseValueChanges.getRestoredAstralPoints() + 1);
+				baseValueChanges.setRestoredAstralPoints(1);
 			} else if (StringUtils.equals(name, BaseResourceData.BUY_PREFIX + "KaP")) {
-				baseValueChanges.setBoughtKarmaPoints(baseValueChanges.getBoughtKarmaPoints() + 1);
+				baseValueChanges.setBoughtKarmaPoints(1);
 			} else if (StringUtils.equals(name, BaseResourceData.LOOSE_PREFIX + "KaP")) {
-				baseValueChanges.setLostKarmaPoints(baseValueChanges.getLostKarmaPoints() + 1);
+				baseValueChanges.setLostKarmaPoints(1);
 			} else if (StringUtils.equals(name, BaseResourceData.RESTORE_PREFIX + "KaP")) {
-				baseValueChanges.setRestoredKarmaPoints(baseValueChanges.getRestoredKarmaPoints() + 1);
+				baseValueChanges.setRestoredKarmaPoints(1);
 			}
+			Event change = Event.builder()
+								.baseValueChanges(baseValueChanges)
+								.build();
+			increase(change);
 		};
 	}
 
@@ -659,7 +666,7 @@ public class CharacterXml implements Character {
 			MarshallingHelper helper = new MarshallingHelper();
 			return helper.marshall(wrapped);
 		} catch (JAXBException e) {
-			LOGGER.error("could not marhsal", e);
+			LOGGER.error("could not marshal", e);
 			return "";
 		}
 	}

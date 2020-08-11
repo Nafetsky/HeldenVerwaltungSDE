@@ -43,7 +43,7 @@ public class BaseResourcePanelBuilder {
 		List<Component> buyEnergyButton = BuildLabelFieldButtonGroup(baseResourceData, charakter, controleInstance, BaseResourceData.BOUGHT_PREFIX, BaseResourceData.BUY_PREFIX);
 		components.addAll(buyEnergyButton);
 
-		if(baseResourceData == BaseResourceData.LIFE){
+		if (baseResourceData == BaseResourceData.LIFE) {
 			components.add(new JLabel(""));
 			components.add(new JLabel(""));
 			components.add(new JLabel(""));
@@ -67,16 +67,25 @@ public class BaseResourcePanelBuilder {
 		List<Component> components = new ArrayList<>();
 		JLabel boughtEnergyLabel = new JLabel(labelText + name);
 		components.add(boughtEnergyLabel);
-		JTextField boughtEnergyField = new JTextField();
-		boughtEnergyField.setEditable(false);
-		boughtEnergyField.setText(Integer.toString(baseResourceData.getBoughtPoints(charakter)));
-		components.add(boughtEnergyField);
+		JTextField currentValueField = new JTextField();
+		currentValueField.setEditable(false);
+		switch (buttonPrefix) {
+			case BaseResourceData.BUY_PREFIX:
+				currentValueField.setText(Integer.toString(baseResourceData.getLevel(charakter)));
+				break;
+			case BaseResourceData.LOOSE_PREFIX:
+				currentValueField.setText(Integer.toString(baseResourceData.getLost(charakter)));
+				break;
+			case BaseResourceData.RESTORE_PREFIX:
+				currentValueField.setText(Integer.toString(baseResourceData.getRestored(charakter)));
+		}
+		components.add(currentValueField);
 
 		JButton buyEnergyButton = new JButton();
 		buyEnergyButton.setText(buttonPrefix + name);
 		buyEnergyButton.addActionListener((ActionEvent e) -> {
 			controleInstance.handleIncreaseSkill(buttonPrefix + name);
-			boughtEnergyField.setText(Integer.toString(Integer.parseInt(boughtEnergyField.getText()) + 1));
+			currentValueField.setText(Integer.toString(Integer.parseInt(currentValueField.getText()) + 1));
 		});
 		components.add(buyEnergyButton);
 		return components;
