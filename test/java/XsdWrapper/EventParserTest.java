@@ -214,7 +214,7 @@ class EventParserTest {
 		ISpecialAbility specialAbility = learnedAbilities.get(0);
 		assertThat(specialAbility, instanceOf(Language.class));
 		assertThat(specialAbility.getName(), is(name));
-		assertThat(specialAbility.getGroup(), is(AbilityGroup.MUNDANE));
+		assertThat(specialAbility.getGroup(), is(AbilityGroup.LANGUAGE));
 		assertThat(((Language)specialAbility).getLevel(), is(1));
 	}
 
